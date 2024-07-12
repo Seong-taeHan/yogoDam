@@ -29,7 +29,14 @@
 }
 
 .Footer {
-  margin-top: auto;
+  height : 60px;
+  position : relative;
+  transform: translateY(0%);
+  border-top: 1px solid #248efe;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background-color: grey;
 }
 

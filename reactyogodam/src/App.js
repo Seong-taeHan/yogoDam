@@ -2,6 +2,8 @@ import logo from './logo.svg';
 import './App.css';
 import SearchFunc from './Component/SearchFunc';
 import Footer from './Component/Footer';
+import Home from './Component/Home';
+import { Routes, Route, BrowserRouter } from "react-router-dom";
 
 function App() {
   return (
@@ -22,7 +24,12 @@ function App() {
     //   </header>
     // </div>
     <div>
-      <SearchFunc></SearchFunc>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home />}/>
+          <Route path="/serch" element={<SearchFunc></SearchFunc>}/>
+        </Routes>
+      </BrowserRouter>
       <Footer></Footer>
     </div>
   );
