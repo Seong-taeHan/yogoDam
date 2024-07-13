@@ -4,6 +4,7 @@ import SearchFunc from './Component/SearchFunc';
 import Footer from './Component/Footer';
 import Home from './Component/Home';
 import { Routes, Route, BrowserRouter } from "react-router-dom";
+import LecipeList from './Component/LecipeList';
 
 function App() {
   return (
@@ -24,12 +25,11 @@ function App() {
     //   </header>
     // </div>
     <div>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />}/>
-          <Route path="/serch" element={<SearchFunc></SearchFunc>}/>
-        </Routes>
-      </BrowserRouter>
+      <SearchFunc></SearchFunc>
+      <Routes>
+        <Route path="/" element={<Home />}/>
+        <Route path="/lecipeList" element={<LecipeList></LecipeList>}/>
+      </Routes>
       <Footer></Footer>
     </div>
   );

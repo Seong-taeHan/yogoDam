@@ -1,18 +1,29 @@
-import React from 'react'
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import '../css/footer.css'
+import React from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import '../css/footer.css';
 
 const Footer = () => {
     const TabData = [
         { id: 0, button: '홈', content: '홈 화면 입니다.', path: '/' },
         { id: 1, button: '찜목록', content: '찜 목록 화면 입니다.', path: '/favorites' },
         { id: 2, button: '로그인/MY', content: '로그인 or My 탭 입니다.', path: '/login' },
-        { id: 3, button: '달력', content: '달력탭 입니다.', path: '/calendar' },
+        { id: 3, button: '레시피', content: '레시피탭 입니다.', path: '/LecipeList' },
         { id: 4, button: '카테고리', content: '카테고리탭 입니다.', path: '/category' }
     ];
 
     const [activeTab, setActiveTab] = useState(0);
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    // 현재 경로에 따라 activeTab을 업데이트
+    useEffect(() => {
+        const currentPath = location.pathname;
+        const tab = TabData.find(tab => tab.path === currentPath);
+        if (tab) {
+            setActiveTab(tab.id);
+        }
+    }, [location.pathname]);
 
     const handleTabClick = (tab) => {
         setActiveTab(tab.id);
@@ -22,7 +33,7 @@ const Footer = () => {
     return (
         <div>
             <div className="tab-content">
-              {TabData.find((a) => a.id === activeTab)?.content}
+                {TabData.find((a) => a.id === activeTab)?.content}
             </div>
             <div className="footer-box">
                 <div className="tab-box">
@@ -30,7 +41,6 @@ const Footer = () => {
                         <button
                             key={tab.id}
                             className={activeTab === tab.id ? "tab-button active" : "tab-button"}
-                            // onClick={() => setActiveTab(tab.id)}
                             onClick={() => handleTabClick(tab)}
                         >
                             {tab.button}
@@ -40,6 +50,6 @@ const Footer = () => {
             </div>
         </div>
     );
-}
+};
 
 export default Footer;
