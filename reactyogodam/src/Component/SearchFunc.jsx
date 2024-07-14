@@ -1,6 +1,7 @@
 import React from 'react'
 import { useRef } from 'react'
 import { useNavigate } from 'react-router-dom';
+import '../css/serchBar.css';
 
 const SearchFunc = () => {
   const inputRef = useRef();
@@ -17,7 +18,7 @@ const SearchFunc = () => {
   };
 
   return (
-      <div>
+      <div className='search-bar'>
           <input type='text' ref={inputRef} onKeyDown={searcher} placeholder='검색어를 입력하세요'/>
       </div>
   );

@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import '../css/footer.css';
 
-const Footer = () => {
+const FooterBar = () => {
     const TabData = [
         { id: 0, button: '홈', content: '홈 화면 입니다.', path: '/' },
         { id: 1, button: '찜목록', content: '찜 목록 화면 입니다.', path: '/favorites' },
@@ -16,7 +16,6 @@ const Footer = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
-    // 현재 경로에 따라 activeTab을 업데이트
     useEffect(() => {
         const currentPath = location.pathname;
         const tab = TabData.find(tab => tab.path === currentPath);
@@ -31,10 +30,10 @@ const Footer = () => {
     };
 
     return (
-        <div>
-            <div className="tab-content">
+        <div className="footer-container">
+            {/* <div className="tab-content">
                 {TabData.find((a) => a.id === activeTab)?.content}
-            </div>
+            </div> */}
             <div className="footer-box">
                 <div className="tab-box">
                     {TabData.map((tab) => (
@@ -52,4 +51,4 @@ const Footer = () => {
     );
 };
 
-export default Footer;
+export default FooterBar;
