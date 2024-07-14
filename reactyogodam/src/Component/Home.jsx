@@ -5,6 +5,7 @@ import BannerSlide from './BannerSlide';
 const Home = () => {
 
     const images = ['/img/testImg/groundImg.png', '/img/testImg/totoro1.png', '/img/testImg/test1.png'];
+    //const images = ['img1.png', 'img2.png', 'img1.png'];
     const intervalTime = 3000; // 3초
 
     const [cardInfoList, setCardInfoList] = useState([]);
@@ -26,6 +27,9 @@ const Home = () => {
     <div>
         <div>
             <BannerSlide images={images} intervalTime={intervalTime}></BannerSlide>
+        </div>
+        <div>
+            
         </div>
         <div>
         {cardInfoList.map(product => (

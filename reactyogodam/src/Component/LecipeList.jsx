@@ -1,11 +1,12 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const LecipeList = () => {
     const [cardInfoList, setCardInfoList] = useState([]);
     const [filteredList, setFilteredList] = useState([]);
     const location = useLocation();
+    const navigate = useNavigate();
 
     useEffect(() => {
         // 초기 데이터 설정
@@ -34,12 +35,16 @@ const LecipeList = () => {
         setFilteredList(filtered);
     }, [location.search, cardInfoList]);
 
+    const handleProductClick = (id) => {
+        navigate(`/lecipeDetail/${id}`);
+    };
+
     return (
         <div>
             <div>
                 {filteredList.length > 0 ? (
                     filteredList.map(product => (
-                        <div key={product.id}>
+                        <div key={product.id} onClick={() => handleProductClick(product.id)}>
                             <h2>{product.name}</h2>
                             <p>{product.content}</p>
                             <p>가격: {product.price}원</p>

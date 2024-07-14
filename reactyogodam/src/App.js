@@ -5,6 +5,7 @@ import Home from './Component/Home';
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import LecipeList from './Component/LecipeList';
 import Footer from './Component/FooterBar';
+import LecipeDetail from './Component/LecipeDetail';
 
 function App() {
   return (
@@ -13,10 +14,14 @@ function App() {
           <SearchFunc />
         </div>
         <div className="right-section">
+          <div>
+            <SearchFunc></SearchFunc>
+          </div>
           <div className="content-wrapper">
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/lecipeList" element={<LecipeList />} />
+              <Route path="/lecipeDetail/:id" element={<LecipeDetail />} />
             </Routes>
           </div>
           <Footer />
