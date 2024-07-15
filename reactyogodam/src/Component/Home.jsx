@@ -1,5 +1,6 @@
 import React from 'react';
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 import BannerSlide from './BannerSlide';
 import '../css/home.css';
 import sampleImg from '../img/sample.png'; // 이미지 import
@@ -13,18 +14,24 @@ const Home = () => {
     const [cardInfoList, setCardInfoList] = useState([]);
     const [activeTab, setActiveTab] = useState('popular'); // 현재 활성화된 탭
 
+    const navigate = useNavigate();
+    
     const products = [
-        { id: 1, name: "상품1", img:images, price: 1000, content: "상품1입니다" },
-        { id: 2, name: "상품2", img:images, price: 2000, content: "상품2입니다" },
-        { id: 3, name: "상품3", img:images, price: 3000, content: "상품3입니다" },
-        { id: 4, name: "상품4", img:images, price: 3000, content: "상품3입니다" },
-        { id: 5, name: "상품5", img:images, price: 3000, content: "상품3입니다" },
-        { id: 6, name: "상품6", img:images, price: 3000, content: "상품3입니다" }
+        { id: 1, name: "상품1", img:'/img/testImg/groundImg.png', price: 1000, content: "상품1입니다" },
+        { id: 2, name: "상품2", img:'/img/testImg/totoro1.png', price: 2000, content: "상품2입니다" },
+        { id: 3, name: "상품3", img:'/img/testImg/test1.png', price: 3000, content: "상품3입니다" },
+        { id: 4, name: "상품4", img:'/img/testImg/groundImg.png', price: 3000, content: "상품3입니다" },
+        { id: 5, name: "상품5", img:'/img/testImg/totoro1.png', price: 3000, content: "상품3입니다" },
+        { id: 6, name: "상품6", img:'/img/testImg/test1.png', price: 3000, content: "상품3입니다" }
     ];
 
     useEffect(() => {
         setCardInfoList(products);
     }, [])
+
+    const handleProductClick = (id) => {
+        navigate(`/lecipeDetail/${id}`);
+    };
 
     return (
         <div className='home-container'>
@@ -47,9 +54,9 @@ const Home = () => {
             </div>
             <div>
                 {cardInfoList.map((product, index) => (
-                    <div className="product-card" key={product.id}>
+                    <div className="product-card" key={product.id} onClick={() => handleProductClick(product.id)}>
                         <div className="product-rank">{index + 1}</div>
-                        <img className="product-img" src={product.img[0]} alt={product.name} />
+                        <img className="product-img" src={product.img} alt={product.name} />
                         <div className="product-info">
                             <h2>{product.name}</h2>
                             <p>{product.content}</p>
