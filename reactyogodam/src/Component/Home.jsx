@@ -54,7 +54,7 @@ const Home = () => {
             </div>
             <div>
                 {cardInfoList.map((product, index) => (
-                    <div className="product-card" key={product.id} onClick={() => handleProductClick(product.id)}>
+                    <div className="product-card" onClick={() => handleProductClick(product.id)}>
                         <div className="product-rank">{index + 1}</div>
                         <img className="product-img" src={product.img} alt={product.name} />
                         <div className="product-info">
