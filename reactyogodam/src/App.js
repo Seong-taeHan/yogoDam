@@ -6,6 +6,7 @@ import { Routes, Route, BrowserRouter } from "react-router-dom";
 import LecipeList from './Component/LecipeList';
 import Footer from './Component/FooterBar';
 import LecipeDetail from './Component/LecipeDetail';
+import LecipeWrite from './Component/LecipeWrite';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/lecipeList" element={<LecipeList />} />
               <Route path="/lecipeDetail/:id" element={<LecipeDetail />} />
+              <Route path='/lecipeWrite' element={<LecipeWrite />} />
             </Routes>
           </div>
           <Footer />
