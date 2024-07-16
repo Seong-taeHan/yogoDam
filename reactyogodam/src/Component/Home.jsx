@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import BannerSlide from './BannerSlide';
 import '../css/home.css';
-import sampleImg from '../img/sample.png'; // 이미지 import
 
 const Home = () => {
 
