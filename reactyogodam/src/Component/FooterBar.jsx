@@ -9,7 +9,7 @@ const FooterBar = () => {
         { id: 1, button: '찜목록', content: '찜 목록 화면 입니다.', path: '/favorites' },
         { id: 2, button: '로그인/MY', content: '로그인 or My 탭 입니다.', path: '/login' },
         { id: 3, button: '레시피', content: '레시피탭 입니다.', path: '/LecipeList' },
-        { id: 4, button: '카테고리', content: '카테고리탭 입니다.', path: '/category' }
+        { id: 4, button: '카테고리', content: '카테고리탭 입니다.', path: '/category' },
     ];
 
     const [activeTab, setActiveTab] = useState(0);
