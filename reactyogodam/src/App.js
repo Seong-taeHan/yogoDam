@@ -7,6 +7,7 @@ import LecipeList from './Component/LecipeList';
 import Footer from './Component/FooterBar';
 import LecipeDetail from './Component/LecipeDetail';
 import LecipeWrite from './Component/LecipeWrite';
+import Login from './Component/Login';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
               <Route path="/lecipeList" element={<LecipeList />} />
               <Route path="/lecipeDetail/:id" element={<LecipeDetail />} />
               <Route path='/lecipeWrite' element={<LecipeWrite />} />
+              <Route path='/login' element={<Login/>}></Route>
             </Routes>
           </div>
           <Footer />
