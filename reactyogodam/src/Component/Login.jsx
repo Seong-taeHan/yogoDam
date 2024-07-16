@@ -3,20 +3,22 @@ import React, { useState } from 'react';
 import '../css/login.css'; // CSS 파일 경로 확인 필요
 
 const Login = () => {
-    const [username, setUsername] = useState('');
+    const [user_id, setUser_id] = useState('');
     const [password, setPassword] = useState('');
 
     const handleSubmit = async (e) => {
+        console.log('방가');
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:5000/api/login', {
-                username,
+            const response = await axios.post('http://localhost:4000/api/login', {
+                user_id,
                 password,
             });
-            console.log(response.data.token);
+            console.log("tleh " + response.data.token);
             // 토큰을 로컬 스토리지에 저장
             localStorage.setItem('token', response.data.token);
         } catch (error) {
+            console.log('api')
             console.error('Login failed:', error);
         }
     };
