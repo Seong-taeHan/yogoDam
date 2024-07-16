@@ -24,9 +24,8 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/lecipeList" element={<LecipeList />} />
               <Route path="/lecipeDetail/:id" element={<LecipeDetail />} />
-              <Route path="/login" element={<Login/>} />
               <Route path='/lecipeWrite' element={<LecipeWrite />} />
-              <Route path='/login' element={<Login/>}></Route>
+              <Route path="/login" element={<Login/>} />
             </Routes>
           </div>
           <Footer />

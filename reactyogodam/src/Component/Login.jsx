@@ -34,9 +34,9 @@ const Login = () => {
                 <h1>요고담</h1>
                 <input
                     type="text"
-                    placeholder="Username"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
+                    placeholder="user_id"
+                    value={user_id}
+                    onChange={(e) => setUser_id(e.target.value)}
                     required
                 />
                 <input
