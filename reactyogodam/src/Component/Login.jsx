@@ -7,7 +7,6 @@ const Login = () => {
     const [password, setPassword] = useState('');
 
     const handleSubmit = async (e) => {
-        console.log('방가');
         e.preventDefault();
         try {
             const response = await axios.post('http://localhost:4000/api/login', {
