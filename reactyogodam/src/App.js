@@ -8,6 +8,7 @@ import Footer from './Component/FooterBar';
 import LecipeDetail from './Component/LecipeDetail';
 import LecipeWrite from './Component/LecipeWrite';
 import Login from './Component/Login';
+import JoinUser from './Component/JoinUser';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
               <Route path="/lecipeDetail/:id" element={<LecipeDetail />} />
               <Route path='/lecipeWrite' element={<LecipeWrite />} />
               <Route path="/login" element={<Login/>} />
+              <Route path='/joinuser' element={<JoinUser/>} />
             </Routes>
           </div>
           <Footer />

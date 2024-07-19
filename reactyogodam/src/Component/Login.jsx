@@ -1,23 +1,24 @@
-import axios from 'axios';
+import axios from '../axios';
 import React, { useState } from 'react';
 import '../css/login.css'; // CSS 파일 경로 확인 필요
+import { Link } from 'react-router-dom';
 
 const Login = () => {
     const [user_id, setUser_id] = useState('');
-    const [password, setPassword] = useState('');
+    const [user_pw, setUser_pw] = useState('');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:4000/api/login', {
-                user_id,
-                password,
+            const response = await axios.post('/user/login', {
+                user_id : user_id,
+                user_pw : user_pw,
             });
-            console.log("tleh " + response.data.token);
-            // 토큰을 로컬 스토리지에 저장
-            localStorage.setItem('token', response.data.token);
+            console.log(response);
+            // console.log("tleh " + response.data.token);
+            // // 토큰을 로컬 스토리지에 저장
+            //localStorage.setItem('token', response.data.token);
         } catch (error) {
-            console.log('api')
             console.error('Login failed:', error);
         }
     };
@@ -25,7 +26,7 @@ const Login = () => {
     return (
         <div className='login_container'>
 
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} method='post'>
                 <div className='btn_container'>
                 <button type="button">◀</button>
                 </div>
@@ -34,19 +35,17 @@ const Login = () => {
                 <input
                     type="text"
                     placeholder="user_id"
-                    value={user_id}
                     onChange={(e) => setUser_id(e.target.value)}
                     required
                 />
                 <input
                     type="password"
                     placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    onChange={(e) => setUser_pw(e.target.value)}
                     required
                 />
                 <button type="submit">로그인</button>
-                <p>아직 회원이 아니신가요? <a href="/register">회원가입</a></p>
+                <p>아직 회원이 아니신가요? <Link to='/joinuser'>회원가입</Link></p>
             </form>
         </div>
     );
