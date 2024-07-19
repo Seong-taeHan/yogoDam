@@ -12,11 +12,12 @@ import Login from './Component/Login';
 function App() {
   return (
     <div className="main-container">
+      <div className='main-background'>
         <div className="left-section">
           <SearchFunc />
         </div>
         <div className="right-section">
-          <div>
+          <div className='right-top-sf'>
             <SearchFunc></SearchFunc>
           </div>
           <div className="content-wrapper">
@@ -30,6 +31,7 @@ function App() {
           </div>
           <Footer />
         </div>
+      </div>
     </div>
   );
 }
