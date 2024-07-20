@@ -29,7 +29,7 @@ const JoinUser = () => {
       }
   };
 
-  const idCheck = async () => {
+  const idCheck = async (e) => {
     e.preventDefault();
     try {
         const idCheckRes = await axios.post('/user/idCheck', {
@@ -65,13 +65,13 @@ const JoinUser = () => {
               onChange={(e) => setUser_pw(e.target.value)}
               required
           />
-          <p>비밀번호 확인</p>
+          {/* <p>비밀번호 확인</p>
           <input
               type="password"
               placeholder="Password_check"
               onChange={(e) => setUser_pw(e.target.value)}
               required
-          />
+          /> */}
           <p>닉네임</p>
           <input
               type="text"
