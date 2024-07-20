@@ -28,7 +28,7 @@ router.post('/join', async (req, res) => {
 
 router.post('/idCheck', async (req, res) => {
     console.log('/idCheck', req.body);
-    const {user_id} = req.body
+    const {user_id} = req.body;
 })
 
 module.exports = router;
