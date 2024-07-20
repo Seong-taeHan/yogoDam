@@ -13,7 +13,7 @@ import JoinUser from './Component/JoinUser';
 
 function App() {
   const location = useLocation();
-  const showSearchBar = !['/login', '/favorites'].includes(location.pathname);
+  const showSearchBar = !['/login', '/favorites', '/joinuser'].includes(location.pathname);
 
   return (
     <div className="main-container">
