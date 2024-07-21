@@ -1,5 +1,5 @@
 import React from 'react'
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import axios from '../axios';
 
 
@@ -15,7 +15,7 @@ const JoinUser = () => {
   const handleSubmit = async (e) => {
       e.preventDefault();
       try {
-          const response = await axios.post('/user/join', {
+          const joinRes = await axios.post('/user/join', {
               user_name : user_name,
               user_id : user_id,
               user_pw : user_pw,
@@ -23,11 +23,23 @@ const JoinUser = () => {
               user_email : user_email,
               user_phone : user_phone
           });
-          console.log(response);
+          console.log(joinRes);
       } catch (error) {
           console.error('Join failed:', error);
       }
   };
+
+  const idCheck = async (e) => {
+    e.preventDefault();
+    try {
+        const idCheckRes = await axios.post('/user/idCheck', {
+            user_id : user_id
+        });
+        console.log(idCheckRes);
+    } catch(error) {
+        console.error('중복검사 실패', error);
+    }
+  }
   return (
     <div>
         <form onSubmit={handleSubmit}>
@@ -45,6 +57,7 @@ const JoinUser = () => {
               onChange={(e) => setUser_id(e.target.value)}
               required
           />
+          <button type='button' onClick={idCheck}>중복체크</button>
           <p>비밀번호</p>
           <input
               type="password"
@@ -52,6 +65,13 @@ const JoinUser = () => {
               onChange={(e) => setUser_pw(e.target.value)}
               required
           />
+          {/* <p>비밀번호 확인</p>
+          <input
+              type="password"
+              placeholder="Password_check"
+              onChange={(e) => setUser_pw(e.target.value)}
+              required
+          /> */}
           <p>닉네임</p>
           <input
               type="text"
