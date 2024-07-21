@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import './App.css';
 import SearchFunc from './Component/SearchFunc';
 import Home from './Component/Home';

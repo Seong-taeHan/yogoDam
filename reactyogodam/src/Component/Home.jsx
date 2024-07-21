@@ -38,16 +38,12 @@ const Home = () => {
                 <BannerSlide images={images} intervalTime={intervalTime}></BannerSlide>
             </div>
             <div className="tab-container">
-                <div
-                    className={`tab ${activeTab === 'popular' ? 'active' : ''}`}
-                    onClick={() => setActiveTab('popular')}
-                >
+                <div className={`tab ${activeTab === 'popular' ? 'active' : ''}`}
+                    onClick={() => setActiveTab('popular')}>
                     인기순
                 </div>
-                <div
-                    className={`tab ${activeTab === 'latest' ? 'active' : ''}`}
-                    onClick={() => setActiveTab('latest')}
-                >
+                <div className={`tab ${activeTab === 'latest' ? 'active' : ''}`}
+                    onClick={() => setActiveTab('latest')}>
                     최신순
                 </div>
             </div>
