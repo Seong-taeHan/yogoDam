@@ -9,6 +9,7 @@ import LecipeDetail from './Component/LecipeDetail';
 import LecipeWrite from './Component/LecipeWrite';
 import Login from './Component/Login';
 import JoinUser from './Component/JoinUser';
+import Favorite from './Component/Favorite';
 
 function App() {
   const location = useLocation();
@@ -34,6 +35,7 @@ function App() {
               <Route path='/lecipeWrite' element={<LecipeWrite />} />
               <Route path="/login" element={<Login />} />
               <Route path='/joinuser' element={<JoinUser />} />
+              <Route path='/favorites' element={<Favorite />} />
             </Routes>
           </div>
           <Footer />
