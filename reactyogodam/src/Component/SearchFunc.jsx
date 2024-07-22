@@ -19,7 +19,8 @@ const SearchFunc = () => {
 
   return (
       <div className='search-bar'>
-          <input type='text' ref={inputRef} onKeyDown={searcher} placeholder='검색어를 입력하세요'/>
+        <input type='text' ref={inputRef} onKeyDown={searcher} placeholder='검색어를 입력하세요'/>
+        <img src={require('../img/icon/black_search.svg').default} alt="search" />
       </div>
   );
 };

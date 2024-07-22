@@ -9,7 +9,7 @@ import LecipeDetail from './Component/LecipeDetail';
 import LecipeWrite from './Component/LecipeWrite';
 import Login from './Component/Login';
 import JoinUser from './Component/JoinUser';
-import UserInfo from './Component/UserInfo';
+import UserInfo from './Component/UserInfo'
 
 function App() {
   const location = useLocation();
