@@ -41,7 +41,7 @@ function App() {
               <Route path="/lecipeDetail/:id" element={<LecipeDetail />} />
               <Route path='/lecipeWrite' element={<LecipeWrite />} />
               <Route path="/login" element={<Login />} />
-              <Route path='/userinfo' element={<UserInfo></UserInfo>}></Route>
+              <Route path='/userinfo' element={<UserInfo />}></Route>
               <Route path='/joinuser' element={<JoinUser />} />
               <Route path='/category' element={<Category />} />
               <Route path='/favorites' element={<Favorite />} />

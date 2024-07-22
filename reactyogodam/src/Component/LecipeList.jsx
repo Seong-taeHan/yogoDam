@@ -1,7 +1,7 @@
-import React from 'react';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import '../css/cardList.css'
+import axios from 'axios';
+import '../css/cardList.css';
 
 const LecipeList = () => {
     const [cardInfoList, setCardInfoList] = useState([]);
@@ -11,13 +11,16 @@ const LecipeList = () => {
 
     useEffect(() => {
         // 백엔드에서 데이터 가져오기
-        fetch('http://localhost:8000/list/products')
-            .then(response => response.json())
-            .then(data => setCardInfoList(data))
-            .catch(error => console.error('Error fetching products:', error));
+        axios.get('http://localhost:8000/list/products')
+            .then(response => {
+                console.log("DB 데이터 응답 확인 : ", response.data);
+                setCardInfoList(response.data);
+            })
+            .catch(error => {
+                console.error("There was an error fetching the data!", error);
+            });
     }, []);
 
-    
     useEffect(() => {
         // URL 파라미터에서 검색어 추출
         const queryParams = new URLSearchParams(location.search);
@@ -25,8 +28,8 @@ const LecipeList = () => {
 
         // 검색어에 따른 필터링
         const lowercasedQuery = searchQuery.toLowerCase();
-        const filtered = cardInfoList.filter(product =>
-            product.content.toLowerCase().includes(lowercasedQuery)
+        const filtered = cardInfoList.filter(food =>
+            food.COOKING_METHOD && food.COOKING_METHOD.toLowerCase().includes(lowercasedQuery)
         );
         setFilteredList(filtered);
     }, [location.search, cardInfoList]);
@@ -39,14 +42,14 @@ const LecipeList = () => {
         <div>
             <div>
                 {filteredList.length > 0 ? (
-                    filteredList.map((product, index) => (
-                        <div className="product-card" key={product.id} onClick={() => handleProductClick(product.id)}>
+                    filteredList.map((food, index) => (
+                        <div className="product-card" key={food.FOOD_ID} onClick={() => handleProductClick(food.FOOD_ID)}>
                             <div className="product-rank">{index + 1}</div>
-                            <img className="product-img" src={product.img} alt={product.name} />
+                            <img className="product-img" src={food.FOOD_IMG} alt={food.FOOD_NAME} />
                             <div className="product-info">
-                                <h2>{product.name}</h2>
-                                <p>{product.content}</p>
-                                <p className="product-price">{product.price.toLocaleString()} 원</p>
+                                <h2>{food.FOOD_NAME}</h2>
+                                <p>{food.COOKING_METHOD}</p>
+                                <p className="product-price">{food.FOOD_PRICE.toLocaleString()} 원</p>
                             </div>
                         </div>
                     ))
