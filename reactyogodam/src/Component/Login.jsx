@@ -1,11 +1,12 @@
 import axios from '../axios';
 import React, { useState } from 'react';
 import '../css/login.css'; // CSS 파일 경로 확인 필요
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Login = () => {
     const [user_id, setUser_id] = useState('');
     const [user_pw, setUser_pw] = useState('');
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -15,9 +16,10 @@ const Login = () => {
                 user_pw : user_pw,
             });
             console.log(response);
-            // console.log("tleh " + response.data.token);
-            // // 토큰을 로컬 스토리지에 저장
-            //localStorage.setItem('token', response.data.token);
+
+            console.log(response);
+            localStorage.setItem('token', response.data.token);
+            navigate('/');
         } catch (error) {
             console.error('Login failed:', error);
         }

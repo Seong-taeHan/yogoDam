@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route, BrowserRouter, useLocation } from "react-router-dom";
+import { Routes, Route, BrowserRouter, useLocation, useNavigate } from "react-router-dom";
 import './App.css';
 import SearchFunc from './Component/SearchFunc';
 import Home from './Component/Home';
@@ -9,10 +9,16 @@ import LecipeDetail from './Component/LecipeDetail';
 import LecipeWrite from './Component/LecipeWrite';
 import Login from './Component/Login';
 import JoinUser from './Component/JoinUser';
+import UserInfo from './Component/UserInfo';
 
 function App() {
   const location = useLocation();
   const showSearchBar = !['/login', '/favorites', '/joinuser'].includes(location.pathname);
+
+  const PrivateRoute = ({ element: Element }) => {
+    const token = localStorage.getItem('token');
+    return token ? <Element /> : <Navigate to="/login" />;
+  };
 
   return (
     <div className="main-container">
@@ -33,6 +39,7 @@ function App() {
               <Route path="/lecipeDetail/:id" element={<LecipeDetail />} />
               <Route path='/lecipeWrite' element={<LecipeWrite />} />
               <Route path="/login" element={<Login />} />
+              <Route path='/userinfo' element={<UserInfo></UserInfo>}></Route>
               <Route path='/joinuser' element={<JoinUser />} />
             </Routes>
           </div>
