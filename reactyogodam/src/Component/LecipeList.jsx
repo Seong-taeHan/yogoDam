@@ -10,19 +10,14 @@ const LecipeList = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        // 초기 데이터 설정
-        const products = [
-            { id: 1, name: "상품1", price: 1000, content: "특급1입니다", likes: 300 },
-            { id: 2, name: "상품2", price: 2000, content: "상품2입니다", likes: 400 },
-            { id: 3, name: "상품3", price: 3000, content: "상품3입니다", likes: 500 },
-            { id: 4, name: "상품4", price: 3000, content: "상품3입니다", likes: 100 },
-            { id: 5, name: "상품5", price: 3000, content: "상품3입니다", likes: 300 },
-            { id: 6, name: "상품6", price: 3000, content: "상품3입니다", likes: 200 }
-        ];
-
-        setCardInfoList(products);
+        // 백엔드에서 데이터 가져오기
+        fetch('http://localhost:8000/list/products')
+            .then(response => response.json())
+            .then(data => setCardInfoList(data))
+            .catch(error => console.error('Error fetching products:', error));
     }, []);
 
+    
     useEffect(() => {
         // URL 파라미터에서 검색어 추출
         const queryParams = new URLSearchParams(location.search);
