@@ -15,14 +15,15 @@ router.post('/login', async (req, res) => {
         const user = await db.execute(sql, [user_id]);
 
         if (user.rows.length === 0) {
-            return res.status(401).send({ message: '아이디 또는 비밀번호가 잘못되었습니다.' });
+            return res.status(401).send({ message: '아이디가 잘못되었습니다.' });
         }
-
-        const hashedPassword = user.rows[0].user_pw;
+        console.log("userInfo : ", user.rows[0]);
+        const hashedPassword = user.rows[0].USER_PW;
+        console.log(hashedPassword);
         const isPasswordMatch = await bcrypt.compare(user_pw, hashedPassword);
 
         if (!isPasswordMatch) {
-            return res.status(401).send({ message: '아이디 또는 비밀번호가 잘못되었습니다.' });
+            return res.status(401).send({ message: '비밀번호가 잘못되었습니다.' });
         }
 
         const token = jwt.sign({ user_id }, 'your_jwt_secret', { expiresIn: '1h' });
