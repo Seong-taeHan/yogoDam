@@ -37,8 +37,7 @@ const Login = () => {
                 <div className='btn_container'>
                 <button type="button">◀</button>
                 </div>
-                <h2>요리 고민 상담</h2>
-                <h1>요고담</h1>
+                <img className='bannerImg' src="./img/banner.png" alt="" />
                 <input
                     type="text"
                     placeholder="user_id"
