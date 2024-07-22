@@ -1,21 +1,28 @@
 import React from 'react'
 import { useRef } from 'react'
+import { useNavigate } from 'react-router-dom';
+import '../css/serchBar.css';
 
 const SearchFunc = () => {
+  const inputRef = useRef();
+  const navigate = useNavigate();
 
-    let inputRef = useRef();
+  const searcher = (e) => {
+      if (e.key === 'Enter') {
+          const query = inputRef.current.value.trim();
+          if (query) {
+              navigate(`/lecipeList?search=${encodeURIComponent(query)}`);
+          }
+          inputRef.current.value = ''; // 검색 후 입력 필드 비우기
+      }
+  };
 
-    const searcher = (e) => {
-        if(e.key === 'Enter'){
-            console.log('검색용 함수 test')
-        }
-        //console.log('onKeyDonw 확인용', inputRef.current.value)
-    }
   return (
-    <div>
-        <input type='text' ref={inputRef} onKeyDown={searcher}></input>
-    </div>
-  )
-}
+      <div className='search-bar'>
+        <input type='text' ref={inputRef} onKeyDown={searcher} placeholder='검색어를 입력하세요'/>
+        <img src={require('../img/icon/black_search.svg').default} alt="search" />
+      </div>
+  );
+};
 
-export default SearchFunc
+export default SearchFunc;

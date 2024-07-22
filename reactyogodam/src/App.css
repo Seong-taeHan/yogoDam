@@ -1,43 +1,56 @@
-.App {
-  text-align: center;
+.main-container {
+  background-color: #fff;
+  padding: 10px;
+  
+  
+}
+.main-background {
+  display: flex;
+  height: 100vh;
+  position: relative; /* 상대 위치 설정 */
+  background-image: url("./img/toast.jpg");
+  background-size: cover; /* 배경 이미지가 컨테이너를 덮도록 설정 */
+  background-position: center; /* 배경 이미지가 가운데 오도록 설정 */
+  z-index: 0; /* 배경 이미지를 가장 뒤로 설정 */  
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+/* Left section for search functionality and image */
+.left-section {
+  width: 50%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  padding: 20px;
+  position: relative; /* 상대 위치 설정 */
+  z-index: 1; /* 내용이 배경 이미지 위에 오도록 설정 */
 }
 
-.App-link {
-  color: #61dafb;
+/* Right section for the recipe list and other content */
+.right-section {
+  width: 45%;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative; /* 상대 위치 설정 */
+  z-index: 1; /* 내용이 배경 이미지 위에 오도록 설정 */
 }
 
-.Footer {
-  margin-top: auto;
-  background-color: grey;
+.right-top-sf {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+  margin: 0 auto;
+  width: 100%;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.content-wrapper {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
