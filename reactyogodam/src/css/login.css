@@ -1,90 +1,100 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: Arial, sans-serif;
-    background-color: #fff;
+.login_container {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
+    background-color: #f0f0f0;
+    user-select: none; /* 드래그 방지 */
 }
 
-.container {
-    width: 90%;
-    max-width: 400px;
-    text-align: center;
-}
-
-header {
+.btn_container {
     display: flex;
-    justify-content: flex-start;
-    padding: 10px 0;
+    justify-content: center;
+    margin-top: 20px;
 }
 
-.back-button {
-    width: 28px; /* 아이콘 크기 조절 */
-    height: 28px; /* 아이콘 크기 조절 */
-    background-image: url('../img/back.png'); /* 아이콘 이미지 경로 */
-    background-size: cover; /* 아이콘이 요소 크기에 맞게 조정 */
-    display: inline-block; /* 아이콘을 인라인 블록 요소로 설정 */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    height: 100vh;
+    margin: 0;
+    justify-content: center;
+    align-items: center;
+    user-select: none; /* 드래그 방지 */
 }
-
-.bannerImg{
-    background-image: url('../img/banner.png'); /* 아이콘 이미지 경로 */
-    height: 13px;
-    width:20px;
-    color: #FF7F00;
-    margin: 20px 0;
-}
-
 
 form {
     display: flex;
     flex-direction: column;
-}
-
-.input-group {
-    margin-bottom: 15px;
-}
-
-label {
-    display: none;
-}
-
-input[type="email"], input[type="password"] {
+    align-items: center;
     width: 100%;
-    padding: 15px;
-    margin: 5px 0;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 16px;
+    max-width: 400px;
+    padding: 40px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    position: relative;
 }
 
-input::placeholder {
-    color: #ccc;
-}
-
-.login-button {
-    background-color: #FF7F00;
-    color: #fff;
+.back_button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    padding: 5px 10px;
+    background-color: #ff7f27;
     border: none;
     border-radius: 5px;
-    padding: 15px;
+    color: white;
     font-size: 16px;
     cursor: pointer;
+    width: auto; /* 너비를 자동으로 설정 */
+}
+
+button[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 20px;
+    background-color: #ff7f27;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button[type="submit"]:hover, .back_button:hover {
+    background-color: #ff5722;
+}
+
+input[type="text"], input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+h1 {
+    font-size: 32px;
+    color: #ff7f27;
+    margin-bottom: 20px;
+}
+
+h2 {
+    font-size: 24px;
+    color: #ff7f27;
+    margin-bottom: 10px;
+}
+
+p {
     margin-top: 20px;
 }
 
-.signup-text {
-    margin-top: 20px;
-    color: #666;
-}
-
-.signup-text a {
-    color: #FF7F00;
+a {
+    color: #ff7f27;
     text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
 }
