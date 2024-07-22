@@ -28,17 +28,6 @@ body {
     position: relative;
 }
 
-.subtitle::before,
-.subtitle::after {
-    content: "";
-    display: inline-block;
-    width: 50px;
-    height: 1px;
-    background-color: #000;
-    position: absolute;
-    top: 50%;
-}
-
 .subtitle::before {
     left: -60px;
 }
