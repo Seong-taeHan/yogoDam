@@ -1,10 +1,11 @@
 .banner-container {
     position: relative; /* 자식 요소인 .dots의 절대 위치를 기준으로 설정 */
     width: 100% -47px;
-    height: 40vh; /* 화면 전체 높이로 설정 */
+    height: 20vh; /* 화면 전체 높이로 설정 */
     overflow: hidden; /* 이미지가 컨테이너를 넘지 않도록 설정 */
     border-radius: 10px; /* Add rounded corners to the container */
-    margin: 47px;
+    margin-top:10px;
+    margin-bottom: 10px;
     
   }
   
@@ -21,6 +22,8 @@
     height: 100%; /* 각 이미지가 슬라이더의 전체 높이를 차지하도록 설정 */
     object-fit: cover; /* 이미지 비율을 유지하면서 컨테이너를 가득 채우기 */
     display: block;
+    
+    
   }
   
   .dots {
