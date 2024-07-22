@@ -19,6 +19,9 @@ conn().then((connection) => {
     const userRouter = require('./routes/user');
     app.use('/user', userRouter);
 
+    const listRouter = require('./routes/list');
+    app.use('/list', listRouter);
+
     app.set('port', process.env.PORT || 8000);
     app.listen(app.get('port'), ()=>{
         console.log(`Server is running on ${app.get('port')}`);
