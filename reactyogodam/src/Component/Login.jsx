@@ -24,31 +24,34 @@ const Login = () => {
     };
 
     return (
-        <div className='login_container'>
-
-            <form onSubmit={handleSubmit} method='post'>
-                <div className='btn_container'>
-                <button type="button">◀</button>
+        <div class="container">
+        <header>
+            <a href="#" class="back-button"></a>
+        </header>
+        <main>
+            <a class="bannerImg"></a>
+            <form>
+                <div class="input-group">
+                    <label for="email">이메일을 입력해 주세요</label>
+                    <input type="email" id="email" placeholder="이메일을 입력해 주세요"/>
                 </div>
-                <h2>요리 고민 상담</h2>
-                <h1>요고담</h1>
-                <input
-                    type="text"
-                    placeholder="user_id"
-                    onChange={(e) => setUser_id(e.target.value)}
-                    required
-                />
-                <input
+                <div class="input-group">
+                    <label for="password">비밀번호를 입력해 주세요</label>
+                    <input
                     type="password"
                     placeholder="Password"
                     onChange={(e) => setUser_pw(e.target.value)}
-                    required
-                />
-                <button type="submit">로그인</button>
-                <p>아직 회원이 아니신가요? <Link to='/joinuser'>회원가입</Link></p>
+                    required/>
+                </div>
+                <button type="submit" class="login-button">로그인</button>
             </form>
-        </div>
+            <p class="signup-text">아직 회원이 아니신가요?<Link to='/joinuser'>회원가입</Link></p>
+        </main>
+    </div>
+
     );
 };
 
 export default Login;
+
+

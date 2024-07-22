@@ -42,11 +42,7 @@
     width: 80%;  /* 줄인 너비 */
   }
   
-  img{
-    
-    border-bottom-left-radius: 50px;
-    border-bottom-right-radius: 50px;
-  }
+
 
   
   /* RecipeDetails Styles */
