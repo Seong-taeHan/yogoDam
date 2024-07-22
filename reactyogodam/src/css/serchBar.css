@@ -1,6 +1,8 @@
 .search-bar {
     width: 80%;
     margin-bottom: 20px;
+    position: relative;
+    display: inline-block; 
 }
 
 .search-bar input {
@@ -9,4 +11,16 @@
     font-size: 16px;
     border: 1px solid #ccc;
     border-radius: 5px;
+}
+
+.search-bar input[type="text"] {
+    padding-right: 30px; /* 이미지가 텍스트 입력을 가리지 않도록 오른쪽 패딩 추가 */
+  }
+  
+.search-bar img{
+    position: absolute;
+    right: 7px; /* 오른쪽 여백을 조정하세요 */
+    top: 50%; /* 세로 중앙 정렬 */
+    transform: translateY(-50%); /* 정확한 세로 중앙 정렬을 위해 */
+    cursor: pointer; /* 이미지를 클릭 가능하게 만들고 싶다면 추가 */
 }
