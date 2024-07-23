@@ -24,9 +24,9 @@ const LecipeWrite = () => {
   };
 
   return (
-    <div>
+    <div className='login_container'>
       <form onSubmit={handleSubmit}>
-        <img src='썸네일 이미지 주소' alt='썸네일 이미지'></img>
+        <img className='bannerImg' src='../img/banner.png' alt='썸네일 이미지'></img>
         <h1>요리 제목 *필수</h1>
         <input type='text' placeholder='요리 제목 입력'></input>
         <div>요리 소개</div>
@@ -59,13 +59,6 @@ const LecipeWrite = () => {
               name="name"
               placeholder="재료"
               value={ingredient.name}
-              onChange={(event) => handleIngredientChange(index, event)}
-            />
-            <input
-              type="text"
-              name="price"
-              placeholder="가격"
-              value={ingredient.price}
               onChange={(event) => handleIngredientChange(index, event)}
             />
           </div>

@@ -1,7 +1,6 @@
 .home-container {
     margin-left: 47px;
     margin-right: 47px;
-    
 }
 
 /* 배너 슬라이드 */
@@ -94,8 +93,57 @@
     color: #000;
     margin-left: auto;
 }
+
 .product-img {
     width: 140px;
     height: 100px;
     object-fit: cover;
 }
+
+.product-card div h2 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.product-card div h2 button {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.product-card div h2 button img {
+    width: 24px;
+    height: 24px;
+}
+
+.product-card div h2 img {
+    margin-left: 8px;
+}
+
+.product-info div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.product-info div div {
+    display: flex;
+    align-items: center;
+}
+
+.product-info div div img {
+    margin-right: 4px;
+}
+
+.product-info div div p {
+    margin: 0;
+}
+
+.bookmark_icon{
+    width: 24px;
+    height: 24px;
+}
+.star_icon, p, img {
+    margin-bottom: 10px; /* 하단에 10px의 마진 추가 */
+  }

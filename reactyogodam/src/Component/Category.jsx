@@ -1,10 +1,9 @@
 import React from 'react'
 import '../css/Category.css';
 
-
 const Category = () => {
   return (
-<div class="container">
+    <div class="container">
         <h1 class="title">카테고리</h1>
         <div class="section">
             <h2 class="subtitle">음식종류</h2>
