@@ -2,8 +2,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    user-select: none; /* 드래그 방지 */
+    height: 90vh;
+    
 }
 
 .btn_container {
