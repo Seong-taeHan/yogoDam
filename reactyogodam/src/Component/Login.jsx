@@ -40,7 +40,6 @@ const Login = () => {
 
             <form onSubmit={handleSubmit} method='post'>
                 <div className='btn_container'>
-                <button type="button">◀</button>
                 </div>
                 <img className='bannerImg' src="./img/banner.png" alt="" />
                 <input
