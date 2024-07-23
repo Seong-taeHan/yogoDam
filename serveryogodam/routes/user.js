@@ -11,7 +11,7 @@ router.post('/login', async (req, res) => {
     const db = req.app.locals.db;
 
     try {
-        const sql = `SELECT user_pw FROM users WHERE user_id = :user_id`;
+        const sql = `SELECT user_id, user_pw, nick_name FROM users WHERE user_id = :user_id`;
         const user = await db.execute(sql, [user_id]);
 
         if (user.rows.length === 0) {
@@ -49,7 +49,7 @@ router.post('/join', async (req, res) => {
         res.status(201).send({ message: `${nick_name} 계정 생성` });
     } catch(err) {
         console.error('회원 가입 오류:', err);
-        res.status(500).send({ message: `${nick_name} 서버 연결 오류` });
+        res.status(500).send({ message: `서버 연결 오류` });
     }
 });
 

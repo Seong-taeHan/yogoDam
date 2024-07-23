@@ -29,7 +29,7 @@ const LecipeList = () => {
         // 검색어에 따른 필터링
         const lowercasedQuery = searchQuery.toLowerCase();
         const filtered = cardInfoList.filter(food =>
-            food.COOKING_METHOD && food.COOKING_METHOD.toLowerCase().includes(lowercasedQuery)
+            food.FOOD_NAME && food.FOOD_NAME.toLowerCase().includes(lowercasedQuery)
         );
         setFilteredList(filtered);
     }, [location.search, cardInfoList]);
