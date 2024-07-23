@@ -41,7 +41,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100px;
+  height: 80px;
   margin: 0 auto;
   width: 100%;
 }
@@ -49,7 +49,7 @@
 .content-wrapper {
   flex: 1;
   overflow-y: auto;
-  display: flex;
+  
   flex-direction: column;
   justify-content: center;
   align-items: center;
