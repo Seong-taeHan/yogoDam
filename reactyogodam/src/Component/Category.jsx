@@ -10,34 +10,6 @@ const Category = () => {
   };
 
   return (
-<<<<<<< HEAD
-    <div class="container">
-        <h1 class="title">카테고리</h1>
-        <div class="section">
-            <h2 class="subtitle">음식종류</h2>
-            <div class="category">
-                <div class="item">
-                    <div class="icon"></div>
-                    <p>한식</p>
-                </div>
-                <div class="item">
-                    <div class="icon"></div>
-                    <p>양식</p>
-                </div>
-                <div class="item">
-                    <div class="icon"></div>
-                    <p>중식</p>
-                </div>
-                <div class="item">
-                    <div class="icon"></div>
-                    <p>일식</p>
-                </div>
-                <div class="item">
-                    <div class="icon"></div>
-                    <p>기타</p>
-                </div>
-            </div>
-=======
     <div className="container">
       <h1 className="title">카테고리</h1>
       <div className="section">
@@ -63,7 +35,6 @@ const Category = () => {
             <div className="icon"></div>
             <p>기타</p>
           </div>
->>>>>>> main
         </div>
       </div>
       <div className="section">
