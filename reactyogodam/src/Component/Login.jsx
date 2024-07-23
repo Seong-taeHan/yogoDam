@@ -17,8 +17,15 @@ const Login = () => {
                 user_id: user_id,
                 user_pw: user_pw,
             });
-            console.log(response);
-            localStorage.setItem('token', response.data.token);
+            console.log(response.data);
+            const { userId, token, nickName, userEmail} = response.data;
+
+            localStorage.setItem('user_id', userId);
+            localStorage.setItem('token', token);
+            localStorage.setItem('nickName', nickName);
+            localStorage.setItem('userEmail', userEmail);
+
+
             navigate('/');
         } catch (error) {
             console.error('Login failed:', error);
@@ -35,7 +42,6 @@ const Login = () => {
 
             <form onSubmit={handleSubmit} method='post'>
                 <div className='btn_container'>
-                <button type="button">◀</button>
                 </div>
                 <img className='bannerImg' src="./img/banner.png" alt="" />
                 <input

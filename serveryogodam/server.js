@@ -29,5 +29,3 @@ conn().then((connection) => {
 }).catch(err => {
     console.log("서버 연결 실패")
 })
-
-

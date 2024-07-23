@@ -50,12 +50,30 @@ const Home = () => {
             <div>
                 {cardInfoList.map((product, index) => (
                     <div className="product-card" onClick={() => handleProductClick(product.id)}>
-                        <div className="product-rank">{index + 1}</div>
+                         <div className="product-rank">{index + 1}</div>
                         <img className="product-img" src={product.img} alt={product.name} />
                         <div className="product-info">
-                            <h2>{product.name}</h2>
-                            <p>{product.content}</p>
-                            <p className="product-price">{product.price.toLocaleString()} 원</p>
+                            <div>
+                                <h2>{product.name}</h2>
+                                <img className='bookmark_icon' src="../img/icon/bookmark.svg" alt="bookmark" />
+                            </div>
+
+                            <div>
+                                <div>
+                                    <div>
+                                        <div >
+                                            <img className="user_icon" src="../img/icon/User.svg" alt="user"/><p>{product.content}</p>
+                                        </div>
+                                        <div>
+                                            <img className='star_icon' src="../img/icon/star.svg" alt="star"/>
+                                            <p>5.0</p>
+                                            <br />
+                                        <img className='search_icon' src="../img/icon/search.svg" alt="search"/><p>2964</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p className="product-price">{product.price.toLocaleString()} 원</p>
+                            </div>
                         </div>
                     </div>
                 ))}
