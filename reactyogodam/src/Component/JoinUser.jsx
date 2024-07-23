@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from '../axios';
+import '../css/JoinUser.css'; // CSS 파일 경로 확인 필요
+
 
 const JoinUser = () => {
   const [user_name, setUser_name] = useState('');
@@ -71,7 +73,7 @@ const JoinUser = () => {
   };
 
   return (
-    <div>
+    <div className='joinUser_container'>
       <form onSubmit={handleSubmit}>
         <p>이름</p>
         <input

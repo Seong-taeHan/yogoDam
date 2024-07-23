@@ -49,7 +49,7 @@
   .dot.active {
     border: none;
     outline: none;
-    background-color: inherit;
+    background-color: #ff6600; /* 활성화된 도트 색상 */
     cursor: pointer;
   }
   
