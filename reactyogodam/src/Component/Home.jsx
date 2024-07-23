@@ -68,7 +68,7 @@ const Home = () => {
                                             <img className='star_icon' src="../img/icon/star.svg" alt="star"/>
                                             <p>5.0</p>
                                             <br />
-                                        <img src="../img/icon/search.svg" alt="search"/><p>2964</p>
+                                        <img className='search_icon' src="../img/icon/search.svg" alt="search"/><p>2964</p>
                                         </div>
                                     </div>
                                 </div>

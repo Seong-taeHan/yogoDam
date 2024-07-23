@@ -144,6 +144,8 @@
     width: 24px;
     height: 24px;
 }
-.star_icon, p, img {
-    margin-bottom: 10px; /* 하단에 10px의 마진 추가 */
-  }
+.star_icon, .user_icon, .search_icon{
+    width: 24px;
+    height: 24px;
+    margin: 5px;
+}
