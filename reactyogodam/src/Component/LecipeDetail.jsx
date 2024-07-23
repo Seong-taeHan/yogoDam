@@ -23,7 +23,7 @@ const LecipeDetail = () => {
                     <span className='tag'>초급요리</span>
                 </div>
                 <h2>재료</h2>
-                <table>
+                <table className='ingredient_table'>
                     <tbody>
                         <tr>
                             <td>중간크기 감자</td>
