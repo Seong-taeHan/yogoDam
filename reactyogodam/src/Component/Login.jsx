@@ -17,8 +17,13 @@ const Login = () => {
                 user_id: user_id,
                 user_pw: user_pw,
             });
-            console.log(response);
-            localStorage.setItem('token', response.data.token);
+            console.log(response.data);
+            const { user_id: userId, token, nickName } = response.data;
+
+            localStorage.setItem('user_id', userId);
+            localStorage.setItem('token', token);
+            localStorage.setItem('nickName', nickName);
+
             navigate('/');
         } catch (error) {
             console.error('Login failed:', error);
