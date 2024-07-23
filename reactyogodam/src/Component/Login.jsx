@@ -18,11 +18,13 @@ const Login = () => {
                 user_pw: user_pw,
             });
             console.log(response.data);
-            const { user_id: userId, token, nickName } = response.data;
+            const { userId, token, nickName, userEmail} = response.data;
 
             localStorage.setItem('user_id', userId);
             localStorage.setItem('token', token);
             localStorage.setItem('nickName', nickName);
+            localStorage.setItem('userEmail', userEmail);
+
 
             navigate('/');
         } catch (error) {
