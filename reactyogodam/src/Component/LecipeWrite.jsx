@@ -33,6 +33,10 @@ const LecipeWrite = () => {
     setSteps([...steps, { description: '', image: null, imagePreview: null }]);
   };
 
+  const handleRemoveStep = (index) => {
+    setSteps(steps.filter((_, i) => i !== index));
+  };
+
   const handleStepChange = (index, e) => {
     const newSteps = steps.map((step, i) => {
       if (i === index) {
@@ -49,7 +53,7 @@ const LecipeWrite = () => {
     reader.onloadend = () => {
       const newSteps = steps.map((step, i) => {
         if (i === index) {
-          return { ...step, image: reader.result, imagePreview: URL.createObjectURL(file) };
+          return { ...step, image: reader.result, imagePreview: URL.createObjectURL(file) }; // Base64 인코딩된 이미지 저장
         }
         return step;
       });
@@ -62,14 +66,10 @@ const LecipeWrite = () => {
     const file = e.target.files[0];
     const reader = new FileReader();
     reader.onloadend = () => {
-      setThumbnail(reader.result);
+      setThumbnail(reader.result); // Base64 인코딩된 이미지 저장
       setThumbnailPreview(URL.createObjectURL(file));
     };
     reader.readAsDataURL(file);
-  };
-
-  const handleRemoveStep = (index) => {
-    setSteps(steps.filter((_, i) => i !== index));
   };
 
   const handleSubmit = async (e) => {
@@ -177,7 +177,7 @@ const LecipeWrite = () => {
         {steps.map((step, index) => (
           <div key={index}>
             {step.imagePreview ? (
-              <img src={step.imagePreview} alt={`요리 순서 ${index + 1}`} style={{ width: '100px', height: '100px' }} />
+              <img src={step.imagePreview} alt={`요리 순서 ${index + 1}`} style={{ width: '300px', height: '300px' }} />
             ) : (
               <div style={{ width: '300px', height: '300px', border: '1px solid gray', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <span>이미지 없음</span>

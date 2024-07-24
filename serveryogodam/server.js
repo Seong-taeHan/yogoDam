@@ -11,6 +11,8 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); 
 
+
+
 conn().then((connection) => {
     app.locals.db = connection;
     const indexRouter = require('./routes');
