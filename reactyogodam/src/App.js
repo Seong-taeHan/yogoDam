@@ -16,7 +16,7 @@ import PlusIconButton from './Component/LecipeDetailButton';
 
 function App() {
   const location = useLocation();
-  const showSearchBar = !['/login', '/favorites', '/joinuser'].includes(location.pathname);
+  const showSearchBar = !['/login', '/favorites', '/joinuser','/userinfo'].includes(location.pathname);
 
   const PrivateRoute = ({ element: Element }) => {
     const token = localStorage.getItem('token');

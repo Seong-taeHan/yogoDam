@@ -1,19 +1,20 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from '../axios';
-import '../css/JoinUser.css'; // CSS 파일 경로 확인 필요
-
+import '../css/JoinUser.css'; // Make sure this path is correct
 
 const JoinUser = () => {
   const [user_name, setUser_name] = useState('');
   const [user_id, setUser_id] = useState('');
   const [user_pw, setUser_pw] = useState('');
+  const [user_pw_confirm, setUser_pw_confirm] = useState(''); // Added state for password confirmation
   const [nick_name, setNick_name] = useState('');
   const [user_email, setUser_email] = useState('');
-  const [user_phone, setUser_phone] = useState('');
+  const [user_phone, setUser_phone] = useState(''); // Changed to birthdate field
   const [idCheckMsg, setIdCheckMsg] = useState('');
   const [isIdValid, setIsIdValid] = useState(false);
+  const [page, setPage] = useState(1);
 
-  // 디바운스 함수
+  // Debounce function
   const debounce = (func, delay) => {
     let debounceTimer;
     return function(...args) {
@@ -25,9 +26,7 @@ const JoinUser = () => {
 
   const checkId = useCallback(debounce(async () => {
     try {
-      const idCheckRes = await axios.post('/user/idCheck', {
-        user_id: user_id,
-      });
+      const idCheckRes = await axios.post('/user/idCheck', { user_id });
       if (idCheckRes.data.available) {
         setIdCheckMsg('사용 가능한 ID입니다.');
         setIsIdValid(true);
@@ -51,6 +50,29 @@ const JoinUser = () => {
     }
   }, [user_id, checkId]);
 
+  const validatePage = (page) => {
+    const form = document.getElementById(`form-page-${page}`);
+    if (form) {
+      return form.checkValidity();
+    }
+    return false;
+  };
+
+  const handleNextPage = (e) => {
+    e.preventDefault();
+    if (validatePage(page)) {
+      setPage((prev) => prev + 1);
+    } else {
+      // Trigger form validation
+      document.getElementById(`form-page-${page}`).reportValidity();
+    }
+  };
+
+  const handlePrevPage = (e) => {
+    e.preventDefault();
+    setPage((prev) => prev - 1);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!isIdValid) {
@@ -59,12 +81,12 @@ const JoinUser = () => {
     }
     try {
       const joinRes = await axios.post('/user/join', {
-        user_name: user_name,
-        user_id: user_id,
-        user_pw: user_pw,
-        nick_name: nick_name,
-        user_email: user_email,
-        user_phone: user_phone,
+        user_name,
+        user_id,
+        user_pw,
+        nick_name,
+        user_email,
+        user_phone,
       });
       console.log(joinRes);
     } catch (error) {
@@ -74,52 +96,92 @@ const JoinUser = () => {
 
   return (
     <div className='joinUser_container'>
-      <form onSubmit={handleSubmit}>
-        <p>이름</p>
-        <input
-          type="text"
-          placeholder="user_name"
-          onChange={(e) => setUser_name(e.target.value)}
-          required
-        />
-        <p>아이디</p>
-        <input
-          type="text"
-          placeholder="user_id"
-          onChange={(e) => setUser_id(e.target.value)}
-          required
-        />
-        <p>{idCheckMsg}</p>
-        <p>비밀번호</p>
-        <input
-          type="password"
-          placeholder="Password"
-          onChange={(e) => setUser_pw(e.target.value)}
-          required
-        />
-        <p>닉네임</p>
-        <input
-          type="text"
-          placeholder="nick_name"
-          onChange={(e) => setNick_name(e.target.value)}
-          required
-        />
-        <p>이메일</p>
-        <input
-          type="email"
-          placeholder="e-mail"
-          onChange={(e) => setUser_email(e.target.value)}
-          required
-        />
-        <p>전화번호</p>
-        <input
-          type="tel"
-          placeholder="tel"
-          onChange={(e) => setUser_phone(e.target.value)}
-          required
-        />
-        <button type="submit">가입하기</button>
-      </form>
+      <h1>가입하기</h1>
+      {page === 1 && (
+        <form id="form-page-1">
+          <p>아이디</p>
+          <input
+            type="text"
+            placeholder="사용할 아이디를 입력해 주세요"
+            onChange={(e) => setUser_id(e.target.value)}
+            required
+          />
+          <p>닉네임</p>
+          <input
+            type="text"
+            placeholder="사용할 닉네임을 입력해 주세요"
+            onChange={(e) => setNick_name(e.target.value)}
+            required
+          />
+          <p>이메일</p>
+          <input
+            type="email"
+            placeholder="이메일을 입력해 주세요"
+            onChange={(e) => setUser_email(e.target.value)}
+            required
+          />
+          <div className="pagination">
+            <span className="dot active"></span>
+            <span className="dot"></span>
+            <span className="dot"></span>
+          </div>
+          <button type="submit" onClick={handleNextPage}>다음</button>
+        </form>
+      )}
+      {page === 2 && (
+        <form id="form-page-2">
+          <p>비밀번호</p>
+          <input
+            type="password"
+            placeholder="비밀번호를 입력해 주세요"
+            onChange={(e) => setUser_pw(e.target.value)}
+            required
+          />
+          <p>비밀번호 확인</p>
+          <input
+            type="password"
+            placeholder="비밀번호를 입력해 주세요"
+            onChange={(e) => setUser_pw_confirm(e.target.value)}
+            required
+          />
+          <p>생년월일</p>
+          <input
+            type="date"
+            placeholder="생년월일을 입력해 주세요"
+            onChange={(e) => setUser_phone(e.target.value)}
+            required
+          />
+          <div className="pagination">
+            <span className="dot"></span>
+            <span className="dot active"></span>
+            <span className="dot"></span>
+          </div>
+          <button type="submit" onClick={handleNextPage}>다음</button>
+        </form>
+      )}
+      {page === 3 && (
+        <form id="form-page-3" onSubmit={handleSubmit}>
+          <p>이름</p>
+          <input
+            type="text"
+            placeholder="이름을 입력해 주세요"
+            onChange={(e) => setUser_name(e.target.value)}
+            required
+          />
+          <p>성별</p>
+          <div className="gender-container">
+            <button type="button" className="gender-button">남성</button>
+            <button type="button" className="gender-button">여성</button>
+          </div>
+          <div className="pagination">
+            <span className="dot"></span>
+            <span className="dot"></span>
+            <span className="dot active"></span>
+          </div>
+          <button type="submit">가입하기</button>
+        </form>
+      )}
+      <p>이미 계정이 있으신가요? <a href="/login">로그인</a></p>
     </div>
   );
 };
