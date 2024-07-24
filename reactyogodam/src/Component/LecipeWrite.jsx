@@ -78,7 +78,7 @@ const LecipeWrite = () => {
       user_id,
       nickName,
       title: e.target[1].value,
-      introduction: e.target[2].value,
+      notification: e.target[2].value,
       cookTime: e.target[3].value,
       category1: e.target[4].value,
       category2: e.target[5].value,
