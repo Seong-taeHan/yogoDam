@@ -144,5 +144,37 @@ router.post('/favorites/toggle', async (req, res) => {
     }
 });
 
+router.get('/favorites/list', async (req, res) => {
+    const db = req.app.locals.db;
+    const { user_id } = req.query;
+
+    try {
+        const result = await db.execute(`
+            SELECT f.FOOD_ID, f.FOOD_NAME, f.FOOD_IMG 
+            FROM USEFAVORITES fav 
+            JOIN FOODS f ON fav.FOOD_ID = f.FOOD_ID 
+            WHERE fav.USER_ID = :user_id AND fav.IS_FAVORITED = 'Y'`, [user_id]
+        );
+        
+        const favorites = await Promise.all(result.rows.map(async row => {
+            let imageBase64 = null;
+            if (row.FOOD_IMG) {
+                const blob = await row.FOOD_IMG.getData();
+                imageBase64 = blob.toString('base64');
+            } return {
+                FOOD_ID: row.FOOD_ID,
+                FOOD_NAME: row.FOOD_NAME,
+                FOOD_IMG: imageBase64
+            }
+
+        }));
+
+        res.status(200).json(favorites);
+    } catch (err) {
+        console.error('즐겨찾기 목록 조회 오류:', err);
+        res.status(500).send({ message: '서버 오류' });
+    }
+});
+
 
 module.exports = router;

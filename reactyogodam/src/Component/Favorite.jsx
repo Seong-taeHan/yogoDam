@@ -1,30 +1,46 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from '../axios';
 import '../css/Favorite.css';
 
 function Favorite() {
-    const itemList = [
-        { title: "돼지불고기1", mark: true, img: "/img/testImg/totoro1.png" },
-        { title: "돼지불고기2", mark: true, img: "/img/testImg/totoro1.png" },
-        { title: "돼지불고기3", mark: true, img: "/img/testImg/totoro1.png" },
-        { title: "돼지불고기4", mark: true, img: "/img/testImg/totoro1.png" },
-    ];
+    const [favorites, setFavorites] = useState([]);
+
+    useEffect(() => {
+        const user_id = localStorage.getItem('user_id');
+        
+        axios.get('http://localhost:8000/list/favorites/list', {
+            params: {
+                user_id: user_id // 실제 사용자 ID를 사용
+            }
+        })
+        .then(response => {
+            const favoriteItems = response.data.map(item => ({
+                title: item.FOOD_NAME,
+                img: item.FOOD_IMG ? `data:image/jpg;base64,${item.FOOD_IMG}` : null,
+                mark: true
+            }));
+            setFavorites(favoriteItems);
+        })
+        .catch(error => {
+            console.error('즐겨찾기 데이터를 불러오는 중 오류 발생:', error);
+        });
+    }, []);
 
     return (
         <div className="FavoriteContainer">
             <div className='TopBar'>
-                <img src='./img/icon/leftarrow.svg' className='Arrow'/>
+                <img src='./img/icon/leftarrow.svg' className='Arrow' alt='Back'/>
                 <h1>내가 찜한 레시피</h1>
             </div>
             <div className="RecipeList">
-                {itemList.map((item, index) => (
+                {favorites.map((item, index) => (
                     <div className="RecipeItem" key={index}>
                         <div className='cm'>
                             <img src={item.img} alt={item.title} />
                             <div className="RecipeDetails">
                                 <h3>{item.title}</h3>
-                                {item.mark && <div className="Mark"><img className="bookmark" src="./img/icon/bookmark.svg" /></div>}
+                                {item.mark && <div className="Mark"><img className="bookmark" src="./img/icon/bookmark.svg" alt="Bookmark" /></div>}
                             </div>
-                            
                         </div>
                     </div>
                 ))}
