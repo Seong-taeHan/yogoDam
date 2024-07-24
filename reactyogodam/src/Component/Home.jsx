@@ -2,6 +2,7 @@ import React from 'react';
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import BannerSlide from './BannerSlide';
+import axios from 'axios';
 import '../css/home.css';
 
 const Home = () => {
@@ -15,18 +16,23 @@ const Home = () => {
 
     const navigate = useNavigate();
     
-    const products = [
-        { id: 1, name: "상품1", img:'/img/testImg/groundImg.png', price: 1000, content: "상품1입니다" },
-        { id: 2, name: "상품2", img:'/img/testImg/totoro1.png', price: 2000, content: "상품2입니다" },
-        { id: 3, name: "상품3", img:'/img/testImg/test1.png', price: 3000, content: "상품3입니다" },
-        { id: 4, name: "상품4", img:'/img/testImg/groundImg.png', price: 3000, content: "상품3입니다" },
-        { id: 5, name: "상품5", img:'/img/testImg/totoro1.png', price: 3000, content: "상품3입니다" },
-        { id: 6, name: "상품6", img:'/img/testImg/test1.png', price: 3000, content: "상품3입니다" }
-    ];
-
     useEffect(() => {
-        setCardInfoList(products);
-    }, [])
+        axios.get('http://localhost:8000/list/products')
+            .then(response => {
+                const products = response.data.map(item => ({
+                    id: item.FOOD_ID,
+                    name: item.FOOD_NAME,
+                    img: `data:image/jpeg;base64,${item.FOOD_IMG}`,
+                    price: item.FOOD_PRICE,
+                    content: item.CUSINE_TYPE,
+                }));
+                setCardInfoList(products);
+            })
+            .catch(error => {
+                console.error('There was an error fetching the data!', error);
+            });
+    }, []);
+
 
     const handleProductClick = (id) => {
         navigate(`/lecipeDetail/${id}`);
