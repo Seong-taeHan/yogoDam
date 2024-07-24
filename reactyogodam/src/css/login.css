@@ -5,23 +5,7 @@
     height: 90vh;
 }
 
-.btn_container {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-}
-
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
-    height: 100vh;
-    margin: 0;
-    justify-content: center;
-    align-items: center;
-    user-select: none; /* 드래그 방지 */
-}
-
-form {
+.ctn {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -52,7 +36,7 @@ form {
     width: auto; /* 너비를 자동으로 설정 */
 }
 
-button[type="submit"] {
+.ctn button[type="submit"] {
     width: 100%;
     padding: 10px;
     margin-top: 20px;
@@ -64,11 +48,11 @@ button[type="submit"] {
     cursor: pointer;
 }
 
-button[type="submit"]:hover, .back_button:hover {
+.ctn button[type="submit"]:hover, .back_button:hover {
     background-color: #ff5722;
 }
 
-input[type="text"], input[type="password"] {
+.ctn input[type="text"], input[type="password"] {
     width: 100%;
     padding: 10px;
     margin: 10px 0;
@@ -76,23 +60,15 @@ input[type="text"], input[type="password"] {
     border-radius: 5px;
 }
 
-h1 {
-    font-size: 32px;
-    color: #ff7f27;
-    margin-bottom: 20px;
-}
-
- 
-
-p {
+.ctn p Link {
     margin-top: 20px;
 }
 
-a {
+.ctn a {
     color: #ff7f27;
     text-decoration: none;
 }
 
-a:hover {
+.ctn a:hover {
     text-decoration: underline;
 }

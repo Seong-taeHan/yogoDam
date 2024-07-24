@@ -40,9 +40,7 @@ const Login = () => {
     return (
         <div className='login_container'>
 
-            <form onSubmit={handleSubmit} method='post'>
-                <div className='btn_container'>
-                </div>
+            <form className='ctn' onSubmit={handleSubmit} method='post'>
                 <img className='bannerImg' src="./img/banner.png" alt="" />
                 <input
                     type="text"

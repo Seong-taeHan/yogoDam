@@ -15,17 +15,17 @@
   justify-content: space-between; /* 이 부분을 수정 */
 }
   
-  .TopBar .Arrow {
-    margin-right: 10px;
-    cursor: pointer;
-    width: 31px;
-    height: 33px;
-    margin-bottom: 8px;
-  }
-  .TopBar h1 {
-    display: flex;
-    margin: auto; /* 추가된 부분 */
-  }
+.TopBar .Arrow {
+  margin-right: 10px;
+  cursor: pointer;
+  width: 31px;
+  height: 33px;
+  margin-bottom: 8px;
+}
+.TopBar h1 {
+  display: flex;
+  margin: auto; /* 추가된 부분 */
+}
 /* RecipeList Styles */
 .RecipeList {
   display: grid;
