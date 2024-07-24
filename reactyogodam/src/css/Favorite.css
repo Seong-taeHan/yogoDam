@@ -8,72 +8,62 @@
   }
   
   /* TopBar Styles */
-  .TopBar {
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-  }
+.TopBar {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  justify-content: space-between; /* 이 부분을 수정 */
+}
   
   .TopBar .Arrow {
     margin-right: 10px;
     cursor: pointer;
+    width: 31px;
+    height: 33px;
+    margin-bottom: 8px;
   }
-  
-  /* Title Styles */
-  .FavoriteContainer h1 {
-    font-size: 24px;
-    font-weight: bold;
-  }
-  
-  /* RecipeList Styles */
-  .RecipeList {
+  .TopBar h1 {
     display: flex;
-    flex-direction: column;
+    margin: auto; /* 추가된 부분 */
   }
-  
-  /* RecipeItem Styles */
-  .RecipeItem {
-    display: flex;
-    align-items: center;
-    padding: 10px;
-    margin-bottom: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    position: relative;  /* Positioning for the bookmark icon */
-    width: 80%;  /* 줄인 너비 */
-  }
-  
+/* RecipeList Styles */
+.RecipeList {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
 
+.RecipeItem {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: #fff;
+  border-radius: 100;
+}
 
-  
-  /* RecipeDetails Styles */
-  .RecipeDetails {
-    display: flex;
-    flex-grow: 1;
-    padding: 5px 10px;
-  }
-  .cm{
-    flex-direction: column;
-    background-color: #ff9900;
-    border-bottom-left-radius: 50px;
-    border-bottom-right-radius: 50px;
-  }
-  
-  .RecipeDetails h3 {
-    font-size: 14px;
-    font-weight: bold;
-    margin: 0;
-    color: white; /* White text to match the example */
-  }
-  
-  .RecipeDetails p {
-    display: none; /* Hide the description text as it is not present in the example */
-  }
-  
-  .Mark {
-    font-size: 20px;
-    color: white; /* White bookmark icon */
-    position: absolute;  /* Absolute positioning to place it in the corner */
-    right: 10px;
-    top: 10px;
-  }
-  
+.RecipeItem .cm {
+  position: relative;
+}
+
+.RecipeItem img {
+  width: 100%;
+  height: auto;
+}
+
+.RecipeDetails h3 {
+  font-size: 16px;
+  color: #333;
+  padding: 5px;
+}
+
+.Mark {
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  justify-content: flex-end;
+}
+.RecipeItem .bookmark {
+  width: 17px;
+}
