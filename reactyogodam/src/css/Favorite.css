@@ -25,6 +25,8 @@
 .TopBar h1 {
   display: flex;
   margin: auto; /* 추가된 부분 */
+  color: #ff7f27;
+  font-size: 33px;
 }
 /* RecipeList Styles */
 .RecipeList {

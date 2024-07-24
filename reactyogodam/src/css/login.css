@@ -27,7 +27,7 @@
     top: 20px;
     left: 20px;
     padding: 5px 10px;
-    background-color: #ff7f27;
+    background-color: rgb(255, 127, 39);
     border: none;
     border-radius: 5px;
     color: white;
@@ -60,7 +60,7 @@
     border-radius: 5px;
 }
 
-.ctn p Link {
+.ctn p, Link {
     margin-top: 20px;
 }
 

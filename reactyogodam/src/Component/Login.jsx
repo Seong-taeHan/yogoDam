@@ -41,7 +41,7 @@ const Login = () => {
         <div className='login_container'>
 
             <form className='ctn' onSubmit={handleSubmit} method='post'>
-                <img className='bannerImg' src="./img/banner.png" alt="" />
+                <img className='bannerImg' src="./img/banner.png"/>
                 <input
                     type="text"
                     placeholder="user_id"
