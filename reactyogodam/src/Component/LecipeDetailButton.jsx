@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import '../css/PlusIconButton.css';
 
 const PlusIconButton = () => {
   const navigate = useNavigate();
@@ -10,7 +11,7 @@ const PlusIconButton = () => {
 
   return (
     <div className="plus-icon-button" onClick={handleClick}>
-      <div className="plus-icon">누르면 작성 화면으로 넘어가유</div>
+      <div className="plus-icon">+</div>
     </div>
   );
 };

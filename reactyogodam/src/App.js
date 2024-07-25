@@ -17,6 +17,7 @@ import PlusIconButton from './Component/LecipeDetailButton';
 function App() {
   const location = useLocation();
   const showSearchBar = !['/login', '/favorites', '/joinuser','/userinfo'].includes(location.pathname);
+  const showPlusIconButton = !['/lecipeWrite'].includes(location.pathname);
 
   const PrivateRoute = ({ element: Element }) => {
     const token = localStorage.getItem('token');
@@ -48,7 +49,7 @@ function App() {
               <Route path='/favorites' element={<Favorite />} />
             </Routes>
           </div>
-          <PlusIconButton />
+          {showPlusIconButton && <PlusIconButton />}
           <Footer />
         </div>
       </div>

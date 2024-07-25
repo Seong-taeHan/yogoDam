@@ -1,0 +1,21 @@
+.plus-icon-button {
+    position: fixed;
+    bottom: 100px;
+    right: 150px;
+    width: 60px;
+    height: 60px;
+    background-color: #ff7f00;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    font-size: 36px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .plus-icon-button:hover {
+    background-color: #e06b00;
+  }
