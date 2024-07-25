@@ -93,3 +93,7 @@
     line-height: 1.5;
     margin-bottom: 10px;
 }
+
+th{
+    text-align: center; /* 텍스트 수평 가운데 정렬 */
+}
