@@ -193,8 +193,7 @@ router.get('/recipes/detail', async (req, res) => {
       unit: row.INGRED_UNIT,
       price: row.INGRED_PRICE
     }));
-    console.log(ingredients.rows)
-
+    
     const stepsResult = await db.execute(
       `SELECT STEPORDER, DESCRIPTION, STEP_IMG
       FROM FOOD_STEPS
@@ -208,7 +207,7 @@ router.get('/recipes/detail', async (req, res) => {
         imageBase64 = blob.toString('base64');
       }
       return {
-        order: row.STEP_ORDER,
+        order: row.STEPORDER,
         description: row.DESCRIPTION,
         image: imageBase64
       };

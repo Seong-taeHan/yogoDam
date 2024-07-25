@@ -71,8 +71,9 @@ const LecipeDetail = () => {
                 <div className='instructions'>
                     {recipeDetail.steps.map((step, index) => (
                         <div key={index}>
-                            <p>{step.order}. {step.description}</p>
                             {step.image && <img src={`data:image/png;base64,${step.image}`} alt={`Step ${step.order}`} />}
+                            <p>{step.order}. {step.description}</p>
+                            <p>{step.order}/{recipeDetail.steps.length}</p>
                         </div>
                     ))}
                 </div>
