@@ -6,10 +6,10 @@ const JoinUser = () => {
   const [user_name, setUser_name] = useState('');
   const [user_id, setUser_id] = useState('');
   const [user_pw, setUser_pw] = useState('');
-  const [user_pw_confirm, setUser_pw_confirm] = useState(''); // Added state for password confirmation
+  const [user_pw_confirm, setUser_pw_confirm] = useState(''); 
   const [nick_name, setNick_name] = useState('');
   const [user_email, setUser_email] = useState('');
-  const [user_phone, setUser_phone] = useState(''); // Changed to birthdate field
+  const [user_birth, setUser_birth] = useState(''); 
   const [idCheckMsg, setIdCheckMsg] = useState('');
   const [isIdValid, setIsIdValid] = useState(false);
   const [page, setPage] = useState(1);
@@ -148,7 +148,7 @@ const JoinUser = () => {
           <input
             type="date"
             placeholder="생년월일을 입력해 주세요"
-            onChange={(e) => setUser_phone(e.target.value)}
+            onChange={(e) => setUser_birth(e.target.value)}
             required
           />
           <div className="pagination">
