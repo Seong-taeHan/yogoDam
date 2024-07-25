@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from '../axios';
 import '../css/Favorite.css';
 
 function Favorite() {
     const [favorites, setFavorites] = useState([]);
+    const nav = useNavigate();
 
     useEffect(() => {
         const user_id = localStorage.getItem('user_id');
@@ -15,6 +17,7 @@ function Favorite() {
         })
         .then(response => {
             const favoriteItems = response.data.map(item => ({
+                id : item.FOOD_ID,
                 title: item.FOOD_NAME,
                 img: item.FOOD_IMG ? `data:image/jpg;base64,${item.FOOD_IMG}` : null,
                 mark: true
