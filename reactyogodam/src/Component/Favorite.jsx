@@ -15,6 +15,7 @@ function Favorite() {
         })
         .then(response => {
             const favoriteItems = response.data.map(item => ({
+                id : item.FOOD_ID,
                 title: item.FOOD_NAME,
                 img: item.FOOD_IMG ? `data:image/jpg;base64,${item.FOOD_IMG}` : null,
                 mark: true

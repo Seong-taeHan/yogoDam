@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axios from '../axios';
 import '../css/cardList.css';
 
 const LecipeList = () => {
@@ -11,7 +11,7 @@ const LecipeList = () => {
 
     useEffect(() => {
         // 백엔드에서 데이터 가져오기
-        axios.get('http://localhost:8000/list/products')
+        axios.get('http://localhost:8000/list/lecipes')
             .then(response => {
                 console.log("DB 데이터 응답 확인 : ", response.data);
                 setCardInfoList(response.data);
@@ -45,11 +45,11 @@ const LecipeList = () => {
                     filteredList.map((food, index) => (
                         <div className="product-card" key={food.FOOD_ID} onClick={() => handleProductClick(food.FOOD_ID)}>
                             <div className="product-rank">{index + 1}</div>
-                            <img className="product-img" src={food.FOOD_IMG} alt={food.FOOD_NAME} />
+                            <img className="product-img" src={food.FOOD_IMG ? `data:image/jpg;base64,${food.FOOD_IMG}` : null} alt={food.FOOD_NAME} />
                             <div className="product-info">
                                 <h2>{food.FOOD_NAME}</h2>
-                                <p>{food.COOKING_METHOD}</p>
-                                <p className="product-price">{food.FOOD_PRICE.toLocaleString()} 원</p>
+                                <p>{food.NOTIFICATION}</p>
+                                <p className="product-price">{food.FOOD_PRICE} 원</p>
                             </div>
                         </div>
                     ))
