@@ -1,68 +1,84 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import axios from '../axios';
 import '../css/LecipeDetail.css';
 
 const LecipeDetail = () => {
-    const products = [
-      { id: 1, name: "백선생 레시피, 겉은 바삭 속은 쫀득한 감자채전 만들기1", price: 50000, content: "1늘 똑같은 감자전에 지겨우시다면 감자채전으로 어떠세요?", thumbnail: "썸네일.png", calories: 279 },
-      { id: 2, name: "백선생 레시피, 겉은 바삭 속은 쫀득한 감자채전 만들기2", price: 50000, content: "2늘 똑같은 감자전에 지겨우시다면 감자채전으로 어떠세요?", thumbnail: "썸네일.png", calories: 279 },
-      { id: 3, name: "백선생 레시피, 겉은 바삭 속은 쫀득한 감자채전 만들기3", price: 50000, content: "3늘 똑같은 감자전에 지겨우시다면 감자채전으로 어떠세요?", thumbnail: "썸네일.png", calories: 279 },
-    ];
+    const { food_id } = useParams();
+    const [recipeDetail, setRecipeDetail] = useState(null);
+
+    useEffect(() => {
+        // 백엔드에서 데이터 가져오기
+        const fetchData = async () => {
+            try {
+                console.log("Fetching data for food_id:", food_id);
+                const response = await axios.get('http://localhost:8000/list/recipes/detail', {
+                    params: {
+                        food_id
+                    }
+                });
+                console.log("DB 데이터 응답 확인 : ", response.data);
+                setRecipeDetail(response.data);
+            } catch (error) {
+                console.error("데이터를 가져오는 중 오류가 발생했습니다:", error);
+            }
+        };
+
+        if (food_id) { // food_id가 존재하는지 확인
+            fetchData();
+        }
+    }, [food_id]);
+
+    if (!recipeDetail) {
+        console.log("RecipeDetail is null, food_id:", food_id);
+        return <div>로딩 중...</div>; // 데이터가 아직 로드되지 않은 경우
+    }
 
     return (
         <div className='LecipeDetail_container'>
             <div className='lp_container'>
                 <div className='image-placeholder'>
-                    <img src={products.thumbnail} alt={products.name} />
+                    {recipeDetail.recipe.image && 
+                        <img src={`data:image/png;base64,${recipeDetail.recipe.image}`} alt={recipeDetail.recipe.name} />
+                    }
                 </div>
-                <h1>{products.name}</h1>
-                <p>{products.content}</p>
+                <h1>{recipeDetail.recipe.name}</h1>
+                <p>{recipeDetail.recipe.notification}</p>
                 <div className='tags'>
-                    <span className='tag'>10분 이내</span>
+                    <span className='tag'>{recipeDetail.recipe.cookTime}</span>
                 </div>
-                <h2>재료</h2>
                 <table className='ingredient_table'>
                     <tbody>
                         <tr>
-                            <td>중간크기 감자</td>
-                            <td>2개</td>
-                            <td>10,000원</td>
+                            <th>재료</th>
+                            <th>계량</th>
+                            <th>이번 달 평균가</th>
                         </tr>
-                        <tr>
-                            <td>소금</td>
-                            <td>1/2티스푼</td>
-                            <td>10,000원</td>
-                        </tr>
-                        <tr>
-                            <td>부침가루</td>
-                            <td>1.5큰술</td>
-                            <td>10,000원</td>
-                        </tr>
-                        <tr>
-                            <td>후추</td>
-                            <td>약간</td>
-                            <td>10,000원</td>
-                        </tr>
-                        <tr>
-                            <td>식용유</td>
-                            <td>넉넉하게</td>
-                            <td>10,000원</td>
-                        </tr>
+                        {recipeDetail.ingredients.map((ingredient, index) => (
+                            <tr key={index}>
+                                <td>{ingredient.name}</td>
+                                <td>{ingredient.amount} {ingredient.unit}</td>
+                                <td>{ingredient.price}</td>
+                            </tr>
+                        ))}
                     </tbody>
                 </table>
                 <div className='summary'>
-                    <span>{products.calories} kcal</span>
-                    <span>합계 {products.price} 원</span>
+                    <span>{recipeDetail.recipe.calories} kcal</span>
+                    <span>합계 {recipeDetail.recipe.price} 원</span>
                 </div>
                 <h2>요리순서</h2>
                 <div className='instructions'>
-                    <p>1. 먼저 감자들은 감자의 껍질을 벗겨준 뒤 얇게 채를 썰어주세요.</p>
-                    <p>2. 얇게 썬 감자는 흐르는 물에 두어 번 헹궈 전분기를 빼주세요. 전분기를 빼지 않으면 찰벼치대에서 찰벼를 만듭니다.</p>
-                    <p>3. 헹군 감자는 물기를 꼭 짜준 뒤 부침가루 1.5 큰 술 소금 약간, 후추 약간을 넣고 버무려주세요.</p>
+                    {recipeDetail.steps.map((step, index) => (
+                        <div key={index}>
+                            <p>{step.order}. {step.description}</p>
+                            {step.image && <img src={`data:image/png;base64,${step.image}`} alt={`Step ${step.order}`} />}
+                        </div>
+                    ))}
                 </div>
             </div>
         </div>
     );
-}
+};
 
 export default LecipeDetail;

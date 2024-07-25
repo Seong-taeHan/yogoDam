@@ -39,7 +39,7 @@ function App() {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/lecipeList" element={<LecipeList />} />
-              <Route path="/lecipeDetail/:id" element={<LecipeDetail />} />
+              <Route path="/lecipeDetail/:food_id" element={<LecipeDetail />} />
               <Route path='/lecipeWrite' element={<LecipeWrite />} />
               <Route path="/login" element={<Login />} />
               <Route path='/userinfo' element={<UserInfo />}></Route>

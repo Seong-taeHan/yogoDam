@@ -176,5 +176,71 @@ router.get('/favorites/list', async (req, res) => {
     }
 });
 
+// 레시피 상세 조회
+router.get('/recipes/detail', async (req, res) => {
+  const db = req.app.locals.db;
+  const food_id = req.query.food_id;
+
+  try {
+    const result = await db.execute(
+      `SELECT INGRE_NAME, AMOUNT, INGRED_UNIT, INGRED_PRICE
+      FROM INGREDIENTS
+      WHERE FOOD_ID = :food_id`, [food_id]);
+    
+    const ingredients = result.rows.map(row => ({
+      name: row.INGRE_NAME,
+      amount: row.AMOUNT,
+      unit: row.INGRED_UNIT,
+      price: row.INGRED_PRICE
+    }));
+    console.log(ingredients.rows)
+
+    const stepsResult = await db.execute(
+      `SELECT STEPORDER, DESCRIPTION, STEP_IMG
+      FROM FOOD_STEPS
+      WHERE FOOD_ID = :food_id
+      ORDER BY STEPORDER`, [food_id]);
+
+    const steps = await Promise.all(stepsResult.rows.map(async row => { 
+      let imageBase64 = null;
+      if (row.STEP_IMG) {
+        const blob = await row.STEP_IMG.getData();
+        imageBase64 = blob.toString('base64');
+      }
+      return {
+        order: row.STEP_ORDER,
+        description: row.DESCRIPTION,
+        image: imageBase64
+      };
+    }));
+
+    const recipeResult = await db.execute(
+      `SELECT FOOD_NAME, FOOD_IMG, COOK_TIME, IS_DELETE, FOOD_PRICE, NOTIFICATION
+      FROM FOODS
+      WHERE FOOD_ID = :food_id`, [food_id]);
+
+    const recipe = await recipeResult.rows.map(async row => {
+      let imageBase64 = null;
+      if (row.FOOD_IMG) {
+      const blob = await row.FOOD_IMG.getData();
+      imageBase64 = blob.toString('base64');
+      }
+      return {
+      name: row.FOOD_NAME,
+      image: imageBase64,
+      cookTime: row.COOK_TIME,
+      isDelete: row.IS_DELETE,
+      price: row.FOOD_PRICE,
+      notification: row.NOTIFICATION
+      };
+    })[0];
+
+    res.status(200).json({ ingredients, steps, recipe });
+
+  } catch (err) {
+    console.error('레시피 상세 조회 오류:', err);
+    res.status(500).send({ message: '서버 오류' });
+  }
+});
 
 module.exports = router;
