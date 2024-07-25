@@ -39,14 +39,14 @@ router.post('/login', async (req, res) => {
 
 router.post('/join', async (req, res) => {
     console.log('/joindata', req.body);
-    const {user_id, user_pw, user_name, user_email, user_phone, nick_name} = req.body;
+    const {user_id, user_pw, user_name, user_email, nick_name, user_birthday, user_gender} = req.body;
     const db = req.app.locals.db;
 
     try {
         const hashedPassword = await bcrypt.hash(user_pw, 10);
-        const sql = `INSERT INTO users (user_id, user_pw, user_name, user_email, user_phone, joined_at, nick_name) VALUES (:user_id, :user_pw, :user_name, :user_email, :user_phone, SYSDATE, :nick_name)`;
+        const sql = `INSERT INTO users (user_id, user_pw, user_name, user_email, joined_at, nick_name, user_birthday, user_gender) VALUES (:user_id, :user_pw, :user_name, :user_email, SYSDATE, :nick_name, :user_birthday, :user_gender)`;
         await db.execute(
-            sql, [user_id, hashedPassword, user_name, user_email, user_phone, nick_name],
+            sql, [user_id, hashedPassword, user_name, user_email, nick_name, user_birthday, user_gender],
             { autoCommit: true }
         );
         res.status(201).send({ message: `${nick_name} 계정 생성` });
