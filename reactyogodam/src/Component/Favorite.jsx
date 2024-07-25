@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from '../axios';
 import '../css/Favorite.css';
 
 function Favorite() {
     const [favorites, setFavorites] = useState([]);
+    const nav = useNavigate();
 
     useEffect(() => {
         const user_id = localStorage.getItem('user_id');
