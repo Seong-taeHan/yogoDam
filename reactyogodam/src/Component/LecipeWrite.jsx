@@ -107,6 +107,10 @@ const LecipeWrite = () => {
     fileInputRef.current.click();
   };
 
+  const handleStepImageClick = (index) => {
+    document.getElementById(`step-image-input-${index}`).click();
+  };
+
   return (
     <div className='write-container'>
       <form onSubmit={handleSubmit} className='write-form'>
@@ -191,13 +195,20 @@ const LecipeWrite = () => {
         <p>요리순서</p>
         {steps.map((step, index) => (
           <div key={index}>
-            {step.imagePreview ? (
-              <img src={step.imagePreview} alt={`요리 순서 ${index + 1}`} style={{ width: '300px', height: '300px' }} />
-            ) : (
-              <div style={{ width: '300px', height: '300px', border: '1px solid gray', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <span>이미지 없음</span>
-              </div>
-            )}
+            <div className='step-image-placeholder' onClick={() => handleStepImageClick(index)}>
+              {step.imagePreview ? (
+                <img src={step.imagePreview} alt={`요리 순서 ${index + 1}`} className='write-thumbnail' />
+              ) : (
+                <img className='write-thumbnail' src='/img/recipeDetailImg/firstImg.png' alt='초기 상태'></img>
+              )}
+              <input
+                id={`step-image-input-${index}`}
+                className='step-input'
+                type='file'
+                accept='image/*'
+                onChange={(e) => handleImageChange(index, e)}
+              />
+            </div>
             <input
               type='text'
               name="description"
@@ -205,11 +216,6 @@ const LecipeWrite = () => {
               value={step.description}
               onChange={(e) => handleStepChange(index, e)}
               required
-            />
-            <input
-              type='file'
-              accept='image/*'
-              onChange={(e) => handleImageChange(index, e)}
             />
             <button type="button" onClick={() => handleRemoveStep(index)}>- 순서 삭제</button>
           </div>
