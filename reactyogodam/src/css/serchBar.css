@@ -19,7 +19,7 @@
 .search-bar img{
     position: absolute;
     right: 7px; /* 오른쪽 여백을 조정하세요 */
-    top: 50%; /* 세로 중앙 정렬 */
+    top: 40%; /* 세로 중앙 정렬 */
     transform: translateY(-50%); /* 정확한 세로 중앙 정렬을 위해 */
     cursor: pointer; /* 이미지를 클릭 가능하게 만들고 싶다면 추가 */
 }

@@ -176,5 +176,20 @@ router.get('/favorites/list', async (req, res) => {
     }
 });
 
+router.get('/favorites/bookmarkDel', async (req, res) => {
+  const db = req.app.locals.db;
+  const user_id = req.query.user_id; // 사용자의 ID를 쿼리로 받아옵니다.
+
+  try {
+      const result = await db.execute(`
+        SELECT FOOD_ID FROM USEFAVORITES WHERE USER_ID = :user_id
+        `,[user_id]);
+      const favorites = result.rows.map(row => row.FOOD_ID);
+      res.status(200).json(favorites);
+  } catch (err) {
+      console.error('북마크 해제 오류:', err);
+      res.status(500).send({ message: '서버 오류' });
+  }
+});
 
 module.exports = router;

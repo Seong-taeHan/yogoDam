@@ -5,6 +5,8 @@ import '../css/Favorite.css';
 
 function Favorite() {
     const [favorites, setFavorites] = useState([]);
+    const [bookmarks, setBookmarks] = useState({});
+
     const nav = useNavigate();
 
     useEffect(() => {
@@ -29,6 +31,22 @@ function Favorite() {
         });
     }, []);
 
+    const toggleBookmark = async (id) => {
+        const user_id = localStorage.getItem('user_id');
+        try {
+            const response = await axios.post('http://localhost:8000/list/favorites/toggle', {
+                user_id: user_id, // 실제 사용자 ID를 사용
+                food_id: id
+            });
+            setBookmarks(prevBookmarks => ({
+                ...prevBookmarks,
+                [id]: !prevBookmarks[id]
+            }));
+        } catch (error) {
+            console.error('즐겨찾기 상태 변경 오류:', error);
+        }
+    };
+
     return (
         <div className="FavoriteContainer">
             <div className='TopBar'>
@@ -42,7 +60,18 @@ function Favorite() {
                             <img src={item.img} alt={item.title} />
                             <div className="RecipeDetails">
                                 <h3>{item.title}</h3>
-                                {item.mark && <div className="Mark"><img className="bookmark" src="./img/icon/bookmark.svg" alt="Bookmark" /></div>}
+                                {item.mark && 
+                                <div className="Mark">
+                                    <img 
+                                    className='bookmark' 
+                                    src={bookmarks[item.id] ?  "../img/icon/bookmark.svg":"../img/icon/bookmarked.svg"} 
+                                    alt="bookmark" 
+                                    onClick={(e) => {
+                                        e.stopPropagation(); 
+                                        toggleBookmark(item.id);
+                                    }}
+                                />
+                                </div>}
                             </div>
                         </div>
                     </div>
