@@ -12,7 +12,7 @@ const FooterBar = () => {
 
     const TabData = [
         { id: 0, button: '카테고리', content: '카테고리탭 입니다.', path: '/category' },
-        { id: 1, button: '달력', content: '달력탭 입니다.', path: '/calender' },
+        { id: 1, button: '추천AI', content: '추천AI탭 입니다.', path: '/recomAi' },
         { id: 2, button: '홈', content: '홈 화면 입니다.', path: '/' },
         { id: 3, button: '찜목록', content: '찜 목록 화면 입니다.', path: '/favorites' },
         isLoggedIn
