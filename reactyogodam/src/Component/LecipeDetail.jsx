@@ -18,9 +18,7 @@ const LecipeDetail = () => {
                 <h1>{products.name}</h1>
                 <p>{products.content}</p>
                 <div className='tags'>
-                    <span className='tag'>2인분</span>
                     <span className='tag'>10분 이내</span>
-                    <span className='tag'>초급요리</span>
                 </div>
                 <h2>재료</h2>
                 <table className='ingredient_table'>
