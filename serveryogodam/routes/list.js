@@ -97,9 +97,11 @@ router.post('/write', async (req, res) => {
       INSERT INTO FOOD_STEPS (step_id, food_id, stepOrder, description, step_img)
       VALUES (SEQ_STEP_ID.NEXTVAL, :foodId, :stepOrder, :description, :step_img)
     `;
+
     for (let i = 0; i < steps.length; i++) {
       const step = steps[i];
-      const stepImageBuffer = step.image ? Buffer.from(step.image, 'base64') : null;
+      const stepImgData = step.step_img ? step.step_img.replace(/^data:image\/\w+;base64,/, '') : '';
+      const stepImageBuffer = Buffer.from(stepImgData, 'base64');
       await db.execute(insertStepSql, [foodId, i + 1, step.description, { val: stepImageBuffer, type: oracledb.BLOB }], { autoCommit: true });
     }
 
@@ -112,7 +114,7 @@ router.post('/write', async (req, res) => {
 
 router.get('/favorites', async (req, res) => {
     const db = req.app.locals.db;
-    const user_id = req.query.user_id; // 사용자의 ID를 쿼리로 받아옵니다.
+    const user_id = req.query.user_id;// 사용자의 ID를 쿼리로 받아옵니다.
 
     try {
         const result = await db.execute('SELECT FOOD_ID FROM USEFAVORITES WHERE USER_ID = :user_id', [user_id]);
@@ -193,7 +195,6 @@ router.get('/recipes/detail', async (req, res) => {
       unit: row.INGRED_UNIT,
       price: row.INGRED_PRICE
     }));
-    
     const stepsResult = await db.execute(
       `SELECT STEPORDER, DESCRIPTION, STEP_IMG
       FROM FOOD_STEPS
@@ -201,15 +202,15 @@ router.get('/recipes/detail', async (req, res) => {
       ORDER BY STEPORDER`, [food_id]);
 
     const steps = await Promise.all(stepsResult.rows.map(async row => { 
-      let imageBase64 = null;
+      let stepImageBase64 = null;
       if (row.STEP_IMG) {
         const blob = await row.STEP_IMG.getData();
-        imageBase64 = blob.toString('base64');
+        stepImageBase64 = blob.toString('base64');
       }
       return {
         order: row.STEPORDER,
         description: row.DESCRIPTION,
-        image: imageBase64
+        image: stepImageBase64
       };
     }));
 
