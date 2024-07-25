@@ -1,11 +1,13 @@
 import axios from '../axios';
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
+import '../css/LecipeWrite.css'
 
 const LecipeWrite = () => {
   const [ingredients, setIngredients] = useState([{ name: '', amount: '', unit: '' }]);
   const [steps, setSteps] = useState([{ description: '', image: null, imagePreview: null }]);
   const [thumbnail, setThumbnail] = useState(null);
   const [thumbnailPreview, setThumbnailPreview] = useState(null);
+  const fileInputRef = useRef(null);
 
   const token = localStorage.getItem('token');
   const nickName = localStorage.getItem('nickName');
@@ -101,49 +103,61 @@ const LecipeWrite = () => {
     }
   };
 
+  const handleThumbnailClick = () => {
+    fileInputRef.current.click();
+  };
+
   return (
-    <div className='login_container'>
-      <form onSubmit={handleSubmit}>
-        <div>
+    <div className='write-container'>
+      <form onSubmit={handleSubmit} className='write-form'>
+        <div onClick={handleThumbnailClick}>
           {thumbnailPreview ? (
-            <img className='bannerImg' src={thumbnailPreview} alt='썸네일 이미지' style={{ width: '300px', height: '300px' }} />
+            <img className='write-thumbnail' src={thumbnailPreview} alt='썸네일 이미지' />
           ) : (
-            <div style={{ width: '300px', height: '300px', border: '1px solid gray', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <span>썸네일이 될 요리 사진을 등록해주세요.</span>
+            <div className='thumbnail-placeholder'>
+              <img className='write-thumbnail' src='/img/recipeDetailImg/firstImg.png' alt='초기 상태'></img>
             </div>
           )}
-          <input type='file' accept='image/*' onChange={handleThumbnailChange} />
+          <input 
+            className='thumbnail-input' 
+            type='file' 
+            accept='image/*' 
+            onChange={handleThumbnailChange}
+            ref={fileInputRef}
+          />
         </div>
-        <h1>레시피 제목 *필수</h1>
+        <p>레시피 제목</p>
         <input type='text' placeholder='요리 제목 입력' required></input>
-        <div>요리 소개</div>
+        <p>요리 소개</p>
         <input type='text' placeholder='이 요리의 배경을 멋지게 소개해 주세요' required></input>
-        <div>요리 시간</div>
+        <p>요리 시간</p>
         <input type="text" placeholder="요리 시간 입력" required></input>
 
-        <div>요리종류</div>
-        <select name="category1" required>
-          <option value=""></option>
-          <option value="한식">한식</option>
-          <option value="일식">일식</option>
-          <option value="양식">양식</option>
-          <option value="중식">중식</option>
-          <option value="기타">기타</option>
-        </select>
+        <p>카테고리</p>
+        <div className='select-container'>
+          <select name="category1" required>
+            <option value=""></option>
+            <option value="한식">한식</option>
+            <option value="일식">일식</option>
+            <option value="양식">양식</option>
+            <option value="중식">중식</option>
+            <option value="기타">기타</option>
+          </select>
 
-        <div>요리재료</div>
-        <select name="category2" required>
-          <option value=""></option>
-          <option value="고기">고기</option>
-          <option value="생선">생선</option>
-          <option value="채소">채소</option>
-          <option value="가공">가공</option>
-          <option value="기타">기타</option>
-        </select>
+          <select name="category2" required>
+            <option value=""></option>
+            <option value="고기">고기</option>
+            <option value="생선">생선</option>
+            <option value="채소">채소</option>
+            <option value="가공">가공</option>
+            <option value="기타">기타</option>
+          </select>
+        </div>
 
-        <div>재료</div>
+        <p>재료</p>
         {ingredients.map((ingredient, index) => (
           <div key={index}>
+            <div className='write-ingredient-row'>
             <input
               type="text"
               name="name"
@@ -168,12 +182,13 @@ const LecipeWrite = () => {
               onChange={(e) => handleIngredientChange(index, e)}
               required
             />
+            </div>
             <button type="button" onClick={() => handleRemoveIngredient(index)}>- 재료 삭제</button>
           </div>
         ))}
         <button type="button" onClick={handleAddIngredient}>+ 재료 추가</button>
 
-        <div>요리순서</div>
+        <p>요리순서</p>
         {steps.map((step, index) => (
           <div key={index}>
             {step.imagePreview ? (

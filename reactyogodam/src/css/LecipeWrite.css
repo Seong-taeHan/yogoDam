@@ -1,7 +1,129 @@
-.login_container {
+.write-container {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-    height: 100vh;
-    user-select: none; /* 드래그 방지 */
+    background-color: #f9f9f9;
 }
+
+.write-form {
+    width: 100%;
+    max-width: 100%;
+    background-color: #fff;
+    padding-top: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.write-form p {
+    font-size: 1.0em;
+    color: #fff;
+    background-color: #ff7f00;
+    margin-bottom: 0px;
+}
+
+.write-form input[type="text"],
+.write-form input[type="file"] {
+    width: calc(100%);
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.write-form input[type="text"]:focus,
+.write-form input[type="file"]:focus,
+.write-form select:focus {
+    border-color: #ff7f00;
+}
+
+.write-form select {
+    width: calc(50% - 20px); 
+    padding: 10px;
+    margin: 10px; 
+    border: 1px solid #ccc; 
+    border-radius: 5px; 
+    background-color: white; 
+    font-size: 16px; 
+    color: #333; 
+    -webkit-appearance: none; 
+    -moz-appearance: none; 
+    appearance: none; 
+    background: url('..//img/angker.png') no-repeat right 10px center;
+    background-size: 15px;
+}
+
+.write-form button {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    background-color: #ff7f00;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+.write-form button[type="button"] {
+    background-color: #ccc;
+    color: #333;
+}
+
+.write-form button:hover {
+    background-color: #e06b00;
+}
+
+.write-form button[type="button"]:hover {
+    background-color: #bbb;
+}
+
+.write-thumbnail {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.write-thumbnail-container,
+.write-step-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.write-thumbnail-container div,
+.write-step-container div {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 10px;
+    background-color: #fff;
+}
+
+.write-add-button {
+    background-color: #4caf50;
+    color: white;
+}
+
+.write-add-button:hover {
+    background-color: #45a049;
+}
+
+.write-ingredient-row {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.write-ingredient-row input[type="text"] {
+    width: calc(33.33% - 10px);
+}
+
+.thumbnail-input {
+    display: none;
+  }
