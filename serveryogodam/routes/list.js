@@ -100,7 +100,8 @@ router.post('/write', async (req, res) => {
 
     for (let i = 0; i < steps.length; i++) {
       const step = steps[i];
-      const stepImgData = step.step_img ? step.step_img.replace(/^data:image\/\w+;base64,/, '') : '';
+      console.log(step.STEP_IMG);
+      const stepImgData = step.image.replace(/^data:image\/\w+;base64,/, '');
       const stepImageBuffer = Buffer.from(stepImgData, 'base64');
       await db.execute(insertStepSql, [foodId, i + 1, step.description, { val: stepImageBuffer, type: oracledb.BLOB }], { autoCommit: true });
     }
