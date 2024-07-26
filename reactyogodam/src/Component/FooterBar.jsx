@@ -1,5 +1,4 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import '../css/footer.css';
 
@@ -11,14 +10,14 @@ const FooterBar = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     const TabData = [
-        { id: 0, button: '카테고리', content: '카테고리탭 입니다.', path: '/category' },
-        { id: 1, button: '추천AI', content: '추천AI탭 입니다.', path: '/recomAi' },
-        { id: 2, button: '홈', content: '홈 화면 입니다.', path: '/' },
-        { id: 3, button: '찜목록', content: '찜 목록 화면 입니다.', path: '/favorites' },
+        { id: 0, button: '카테고리', content: '카테고리탭 입니다.', path: '/category', icon: '/img/icon/iconCategory.png' },
+        { id: 1, button: '추천AI', content: '추천AI탭 입니다.', path: '/recomAi', icon: '/img/icon/iconAi.png' },
+        { id: 2, button: '홈', content: '홈 화면 입니다.', path: '/', icon: '/img/icon/iconHome.png' },
+        { id: 3, button: '찜목록', content: '찜 목록 화면 입니다.', path: '/favorites', icon: '/img/icon/iconList.png' },
         isLoggedIn
-            ? { id: 4, button: '내 정보', content: '내 정보 탭 입니다.', path: '/userinfo' }
-            : { id: 4, button: '로그인', content: '로그인 탭 입니다.', path: '/login' },
-        { id: 5, button: '레시피', content: '레시피탭 입니다.', path: '/LecipeList' },
+            ? { id: 4, button: '내 정보', content: '내 정보 탭 입니다.', path: '/userinfo', icon: '/img/icon/iconMy.png' }
+            : { id: 4, button: '로그인', content: '로그인 탭 입니다.', path: '/login', icon: '/img/icon/iconLogin.png' },
+        { id: 5, button: '레시피', content: '레시피탭 입니다.', path: '/LecipeList', icon: '/img/lecipeList.png' },
     ];
 
     useEffect(() => {
@@ -39,9 +38,6 @@ const FooterBar = () => {
 
     return (
         <div className="footer-container">
-            {/* <div className="tab-content">
-                {TabData.find((a) => a.id === activeTab)?.content}
-            </div> */}
             <div className="footer-box">
                 <div className="tab-box">
                     {TabData.map((tab) => (
@@ -50,7 +46,7 @@ const FooterBar = () => {
                             className={activeTab === tab.id ? "tab-button active" : "tab-button"}
                             onClick={() => handleTabClick(tab)}
                         >
-                            {tab.button}
+                            <img src={tab.icon} alt={tab.button} className="tab-icon" />
                         </button>
                     ))}
                 </div>
