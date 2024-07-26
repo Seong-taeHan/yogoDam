@@ -10,7 +10,7 @@ const LecipeList = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        // 백엔드에서 데이터 가져오기
+        // Fetch data from the backend
         axios.get('http://localhost:8000/list/lecipes')
             .then(response => {
                 console.log("DB 데이터 응답 확인 : ", response.data);
@@ -22,14 +22,16 @@ const LecipeList = () => {
     }, []);
 
     useEffect(() => {
-        // URL 파라미터에서 검색어 추출
+        // Extract nickname and search query from URL parameters
         const queryParams = new URLSearchParams(location.search);
         const searchQuery = queryParams.get('search') || '';
+        const nickName = queryParams.get('nick_name') || '';
 
-        // 검색어에 따른 필터링
+        // Filter based on search query and nickname
         const lowercasedQuery = searchQuery.toLowerCase();
         const filtered = cardInfoList.filter(food =>
-            food.FOOD_NAME && food.FOOD_NAME.toLowerCase().includes(lowercasedQuery)
+            food.FOOD_NAME && food.FOOD_NAME.toLowerCase().includes(lowercasedQuery) &&
+            food.NICK_NAME && food.NICK_NAME === nickName
         );
         setFilteredList(filtered);
     }, [location.search, cardInfoList]);
