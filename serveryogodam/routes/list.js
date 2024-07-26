@@ -27,8 +27,6 @@ router.get('/lecipes', async (req, res) => {
 
       }));
 
-
-
       //console.log(lecipes);
         
       res.status(200).json(lecipes);
@@ -240,6 +238,43 @@ router.get('/recipes/detail', async (req, res) => {
 
   } catch (err) {
     console.error('레시피 상세 조회 오류:', err);
+    res.status(500).send({ message: '서버 오류' });
+  }
+});
+
+
+router.get('/recipes/my', async (req, res) => {
+  const db = req.app.locals.db;
+
+  try {
+    const result = await db.execute(`
+      SELECT FOOD_ID, FOOD_NAME, NOTIFICATION, NICK_NAME, FOOD_IMG 
+      FROM (
+        SELECT FOOD_ID, FOOD_NAME, NOTIFICATION, NICK_NAME, FOOD_IMG 
+        FROM FOODS 
+        WHERE NICK_NAME = :nick_name
+        ORDER BY FOOD_ID DESC
+      ) WHERE ROWNUM <= 3
+    `, { nick_name: req.query.nick_name });
+
+    const recipes = await Promise.all(result.rows.map(async row => {
+      let imageBase64 = null;
+      if (row.FOOD_IMG) {
+        const blob = await row.FOOD_IMG.getData();
+        imageBase64 = blob.toString('base64');
+      }
+      return {
+        FOOD_ID: row.FOOD_ID,
+        FOOD_NAME: row.FOOD_NAME,
+        NOTIFICATION: row.NOTIFICATION,
+        NICK_NAME: row.NICK_NAME,
+        FOOD_IMG: imageBase64,
+      };
+    }));
+
+    res.status(200).json(recipes);
+  } catch (err) {
+    console.error('레시피 목록 조회 오류:', err);
     res.status(500).send({ message: '서버 오류' });
   }
 });
