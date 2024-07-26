@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from '../axios';
+import 'swiper/css';
+import 'swiper/css/pagination';
+import { Pagination } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
 import '../css/LecipeDetail.css';
 
 const LecipeDetail = () => {
@@ -68,15 +72,25 @@ const LecipeDetail = () => {
                     <span>합계 {recipeDetail.recipe.price} 원</span>
                 </div>
                 <h2>요리순서</h2>
-                <div className='instructions'>
+                <hr></hr>
+                <Swiper
+                    modules={[Pagination]}
+                    navigation
+                    pagination={{ clickable: true }}
+                    className='instructions'
+                >
                     {recipeDetail.steps.map((step, index) => (
-                        <div key={index}>
-                            {step.image && <img src={`data:image/png;base64,${step.image}`} alt={`Step ${step.order}`} />}
-                            <p>{step.order}. {step.description}</p>
-                            <p>{step.order}/{recipeDetail.steps.length}</p>
-                        </div>
+                        <SwiperSlide key={index}>
+                            <div className="instruction-slide">
+                                {step.image && <img src={`data:image/png;base64,${step.image}`} alt={`Step ${step.order}`} />}
+                                <div className="instruction-text">
+                                    <p className="description">{step.order}. {step.description}</p>
+                                    <p className="step-counter">{step.order}/{recipeDetail.steps.length}</p>
+                                </div>
+                            </div>
+                        </SwiperSlide>
                     ))}
-                </div>
+                </Swiper>
             </div>
         </div>
     );

@@ -38,13 +38,6 @@
     margin-bottom: 10px;
 }
 
-.lp_container p {
-    font-size: 16px;
-    color: #666;
-    line-height: 1.5;
-    margin-bottom: 10px;
-}
-
 .tags {
     margin-bottom: 20px;
 }
@@ -87,13 +80,62 @@
     align-items: flex-end;
 }
 
-.instructions p {
-    font-size: 16px;
-    color: #666;
-    line-height: 1.5;
-    margin-bottom: 10px;
+.instructions {
+    width: 100%;
+    height: auto; /* 높이를 자동으로 조절 */
 }
 
-th{
+th {
     text-align: center; /* 텍스트 수평 가운데 정렬 */
+}
+
+/* Swiper 커스터마이징 */
+.swiper-container {
+    width: 100%;
+    height: 360px; /* 이미지와 동일한 높이로 설정 */
+}
+
+.swiper-slide {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff; /* 슬라이드 배경색 설정 */
+    flex-direction: column;
+}
+
+.swiper-slide img {
+    max-width: 100%;
+    height: 500px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.instruction-slide {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.instruction-text {
+    margin-top: 20px;
+    background: #fff8e1;
+    border-radius: 5px;
+    width: 100%;
+    height: 300px;
+    text-align: left;
+}
+
+.description {
+    height: 80%;
+    text-align: left;
+    font-size: 40px;
+    display: flex;
+    align-items: center;
+}
+
+.step-counter {
+    text-align: right;
+    color: #999;
+    font-size: 1.5em;
 }
