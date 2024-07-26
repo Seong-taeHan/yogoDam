@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import axios from '../axios';
 import '../css/Category.css';
 
 const SearchList = () => {
-    const [search, setSearch] = useState('');
     const [searchList, setSearchList] = useState([]);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
+    const location = useLocation();
 
     useEffect(() => {
-        const search = new URLSearchParams(window.location.search).get('search');
+        const search = new URLSearchParams(location.search).get('search');
         console.log('검색어:', search);
 
         axios.get('http://localhost:8000/list/searchlist', {
@@ -31,7 +31,7 @@ const SearchList = () => {
             console.error('데이터를 불러오는 중 오류 발생:', error);
             setLoading(false);
         });
-    }, []);
+    }, [location.search]);
 
     const handleProductClick = (id) => {
         navigate(`/recipeDetail/${id}`);
@@ -58,7 +58,7 @@ const SearchList = () => {
                     </div>
                 ))
             ) : (
-                <p>검색 결과가 없습니다.ㅁㄴㅇ</p>
+                <p>검색 결과가 없습니다.</p>
             )}
         </div>
     );
