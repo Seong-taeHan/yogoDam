@@ -7,7 +7,7 @@ function Favorite() {
     const [favorites, setFavorites] = useState([]);
     const [bookmarks, setBookmarks] = useState({});
 
-    const nav = useNavigate();
+    const navigate = useNavigate();
 
     useEffect(() => {
         const user_id = localStorage.getItem('user_id');
@@ -47,6 +47,10 @@ function Favorite() {
         }
     };
 
+    const handleProductClick = (id) => {
+        navigate(`/lecipeDetail/${id}`);
+    };
+
     return (
         <div className="FavoriteContainer">
             <div className='TopBar'>
@@ -55,7 +59,7 @@ function Favorite() {
             </div>
             <div className="RecipeList">
                 {favorites.map((item, index) => (
-                    <div className="RecipeItem" key={index}>
+                    <div className="RecipeItem" onClick={() => handleProductClick(item.id)} key={item.id}>
                         <div className='cm'>
                             <img src={item.img} alt={item.title} />
                             <div className="RecipeDetails">
