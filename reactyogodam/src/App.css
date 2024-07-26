@@ -1,9 +1,8 @@
 .main-container {
   background-color: #fff;
   padding: 10px;
-  
-  
 }
+
 .main-background {
   display: flex;
   height: 100vh;
@@ -49,8 +48,17 @@
 .content-wrapper {
   flex: 1;
   overflow-y: auto;
-  
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+@media (max-width: 1200px) {
+  .left-section {
+    display: none;
+  }
+  
+  .right-section {
+    width: 100%; /* 화면이 작을 때 오른쪽 섹션이 전체 너비를 차지 */
+  }
 }
