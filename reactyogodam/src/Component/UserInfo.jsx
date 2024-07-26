@@ -81,7 +81,7 @@ const UserInfo = () => {
       <div className="recipe-section">
         <div className="section-header">
           <p>내가 올린 레시피</p>
-          <Link to="#">더 보기</Link>
+          <Link to={`/lecipeList?nick_name=${userInfo.nickName}`}>더 보기</Link>
         </div>
         <div className="recipe-list">
           {uploadedRecipes.map((recipe) => (
