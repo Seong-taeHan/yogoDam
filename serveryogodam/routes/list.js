@@ -316,4 +316,51 @@ router.get('/categorylist', async (req, res) => {
 });
 
 
+router.get('/searchlist', async (req, res) => {
+  const db = req.app.locals.db;
+  const { search } = req.query;
+
+  console.log('검색어:', search);
+
+  try {
+    if (!db) {
+      throw new Error('데이터베이스에 연결할 수 없습니다.');
+    }
+
+    const result = await db.execute(`
+        SELECT *
+        FROM FOODS
+        WHERE FOOD_NAME = :search
+        OR FOOD_ID IN (
+            SELECT FOOD_ID
+            FROM INGREDIENTS
+            WHERE INGRE_NAME = :search
+        )
+    `, { search });
+
+    console.log('쿼리 결과:', result.rows);
+
+    const recipes = await Promise.all(result.rows.map(async row => {
+      let imageBase64 = null;
+      if (row.FOOD_IMG) {
+        const blob = await row.FOOD_IMG.getData();
+        imageBase64 = blob.toString('base64');
+      }
+      return {
+        FOOD_ID: row.FOOD_ID,
+        FOOD_NAME: row.FOOD_NAME,
+        NOTIFICATION: row.NOTIFICATION,
+        NICK_NAME: row.NICK_NAME,
+        FOOD_IMG: imageBase64,
+        FOOD_PRICE: row.FOOD_PRICE
+      };
+    }));
+
+    res.status(200).json(recipes);
+  } catch (err) {
+    console.error('레시피 목록 조회 오류:', err);
+    res.status(500).send({ message: '서버 오류', error: err.message });
+  }
+});
+
 module.exports = router;

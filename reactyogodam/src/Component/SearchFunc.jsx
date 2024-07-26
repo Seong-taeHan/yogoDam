@@ -1,5 +1,5 @@
-import React from 'react'
-import { useRef } from 'react'
+import React from 'react';
+import { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../css/serchBar.css';
 
@@ -11,7 +11,7 @@ const SearchFunc = () => {
       if (e.key === 'Enter') {
           const query = inputRef.current.value.trim();
           if (query) {
-              navigate(`/lecipeList?search=${encodeURIComponent(query)}`);
+              navigate(`/searchlist?search=${encodeURIComponent(query)}`);
           }
           inputRef.current.value = ''; // 검색 후 입력 필드 비우기
       }
