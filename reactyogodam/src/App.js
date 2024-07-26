@@ -13,6 +13,7 @@ import UserInfo from './Component/UserInfo'
 import Category from './Component/Category';
 import Favorite from './Component/Favorite';
 import PlusIconButton from './Component/LecipeDetailButton';
+import CategoryList from './Component/CategoryList';
 
 function App() {
   const location = useLocation();
@@ -46,6 +47,7 @@ function App() {
               <Route path='/userinfo' element={<UserInfo />}></Route>
               <Route path='/joinuser' element={<JoinUser />} />
               <Route path='/category' element={<Category />} />
+              <Route path='/categoryList' element={<CategoryList />} />
               <Route path='/favorites' element={<Favorite />} />
             </Routes>
           </div>

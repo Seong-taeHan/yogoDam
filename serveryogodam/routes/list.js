@@ -279,4 +279,41 @@ router.get('/recipes/my', async (req, res) => {
   }
 });
 
+
+router.get('/categorylist', async (req, res) => {
+  const db = req.app.locals.db;
+  const { category } = req.query;
+
+  try {
+    const result = await db.execute(`
+      SELECT FOOD_ID, FOOD_NAME, NOTIFICATION, NICK_NAME, FOOD_IMG, FOOD_PRICE
+      FROM FOODS 
+      WHERE CUSINE_TYPE = :category OR COOKING_METHOD = :category
+      ORDER BY FOOD_ID DESC 
+    `, { category });
+
+    const recipes = await Promise.all(result.rows.map(async row => {
+      let imageBase64 = null;
+      if (row.FOOD_IMG) {
+        const blob = await row.FOOD_IMG.getData();
+        imageBase64 = blob.toString('base64');
+      }
+      return {
+        FOOD_ID: row.FOOD_ID,
+        FOOD_NAME: row.FOOD_NAME,
+        NOTIFICATION: row.NOTIFICATION,
+        NICK_NAME: row.NICK_NAME,
+        FOOD_IMG: imageBase64,
+        FOOD_PRICE: row.FOOD_PRICE
+      };
+    }));
+
+    res.status(200).json(recipes);
+  } catch (err) {
+    console.error('레시피 목록 조회 오류:', err);
+    res.status(500).send({ message: '서버 오류' });
+  }
+});
+
+
 module.exports = router;
