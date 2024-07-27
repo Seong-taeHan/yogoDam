@@ -39,19 +39,19 @@ const LecipeDetail = () => {
     }
 
     return (
-        <div className='LecipeDetail_container'>
-            <div className='lp_container'>
-                <div className='image-placeholder'>
+        <div className='lecipe-detail-container'>
+            <div className='lecipe-detail-lp-container'>
+                <div className='lecipe-detail-image-placeholder'>
                     {recipeDetail.recipe.image && 
                         <img src={`data:image/png;base64,${recipeDetail.recipe.image}`} alt={recipeDetail.recipe.name} />
                     }
                 </div>
                 <h1>{recipeDetail.recipe.name}</h1>
                 <p>{recipeDetail.recipe.notification}</p>
-                <div className='tags'>
-                    <span className='tag'>{recipeDetail.recipe.cookTime}</span>
+                <div className='lecipe-detail-tags'>
+                    <span className='lecipe-detail-tag'>{recipeDetail.recipe.cookTime}</span>
                 </div>
-                <table className='ingredient_table'>
+                <table className='lecipe-detail-ingredient-table'>
                     <tbody>
                         <tr>
                             <th>재료</th>
@@ -67,7 +67,7 @@ const LecipeDetail = () => {
                         ))}
                     </tbody>
                 </table>
-                <div className='summary'>
+                <div className='lecipe-detail-summary'>
                     <span>{recipeDetail.recipe.calories} kcal</span>
                     <span>합계 {recipeDetail.recipe.price} 원</span>
                 </div>
@@ -77,15 +77,15 @@ const LecipeDetail = () => {
                     modules={[Pagination]}
                     navigation
                     pagination={{ clickable: true }}
-                    className='instructions'
+                    className='lecipe-detail-instructions'
                 >
                     {recipeDetail.steps.map((step, index) => (
                         <SwiperSlide key={index}>
-                            <div className="instruction-slide">
-                                {step.image && <img src={`data:image/png;base64,${step.image}`} alt={`Step ${step.order}`} />}
-                                <div className="instruction-text">
-                                    <p className="description">{step.order}. {step.description}</p>
-                                    <p className="step-counter">{step.order}/{recipeDetail.steps.length}</p>
+                            <div className="lecipe-detail-instruction-slide">
+                                {step.image && <img className='lecipe-detail-swiper-slide' src={`data:image/png;base64,${step.image}`} alt={`Step ${step.order}`} />}
+                                <div className="lecipe-detail-instruction-text">
+                                    <p className="lecipe-detail-description">{step.order}. {step.description}</p>
+                                    <p className="lecipe-detail-step-counter">{step.order}/{recipeDetail.steps.length}</p>
                                 </div>
                             </div>
                         </SwiperSlide>

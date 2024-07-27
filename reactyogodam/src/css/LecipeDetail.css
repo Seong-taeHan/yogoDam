@@ -1,4 +1,4 @@
-.LecipeDetail_container {
+.lecipe-detail-container {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -6,7 +6,7 @@
     background-color: #f8f8f8;
 }
 
-.lp_container {
+.lecipe-detail-lp-container {
     background: white;
     padding: 20px;
     border-radius: 10px;
@@ -15,7 +15,7 @@
     max-width: 600px;
 }
 
-.image-placeholder {
+.lecipe-detail-image-placeholder {
     width: 100%;
     height: 360px;
     background-color: #f0f0f0;
@@ -26,23 +26,23 @@
     margin-bottom: 20px;
 }
 
-.image-placeholder img {
+.lecipe-detail-image-placeholder img {
     max-width: 100%;
     max-height: 100%;
     border-radius: 10px;
 }
 
-.lp_container h1 {
+.lecipe-detail-lp-container h1 {
     font-size: 24px;
     color: #333;
     margin-bottom: 10px;
 }
 
-.tags {
+.lecipe-detail-tags {
     margin-bottom: 20px;
 }
 
-.tag {
+.lecipe-detail-tag {
     display: inline-block;
     background-color: #ff8c00;
     color: white;
@@ -52,25 +52,25 @@
     font-size: 14px;
 }
 
-.lp_container h2 {
+.lecipe-detail-lp-container h2 {
     font-size: 20px;
     color: #333;
     margin-top: 20px;
     margin-bottom: 10px;
 }
 
-.ingredient_table {
+.lecipe-detail-ingredient-table {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 20px;
 }
 
-.ingredient_table td {
+.lecipe-detail-ingredient-table td {
     padding: 10px;
     border-bottom: 1px solid #f0f0f0;
 }
 
-.summary {
+.lecipe-detail-summary {
     display: flex;
     justify-content: space-between;
     font-size: 18px;
@@ -80,7 +80,7 @@
     align-items: flex-end;
 }
 
-.instructions {
+.lecipe-detail-instructions {
     width: 100%;
     height: auto; /* 높이를 자동으로 조절 */
 }
@@ -90,12 +90,12 @@ th {
 }
 
 /* Swiper 커스터마이징 */
-.swiper-container {
+.lecipe-detail-swiper-container {
     width: 100%;
     height: 360px; /* 이미지와 동일한 높이로 설정 */
 }
 
-.swiper-slide {
+.lecipe-detail-swiper-slide {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -103,21 +103,21 @@ th {
     flex-direction: column;
 }
 
-.swiper-slide img {
+.lecipe-detail-instruction-slide img {
     max-width: 100%;
     height: 500px;
     object-fit: cover;
     border-radius: 10px;
 }
 
-.instruction-slide {
+.lecipe-detail-instruction-slide {
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
 }
 
-.instruction-text {
+.lecipe-detail-instruction-text {
     margin-top: 20px;
     background: #fff8e1;
     border-radius: 5px;
@@ -126,7 +126,7 @@ th {
     text-align: left;
 }
 
-.description {
+.lecipe-detail-description {
     height: 80%;
     text-align: left;
     font-size: 40px;
@@ -134,7 +134,7 @@ th {
     align-items: center;
 }
 
-.step-counter {
+.lecipe-detail-step-counter {
     text-align: right;
     color: #999;
     font-size: 1.5em;
