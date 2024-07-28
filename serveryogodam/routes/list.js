@@ -290,19 +290,19 @@ router.get('/recipes/my', async (req, res) => {
 
   try {
     const result = await db.execute(`
-      SELECT FOOD_ID, FOOD_NAME, NOTIFICATION, NICK_NAME, FOOD_IMG 
-      FROM (
-        SELECT FOOD_ID, FOOD_NAME, NOTIFICATION, NICK_NAME, FOOD_IMG 
-        FROM FOODS 
-        WHERE NICK_NAME = :nick_name
-        ORDER BY FOOD_ID DESC
-      ) WHERE ROWNUM <= 3
+      SELECT f.FOOD_ID, f.FOOD_NAME, f.NOTIFICATION, f.NICK_NAME, COUNT(u.FOOD_ID) AS POPULARITY
+      FROM FOODS f
+      LEFT JOIN USEFAVORITES u ON f.FOOD_ID = u.FOOD_ID AND u.IS_FAVORITED = 'Y'
+      WHERE f.NICK_NAME = :nick_name
+      GROUP BY f.FOOD_ID, f.FOOD_NAME, f.NOTIFICATION, f.NICK_NAME
+      ORDER BY f.FOOD_ID DESC
     `, { nick_name: req.query.nick_name });
 
     const recipes = await Promise.all(result.rows.map(async row => {
+      const foodImgResult = await db.execute('SELECT FOOD_IMG FROM FOODS WHERE FOOD_ID = :foodId', [row.FOOD_ID]);
       let imageBase64 = null;
-      if (row.FOOD_IMG) {
-        const blob = await row.FOOD_IMG.getData();
+      if (foodImgResult.rows[0] && foodImgResult.rows[0].FOOD_IMG) {
+        const blob = await foodImgResult.rows[0].FOOD_IMG.getData();
         imageBase64 = blob.toString('base64');
       }
       return {
@@ -311,6 +311,7 @@ router.get('/recipes/my', async (req, res) => {
         NOTIFICATION: row.NOTIFICATION,
         NICK_NAME: row.NICK_NAME,
         FOOD_IMG: imageBase64,
+        POPULARITY: row.POPULARITY
       };
     }));
 
