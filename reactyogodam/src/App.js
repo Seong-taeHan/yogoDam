@@ -15,6 +15,7 @@ import Favorite from './Component/Favorite';
 import PlusIconButton from './Component/LecipeDetailButton';
 import CategoryList from './Component/CategoryList';
 import SearchList from './Component/SearchList';
+import LoginComplete from './Component/LoginComplete';
 
 function App() {
   const location = useLocation();
@@ -52,6 +53,7 @@ function App() {
               <Route path='/categoryList' element={<CategoryList />} />
               <Route path='/favorites' element={<Favorite />} />
               <Route path='/searchlist' element={<SearchList />} />
+              <Route path='/loginComplete' element={<LoginComplete />}/>
             </Routes>
           </div>
           {showPlusIconButton && <PlusIconButton />} 

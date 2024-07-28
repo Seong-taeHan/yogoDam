@@ -105,7 +105,7 @@ const JoinUser = () => {
         user_gender
       });
       console.log(joinRes);
-      nav('/login')
+      nav('/loginComplete')
     } catch (error) {
       console.error('가입 실패:', error);
     }
