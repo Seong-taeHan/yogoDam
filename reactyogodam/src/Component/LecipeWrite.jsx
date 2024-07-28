@@ -24,6 +24,10 @@ const LecipeWrite = () => {
   const handleIngredientChange = (index, e) => {
     const newIngredients = ingredients.map((ingredient, i) => {
       if (i === index) {
+        if (e.target.name === 'amount') {   //정규식 활용하여 숫자만 입력되도록
+          const numericValue = e.target.value.replace(/[^0-9]/g, ''); // 숫자가 아닌 문자는 제거
+          return { ...ingredient, [e.target.name]: numericValue };
+        }
         return { ...ingredient, [e.target.name]: e.target.value };
       }
       return ingredient;
@@ -96,10 +100,9 @@ const LecipeWrite = () => {
         }
       });
       console.log('Form submitted:', response.data);
-      // Handle success (e.g., navigate to another page or show success message)
+      window.location.href = '/';
     } catch (error) {
       console.error('Form submission failed:', error);
-      // Handle error (e.g., show error message)
     }
   };
 
