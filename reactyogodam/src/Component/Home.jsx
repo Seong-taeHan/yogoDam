@@ -5,7 +5,6 @@ import axios from '../axios';
 import '../css/home.css';
 
 const Home = () => {
-
     const images = ['/img/testImg/groundImg.png', '/img/testImg/totoro1.png', '/img/testImg/test1.png'];
     const intervalTime = 3000; // 3초
 
@@ -13,28 +12,33 @@ const Home = () => {
     const [bookmarks, setBookmarks] = useState({});
     const [activeTab, setActiveTab] = useState('popular'); // 현재 활성화된 탭
     const user_id = localStorage.getItem('user_id');
-    
 
     const navigate = useNavigate();
     
     useEffect(() => {
-        axios.get('http://localhost:8000/list/lecipes')
-            .then(response => {
+        const fetchRecipes = async () => {
+            try {
+                const url = activeTab === 'popular' 
+                    ? 'http://localhost:8000/list/lecipes/pop' 
+                    : 'http://localhost:8000/list/lecipes';
+                const response = await axios.get(url);
                 const lecipes = response.data.map(item => ({
                     id: item.FOOD_ID,
                     name: item.FOOD_NAME,
                     img: item.FOOD_IMG ? `data:image/jpg;base64,${item.FOOD_IMG}` : null,
-                    price: 0, //item.FOOD_PRICE,
-                    nickName : item.NICK_NAME,
+                    price: 0, // item.FOOD_PRICE,
+                    nickName: item.NICK_NAME,
                     content: item.NOTIFICATION
                 }));
                 console.log(lecipes);
                 setCardInfoList(lecipes);
-            })
-            .catch(error => {
-                console.error('There was an error fetching the data!', error);
-            });
-    }, []);
+            } catch (error) {
+                console.error('데이터를 가져오는 중 오류 발생:', error);
+            }
+        };
+
+        fetchRecipes();
+    }, [activeTab]);
 
     useEffect(() => {
         axios.get('http://localhost:8000/list/favorites', {
@@ -52,11 +56,11 @@ const Home = () => {
         .catch(error => {
             console.error('즐겨찾기 데이터 불러오기 오류:', error);
         });
-    }, []);
+    }, [user_id]);
 
     const toggleBookmark = async (id) => {
         try {
-            const response = await axios.post('http://localhost:8000/list/favorites/toggle', {
+            await axios.post('http://localhost:8000/list/favorites/toggle', {
                 user_id: user_id, // 실제 사용자 ID를 사용
                 food_id: id
             });
@@ -67,7 +71,7 @@ const Home = () => {
         } catch (error) {
             console.error('즐겨찾기 상태 변경 오류:', error);
         }
-    };
+    }; 
 
     const handleProductClick = (id) => {
         navigate(`/lecipeDetail/${id}`);

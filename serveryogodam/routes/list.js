@@ -37,6 +37,41 @@ router.get('/lecipes', async (req, res) => {
     }
 });
 
+router.get('/lecipes/pop', async (req, res) => {
+  const db = req.app.locals.db;
+
+  try {
+      const result = await db.execute(`
+          SELECT f.FOOD_ID, f.FOOD_NAME, f.NOTIFICATION, f.NICK_NAME, COUNT(u.FOOD_ID) AS LIKE_COUNT
+          FROM FOODS f
+          LEFT JOIN USEFAVORITES u ON f.FOOD_ID = u.FOOD_ID AND u.IS_FAVORITED = 'Y'
+          GROUP BY f.FOOD_ID, f.FOOD_NAME, f.NOTIFICATION, f.NICK_NAME
+          ORDER BY LIKE_COUNT DESC
+      `);
+
+      const lecipes = await Promise.all(result.rows.map(async row => {
+          const foodImgResult = await db.execute('SELECT FOOD_IMG FROM FOODS WHERE FOOD_ID = :foodId', [row.FOOD_ID]);
+          let imageBase64 = null;
+          if (foodImgResult.rows[0].FOOD_IMG) {
+              const blob = await foodImgResult.rows[0].FOOD_IMG.getData();
+              imageBase64 = blob.toString('base64');
+          }
+          return {
+              FOOD_ID: row.FOOD_ID,
+              FOOD_NAME: row.FOOD_NAME,
+              NOTIFICATION: row.NOTIFICATION,
+              NICK_NAME: row.NICK_NAME,
+              FOOD_IMG: imageBase64,
+          };
+      }));
+
+      res.status(200).json(lecipes);
+      console.log("pop -> DB 데이터 연결 확인");
+  } catch (err) {
+      console.error('인기순 레시피 목록 조회 오류:', err);
+      res.status(500).send({ message: '서버 오류' });
+  }
+});
 // 레시피 작성
 router.post('/write', async (req, res) => {
   console.log('/write : ', req.body);
