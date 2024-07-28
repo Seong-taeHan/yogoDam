@@ -101,7 +101,7 @@
 .recipe-section {
   padding-left: 40px;
   padding-right: 40px;
-  height: 59vh;
+  height: 60vh;
 }
 
 .section-header {
@@ -161,12 +161,14 @@
   width: 40%; /* 가로 길이를 자동으로 맞춤 */
   height: 100%; /* 카드 높이에 맞추기 */
   object-fit: cover; /* 이미지 비율 유지하면서 카드에 맞춤 */
+  border-radius: 5%;
 }
 
 .recipe-save-image {
   width: 100%; /* 가로 길이를 자동으로 맞춤 */
   height: 200px; /* 카드 높이에 맞추기 */
-  object-fit: cover; /* 이미지 비율 유지하면서 카드에 맞춤 */
+  /* object-fit: cover; 이미지 비율 유지하면서 카드에 맞춤 */
+  border-radius: 5%;
 }
 
 .recipe-item.saved {
@@ -190,18 +192,31 @@
 }
 
 .recipe-title {
-  font-size: 1em;
+  font-size: 25px;
   font-weight: bold;
+  margin: 0;
+}
+
+.recipe-NOTIFICATION {
+  color: gray;
+  font-size: 20px;
+  margin: 5px 0;
 }
 
 .recipe-details {
   color: gray;
   font-size: 0.9em;
+  margin: 0px 0;
 }
 
 .recipe-price {
   color: #ff7f00;
   font-weight: bold;
+}
+.recipe-like {
+  color: gray;
+  font-size: 20px;
+  margin: 5px 0;
 }
 
 .swiper-button-next,
