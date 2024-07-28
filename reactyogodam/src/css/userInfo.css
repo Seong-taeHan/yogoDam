@@ -1,7 +1,7 @@
 .user-info-container {
   font-family: Arial, sans-serif;
   background-color: #f6f6f6;
-
+  height: 100%;
 }
 
 .user-info-header {
@@ -101,7 +101,7 @@
 .recipe-section {
   padding-left: 40px;
   padding-right: 40px;
-  height: 60vh;
+  flex: 1; /* 남은 공간을 모두 차지하도록 설정 */
 }
 
 .section-header {
