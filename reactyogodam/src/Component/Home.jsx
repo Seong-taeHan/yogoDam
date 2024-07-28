@@ -28,7 +28,8 @@ const Home = () => {
                     img: item.FOOD_IMG ? `data:image/jpg;base64,${item.FOOD_IMG}` : null,
                     price: 0, // item.FOOD_PRICE,
                     nickName: item.NICK_NAME,
-                    content: item.NOTIFICATION
+                    content: item.NOTIFICATION,
+                    popularity: item.POPULARITY
                 }));
                 console.log(lecipes);
                 setCardInfoList(lecipes);
@@ -36,9 +37,10 @@ const Home = () => {
                 console.error('데이터를 가져오는 중 오류 발생:', error);
             }
         };
-
+    
         fetchRecipes();
     }, [activeTab]);
+    
 
     useEffect(() => {
         axios.get('http://localhost:8000/list/favorites', {
@@ -120,7 +122,7 @@ const Home = () => {
                                     <div className="product-stats">
                                         <div className="product-rating">
                                             <img className='star_icon' src="../img/icon/star.svg" alt="star" />
-                                            <p>5.0</p>
+                                            <p>{product.popularity}</p>
                                         </div>
                                         <div className="product-views">
                                             <img className='search_icon' src="../img/icon/search.svg" alt="search" />
