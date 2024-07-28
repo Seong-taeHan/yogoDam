@@ -18,8 +18,9 @@ import SearchList from './Component/SearchList';
 
 function App() {
   const location = useLocation();
+  const token = localStorage.getItem('token');
   const showSearchBar = !['/login', '/favorites', '/joinuser','/userinfo'].includes(location.pathname);
-  const showPlusIconButton = !['/lecipeWrite'].includes(location.pathname);
+  const showPlusIconButton = token && !['/lecipeWrite'].includes(location.pathname);
 
   const PrivateRoute = ({ element: Element }) => {
     const token = localStorage.getItem('token');
@@ -53,7 +54,7 @@ function App() {
               <Route path='/searchlist' element={<SearchList />} />
             </Routes>
           </div>
-          {showPlusIconButton && <PlusIconButton />}
+          {showPlusIconButton && <PlusIconButton />} 
           <Footer />
         </div>
       </div>
