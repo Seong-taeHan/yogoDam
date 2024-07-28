@@ -17,7 +17,7 @@ const FooterBar = () => {
         isLoggedIn
             ? { id: 4, button: '내 정보', content: '내 정보 탭 입니다.', path: '/userinfo', icon: '/img/icon/iconMy.png' }
             : { id: 4, button: '로그인', content: '로그인 탭 입니다.', path: '/login', icon: '/img/icon/iconLogin.png' },
-        { id: 5, button: '레시피', content: '레시피탭 입니다.', path: '/LecipeList', icon: '/img/lecipeList.png' },
+        // { id: 5, button: '레시피', content: '레시피탭 입니다.', path: '/LecipeList', icon: '/img/lecipeList.png' },
     ];
 
     useEffect(() => {
