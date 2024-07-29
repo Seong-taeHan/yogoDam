@@ -17,6 +17,7 @@ import CategoryList from './Component/CategoryList';
 import SearchList from './Component/SearchList';
 import LoginComplete from './Component/LoginComplete';
 import RecomAI from './Component/RecomAI';
+import AiSelectPage from './Component/AiSelectPage';
 
 function App() {
   const location = useLocation();
@@ -56,6 +57,7 @@ function App() {
               <Route path='/searchlist' element={<SearchList />} />
               <Route path='/loginComplete' element={<LoginComplete />}/>
               <Route path='/recomAi' element={<RecomAI />}/>
+              <Route path='/aiselect' element={<AiSelectPage />} />
             </Routes>
           </div>
           {showPlusIconButton && <PlusIconButton />} 
