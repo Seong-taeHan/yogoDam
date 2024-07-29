@@ -93,7 +93,7 @@ const UserInfo = () => {
           modules={[Pagination]}
           className="uploaded-swiper"
         >
-          {uploadedRecipes.map((recipe) => (
+          {uploadedRecipes.slice(0, 3).map((recipe) => (
             <SwiperSlide key={recipe.FOOD_ID}>
               <div className="recipe-item uploaded" onClick={() => handleProductClick(recipe.FOOD_ID)}>
                 {recipe.FOOD_IMG ? (
@@ -110,7 +110,6 @@ const UserInfo = () => {
               </div>
             </SwiperSlide>
           ))}
-
         </Swiper>
         <div className="section-header">
           <h3>내가 찜한 레시피</h3>
@@ -124,7 +123,7 @@ const UserInfo = () => {
           modules={[Pagination]}
           className="saved-swiper"
         >
-          {savedRecipes.map((recipe) => (
+          {savedRecipes.slice(0, 4).map((recipe) => (
             <SwiperSlide key={recipe.FOOD_ID}>
               <div className="recipe-item saved" onClick={() => handleProductClick(recipe.FOOD_ID)}>
                 {recipe.FOOD_IMG ? (
