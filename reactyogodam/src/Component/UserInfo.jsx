@@ -112,7 +112,7 @@ const UserInfo = () => {
           ))}
 
         </Swiper>
-        <div className="section-header">
+        <div className="like-section-header">
           <h3>내가 찜한 레시피</h3>
           <Link to="/favorites">더 보기</Link>
         </div>

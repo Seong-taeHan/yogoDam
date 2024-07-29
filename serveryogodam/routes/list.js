@@ -6,15 +6,20 @@ const conn = require('../config/database');
 
 router.get('/lecipes', async (req, res) => {
   const db = req.app.locals.db;
+  const page = parseInt(req.query.page) || 1;
+  const itemsPerPage = 10;
+  const offset = (page - 1) * itemsPerPage;
 
   try {
       const result = await db.execute(`
-          SELECT f.FOOD_ID, f.FOOD_NAME, f.NOTIFICATION, f.NICK_NAME, COUNT(u.FOOD_ID) AS POPULARITY
-          FROM FOODS f
-          LEFT JOIN USEFAVORITES u ON f.FOOD_ID = u.FOOD_ID AND u.IS_FAVORITED = 'Y'
-          GROUP BY f.FOOD_ID, f.FOOD_NAME, f.NOTIFICATION, f.NICK_NAME
-          ORDER BY f.FOOD_ID DESC
-      `);
+          SELECT * FROM (
+              SELECT f.FOOD_ID, f.FOOD_NAME, f.NOTIFICATION, f.NICK_NAME, COUNT(u.FOOD_ID) AS POPULARITY, 
+                     ROW_NUMBER() OVER (ORDER BY f.FOOD_ID DESC) AS rn
+              FROM FOODS f
+              LEFT JOIN USEFAVORITES u ON f.FOOD_ID = u.FOOD_ID AND u.IS_FAVORITED = 'Y'
+              GROUP BY f.FOOD_ID, f.FOOD_NAME, f.NOTIFICATION, f.NICK_NAME
+          ) WHERE rn > :offset AND rn <= :offset + :itemsPerPage
+      `, { offset, itemsPerPage });
 
       const lecipes = await Promise.all(result.rows.map(async row => {
           const foodImgResult = await db.execute('SELECT FOOD_IMG FROM FOODS WHERE FOOD_ID = :foodId', [row.FOOD_ID]);
@@ -43,15 +48,20 @@ router.get('/lecipes', async (req, res) => {
 
 router.get('/lecipes/pop', async (req, res) => {
   const db = req.app.locals.db;
+  const page = parseInt(req.query.page) || 1;
+  const itemsPerPage = 10;
+  const offset = (page - 1) * itemsPerPage;
 
   try {
       const result = await db.execute(`
-          SELECT f.FOOD_ID, f.FOOD_NAME, f.NOTIFICATION, f.NICK_NAME, COUNT(u.FOOD_ID) AS POPULARITY
-          FROM FOODS f
-          LEFT JOIN USEFAVORITES u ON f.FOOD_ID = u.FOOD_ID AND u.IS_FAVORITED = 'Y'
-          GROUP BY f.FOOD_ID, f.FOOD_NAME, f.NOTIFICATION, f.NICK_NAME
-          ORDER BY POPULARITY DESC
-      `);
+          SELECT * FROM (
+              SELECT f.FOOD_ID, f.FOOD_NAME, f.NOTIFICATION, f.NICK_NAME, COUNT(u.FOOD_ID) AS POPULARITY,
+                     ROW_NUMBER() OVER (ORDER BY COUNT(u.FOOD_ID) DESC) AS rn
+              FROM FOODS f
+              LEFT JOIN USEFAVORITES u ON f.FOOD_ID = u.FOOD_ID AND u.IS_FAVORITED = 'Y'
+              GROUP BY f.FOOD_ID, f.FOOD_NAME, f.NOTIFICATION, f.NICK_NAME
+          ) WHERE rn > :offset AND rn <= :offset + :itemsPerPage
+      `, { offset, itemsPerPage });
 
       const lecipes = await Promise.all(result.rows.map(async row => {
           const foodImgResult = await db.execute('SELECT FOOD_IMG FROM FOODS WHERE FOOD_ID = :foodId', [row.FOOD_ID]);
@@ -77,7 +87,6 @@ router.get('/lecipes/pop', async (req, res) => {
       res.status(500).send({ message: '서버 오류' });
   }
 });
-
 
 // 레시피 작성
 router.post('/write', async (req, res) => {
