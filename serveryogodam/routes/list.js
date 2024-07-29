@@ -17,6 +17,7 @@ router.get('/lecipes', async (req, res) => {
                      ROW_NUMBER() OVER (ORDER BY f.FOOD_ID DESC) AS rn
               FROM FOODS f
               LEFT JOIN USEFAVORITES u ON f.FOOD_ID = u.FOOD_ID AND u.IS_FAVORITED = 'Y'
+              WHERE f.IS_DELETE = 'N'
               GROUP BY f.FOOD_ID, f.FOOD_NAME, f.NOTIFICATION, f.NICK_NAME, f.FOOD_PRICE
           ) WHERE rn > :offset AND rn <= :offset + :itemsPerPage
       `, { offset, itemsPerPage });
@@ -60,6 +61,7 @@ router.get('/lecipes/pop', async (req, res) => {
                      ROW_NUMBER() OVER (ORDER BY COUNT(u.FOOD_ID) DESC) AS rn
               FROM FOODS f
               LEFT JOIN USEFAVORITES u ON f.FOOD_ID = u.FOOD_ID AND u.IS_FAVORITED = 'Y'
+              WHERE f.IS_DELETE = 'N'
               GROUP BY f.FOOD_ID, f.FOOD_NAME, f.NOTIFICATION, f.NICK_NAME, f.FOOD_PRICE
           ) WHERE rn > :offset AND rn <= :offset + :itemsPerPage
       `, { offset, itemsPerPage });
@@ -169,7 +171,12 @@ router.get('/favorites', async (req, res) => {
     const user_id = req.query.user_id;// 사용자의 ID를 쿼리로 받아옵니다.
 
     try {
-        const result = await db.execute('SELECT FOOD_ID FROM USEFAVORITES WHERE USER_ID = :user_id', [user_id]);
+        const result = await db.execute(`
+          SELECT uf.FOOD_ID 
+          FROM USEFAVORITES uf
+          JOIN FOODS f ON uf.FOOD_ID = f.FOOD_ID
+          WHERE uf.USER_ID = :user_id
+          AND f.IS_DELETE = 'N'`, [user_id]);
         const favorites = result.rows.map(row => row.FOOD_ID);
         res.status(200).json(favorites);
     } catch (err) {
@@ -204,11 +211,14 @@ router.get('/favorites/list', async (req, res) => {
 
     try {
         const result = await db.execute(`
-            SELECT f.FOOD_ID, f.FOOD_NAME, f.FOOD_IMG 
-            FROM USEFAVORITES fav 
-            JOIN FOODS f ON fav.FOOD_ID = f.FOOD_ID 
-            WHERE fav.USER_ID = :user_id AND fav.IS_FAVORITED = 'Y'`, [user_id]
-        );
+              SELECT f.FOOD_ID, f.FOOD_NAME, f.FOOD_IMG 
+              FROM USEFAVORITES fav 
+              JOIN FOODS f ON fav.FOOD_ID = f.FOOD_ID 
+              WHERE fav.USER_ID = :user_id 
+                AND fav.IS_FAVORITED = 'Y' 
+                AND f.IS_DELETE = 'N'
+              `, [user_id]
+                      );
         
         const favorites = await Promise.all(result.rows.map(async row => {
             let imageBase64 = null;
@@ -304,9 +314,10 @@ router.get('/recipes/my', async (req, res) => {
       SELECT f.FOOD_ID, f.FOOD_NAME, f.NOTIFICATION, f.NICK_NAME, COUNT(u.FOOD_ID) AS POPULARITY
       FROM FOODS f
       LEFT JOIN USEFAVORITES u ON f.FOOD_ID = u.FOOD_ID AND u.IS_FAVORITED = 'Y'
-      WHERE f.NICK_NAME = :nick_name
+      WHERE f.NICK_NAME = :nick_name AND f.IS_DELETE = 'N'
       GROUP BY f.FOOD_ID, f.FOOD_NAME, f.NOTIFICATION, f.NICK_NAME
       ORDER BY f.FOOD_ID DESC
+
     `, { nick_name: req.query.nick_name });
 
     const recipes = await Promise.all(result.rows.map(async row => {
@@ -382,14 +393,13 @@ router.get('/searchlist', async (req, res) => {
     }
 
     const result = await db.execute(`
-        SELECT *
-        FROM FOODS
-        WHERE FOOD_NAME = :search
-        OR FOOD_ID IN (
-            SELECT FOOD_ID
-            FROM INGREDIENTS
-            WHERE INGRE_NAME = :search
-        )
+    SELECT *
+    FROM FOODS
+    WHERE (FOOD_NAME = :search OR FOOD_ID IN (
+        SELECT FOOD_ID
+        FROM INGREDIENTS
+        WHERE INGRE_NAME = :search
+    )) AND IS_DELETE = 'N'
     `, { search });
 
     console.log('쿼리 결과:', result.rows);
@@ -454,6 +464,29 @@ router.get('/searchnutrition', async (req, res) => {
   } catch (err) {
     console.error('nutrition 오류:', err);
     res.status(500).send({ message: '서버 오류', error: err.message });
+  }
+});
+
+router.post('/lecipe/del', async (req, res) => {
+  const db = req.app.locals.db;
+  const { foodId } = req.body;
+
+  try {
+      // IS_DELETE 컬럼을 'Y'로 업데이트
+      const result = await db.execute(`
+          UPDATE FOODS
+          SET IS_DELETE = 'Y'
+          WHERE FOOD_ID = :foodId
+      `, { foodId });
+
+      if (result.rowsAffected === 0) {
+          res.status(404).send({ message: '음식을 찾을 수 없습니다.' });
+      } else {
+          res.status(200).send({ message: '음식이 삭제 상태로 업데이트되었습니다.' });
+      }
+  } catch (err) {
+      console.error('음식 삭제 상태 업데이트 오류:', err);
+      res.status(500).send({ message: '서버 오류' });
   }
 });
 
