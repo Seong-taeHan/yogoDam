@@ -4,6 +4,9 @@ const bodyParser = require('body-parser');
 const oracledb = require('oracledb');
 const conn = require('../config/database');
 
+router.use(bodyParser.json()); // body-parser 미들웨어 사용
+
+// 레시피 목록 조회
 router.get('/lecipes', async (req, res) => {
   const db = req.app.locals.db;
   const page = parseInt(req.query.page) || 1;
@@ -11,43 +14,44 @@ router.get('/lecipes', async (req, res) => {
   const offset = (page - 1) * itemsPerPage;
 
   try {
-      const result = await db.execute(`
-          SELECT * FROM (
-              SELECT f.FOOD_ID, f.FOOD_NAME, f.NOTIFICATION, f.NICK_NAME, f.FOOD_PRICE, COUNT(u.FOOD_ID) AS POPULARITY, 
-                     ROW_NUMBER() OVER (ORDER BY f.FOOD_ID DESC) AS rn
-              FROM FOODS f
-              LEFT JOIN USEFAVORITES u ON f.FOOD_ID = u.FOOD_ID AND u.IS_FAVORITED = 'Y'
-              WHERE f.IS_DELETE = 'N'
-              GROUP BY f.FOOD_ID, f.FOOD_NAME, f.NOTIFICATION, f.NICK_NAME, f.FOOD_PRICE
-          ) WHERE rn > :offset AND rn <= :offset + :itemsPerPage
-      `, { offset, itemsPerPage });
+    const result = await db.execute(`
+      SELECT * FROM (
+        SELECT f.FOOD_ID, f.FOOD_NAME, f.NOTIFICATION, f.NICK_NAME, f.FOOD_PRICE, COUNT(u.FOOD_ID) AS POPULARITY, 
+               ROW_NUMBER() OVER (ORDER BY f.FOOD_ID DESC) AS rn
+        FROM FOODS f
+        LEFT JOIN USEFAVORITES u ON f.FOOD_ID = u.FOOD_ID AND u.IS_FAVORITED = 'Y'
+        WHERE f.IS_DELETE = 'N'
+        GROUP BY f.FOOD_ID, f.FOOD_NAME, f.NOTIFICATION, f.NICK_NAME, f.FOOD_PRICE
+      ) WHERE rn > :offset AND rn <= :offset + :itemsPerPage
+    `, { offset, itemsPerPage });
 
-      const lecipes = await Promise.all(result.rows.map(async row => {
-          const foodImgResult = await db.execute('SELECT FOOD_IMG FROM FOODS WHERE FOOD_ID = :foodId', [row.FOOD_ID]);
-          let imageBase64 = null;
-          if (foodImgResult.rows[0].FOOD_IMG) {
-              const blob = await foodImgResult.rows[0].FOOD_IMG.getData();
-              imageBase64 = blob.toString('base64');
-          }
-          return {
-              FOOD_ID: row.FOOD_ID,
-              FOOD_NAME: row.FOOD_NAME,
-              NOTIFICATION: row.NOTIFICATION,
-              NICK_NAME: row.NICK_NAME,
-              FOOD_IMG: imageBase64,
-              FOOD_PRICE: row.FOOD_PRICE,
-              POPULARITY: row.POPULARITY
-          };
-      }));
+    const lecipes = await Promise.all(result.rows.map(async row => {
+      const foodImgResult = await db.execute('SELECT FOOD_IMG FROM FOODS WHERE FOOD_ID = :foodId', [row.FOOD_ID]);
+      let imageBase64 = null;
+      if (foodImgResult.rows[0].FOOD_IMG) {
+        const blob = await foodImgResult.rows[0].FOOD_IMG.getData();
+        imageBase64 = blob.toString('base64');
+      }
+      return {
+        FOOD_ID: row.FOOD_ID,
+        FOOD_NAME: row.FOOD_NAME,
+        NOTIFICATION: row.NOTIFICATION,
+        NICK_NAME: row.NICK_NAME,
+        FOOD_IMG: imageBase64,
+        FOOD_PRICE: row.FOOD_PRICE,
+        POPULARITY: row.POPULARITY
+      };
+    }));
 
-      res.status(200).json(lecipes);
-      console.log("list -> DB 데이터 연결 확인");
+    res.status(200).json(lecipes);
+    console.log("list -> DB 데이터 연결 확인");
   } catch (err) {
-      console.error('레시피 목록 조회 오류:', err);
-      res.status(500).send({ message: '서버 오류' });
+    console.error('레시피 목록 조회 오류:', err);
+    res.status(500).send({ message: '서버 오류' });
   }
 });
 
+// 인기순 레시피 목록 조회
 router.get('/lecipes/pop', async (req, res) => {
   const db = req.app.locals.db;
   const page = parseInt(req.query.page) || 1;
@@ -55,40 +59,40 @@ router.get('/lecipes/pop', async (req, res) => {
   const offset = (page - 1) * itemsPerPage;
 
   try {
-      const result = await db.execute(`
-          SELECT * FROM (
-              SELECT f.FOOD_ID, f.FOOD_NAME, f.NOTIFICATION, f.NICK_NAME, f.FOOD_PRICE, COUNT(u.FOOD_ID) AS POPULARITY,
-                     ROW_NUMBER() OVER (ORDER BY COUNT(u.FOOD_ID) DESC) AS rn
-              FROM FOODS f
-              LEFT JOIN USEFAVORITES u ON f.FOOD_ID = u.FOOD_ID AND u.IS_FAVORITED = 'Y'
-              WHERE f.IS_DELETE = 'N'
-              GROUP BY f.FOOD_ID, f.FOOD_NAME, f.NOTIFICATION, f.NICK_NAME, f.FOOD_PRICE
-          ) WHERE rn > :offset AND rn <= :offset + :itemsPerPage
-      `, { offset, itemsPerPage });
+    const result = await db.execute(`
+      SELECT * FROM (
+        SELECT f.FOOD_ID, f.FOOD_NAME, f.NOTIFICATION, f.NICK_NAME, f.FOOD_PRICE, COUNT(u.FOOD_ID) AS POPULARITY,
+               ROW_NUMBER() OVER (ORDER BY COUNT(u.FOOD_ID) DESC) AS rn
+        FROM FOODS f
+        LEFT JOIN USEFAVORITES u ON f.FOOD_ID = u.FOOD_ID AND u.IS_FAVORITED = 'Y'
+        WHERE f.IS_DELETE = 'N'
+        GROUP BY f.FOOD_ID, f.FOOD_NAME, f.NOTIFICATION, f.NICK_NAME, f.FOOD_PRICE
+      ) WHERE rn > :offset AND rn <= :offset + :itemsPerPage
+    `, { offset, itemsPerPage });
 
-      const lecipes = await Promise.all(result.rows.map(async row => {
-          const foodImgResult = await db.execute('SELECT FOOD_IMG FROM FOODS WHERE FOOD_ID = :foodId', [row.FOOD_ID]);
-          let imageBase64 = null;
-          if (foodImgResult.rows[0].FOOD_IMG) {
-              const blob = await foodImgResult.rows[0].FOOD_IMG.getData();
-              imageBase64 = blob.toString('base64');
-          }
-          return {
-              FOOD_ID: row.FOOD_ID,
-              FOOD_NAME: row.FOOD_NAME,
-              NOTIFICATION: row.NOTIFICATION,
-              NICK_NAME: row.NICK_NAME,
-              FOOD_IMG: imageBase64,
-              FOOD_PRICE: row.FOOD_PRICE,
-              POPULARITY: row.POPULARITY
-          };
-      }));
+    const lecipes = await Promise.all(result.rows.map(async row => {
+      const foodImgResult = await db.execute('SELECT FOOD_IMG FROM FOODS WHERE FOOD_ID = :foodId', [row.FOOD_ID]);
+      let imageBase64 = null;
+      if (foodImgResult.rows[0].FOOD_IMG) {
+        const blob = await foodImgResult.rows[0].FOOD_IMG.getData();
+        imageBase64 = blob.toString('base64');
+      }
+      return {
+        FOOD_ID: row.FOOD_ID,
+        FOOD_NAME: row.FOOD_NAME,
+        NOTIFICATION: row.NOTIFICATION,
+        NICK_NAME: row.NICK_NAME,
+        FOOD_IMG: imageBase64,
+        FOOD_PRICE: row.FOOD_PRICE,
+        POPULARITY: row.POPULARITY
+      };
+    }));
 
-      res.status(200).json(lecipes);
-      console.log("pop -> DB 데이터 연결 확인");
+    res.status(200).json(lecipes);
+    console.log("pop -> DB 데이터 연결 확인");
   } catch (err) {
-      console.error('인기순 레시피 목록 조회 오류:', err);
-      res.status(500).send({ message: '서버 오류' });
+    console.error('인기순 레시피 목록 조회 오류:', err);
+    res.status(500).send({ message: '서버 오류' });
   }
 });
 
@@ -114,7 +118,6 @@ router.post('/write', async (req, res) => {
     const thumbnailData = thumbnail.replace(/^data:image\/\w+;base64,/, '');
     const thumbnailBuffer = Buffer.from(thumbnailData, 'base64');
 
-    // 레시피 데이터를 데이터베이스에 저장하는 로직 작성
     const insertRecipeSql = `
       INSERT INTO FOODS (user_id, food_name, food_img, cook_time, upload_date, is_delete, food_price, cusine_type, cooking_method, nick_name, notification)
       VALUES (:user_id, :title, :thumbnail, :cookTime, SYSDATE, 'N', 0, :category1, :category2, :nickName, :notification)
@@ -133,10 +136,8 @@ router.post('/write', async (req, res) => {
     };
 
     const result = await db.execute(insertRecipeSql, bindVars, { autoCommit: true });
-
     const foodId = result.outBinds.food_id[0];
 
-    // 재료 데이터를 데이터베이스에 저장하는 로직
     const insertIngredientSql = `
       INSERT INTO INGREDIENTS (food_id, ingre_name, amount, ingred_unit)
       VALUES (:foodId, :name, :amount, :unit)
@@ -145,15 +146,12 @@ router.post('/write', async (req, res) => {
       await db.execute(insertIngredientSql, [foodId, ingredient.name, ingredient.amount, ingredient.unit], { autoCommit: true });
     }
 
-    // 요리 순서 데이터를 데이터베이스에 저장하는 로직
     const insertStepSql = `
       INSERT INTO FOOD_STEPS (step_id, food_id, stepOrder, description, step_img)
       VALUES (SEQ_STEP_ID.NEXTVAL, :foodId, :stepOrder, :description, :step_img)
     `;
-
     for (let i = 0; i < steps.length; i++) {
       const step = steps[i];
-      console.log(step.STEP_IMG);
       const stepImgData = step.image.replace(/^data:image\/\w+;base64,/, '');
       const stepImageBuffer = Buffer.from(stepImgData, 'base64');
       await db.execute(insertStepSql, [foodId, i + 1, step.description, { val: stepImageBuffer, type: oracledb.BLOB }], { autoCommit: true });
@@ -166,78 +164,81 @@ router.post('/write', async (req, res) => {
   }
 });
 
+// 즐겨찾기 목록 조회
 router.get('/favorites', async (req, res) => {
-    const db = req.app.locals.db;
-    const user_id = req.query.user_id;// 사용자의 ID를 쿼리로 받아옵니다.
+  const db = req.app.locals.db;
+  const user_id = req.query.user_id; // 사용자의 ID를 쿼리로 받아옵니다.
 
-    try {
-        const result = await db.execute(`
-          SELECT uf.FOOD_ID 
-          FROM USEFAVORITES uf
-          JOIN FOODS f ON uf.FOOD_ID = f.FOOD_ID
-          WHERE uf.USER_ID = :user_id
-          AND f.IS_DELETE = 'N'`, [user_id]);
-        const favorites = result.rows.map(row => row.FOOD_ID);
-        res.status(200).json(favorites);
-    } catch (err) {
-        console.error('즐겨찾기 목록 조회 오류:', err);
-        res.status(500).send({ message: '서버 오류' });
-    }
+  try {
+    const result = await db.execute(`
+      SELECT uf.FOOD_ID 
+      FROM USEFAVORITES uf
+      JOIN FOODS f ON uf.FOOD_ID = f.FOOD_ID
+      WHERE uf.USER_ID = :user_id
+      AND f.IS_DELETE = 'N'
+    `, [user_id]);
+    const favorites = result.rows.map(row => row.FOOD_ID);
+    res.status(200).json(favorites);
+  } catch (err) {
+    console.error('즐겨찾기 목록 조회 오류:', err);
+    res.status(500).send({ message: '서버 오류' });
+  }
 });
 
+// 즐겨찾기 토글
 router.post('/favorites/toggle', async (req, res) => {
-    const db = req.app.locals.db;
-    const { user_id, food_id } = req.body;
+  const db = req.app.locals.db;
+  const { user_id, food_id } = req.body;
 
-    try {
-        const result = await db.execute('SELECT * FROM USEFAVORITES WHERE USER_ID = :user_id AND FOOD_ID = :food_id', [user_id, food_id]);
-        if (result.rows.length > 0) {
-            // 이미 북마크가 존재하면 삭제
-            await db.execute('DELETE FROM USEFAVORITES WHERE USER_ID = :user_id AND FOOD_ID = :food_id', [user_id, food_id], { autoCommit: true });
-        } else {
-            // 북마크가 존재하지 않으면 추가
-            await db.execute("INSERT INTO USEFAVORITES (USER_ID, FOOD_ID, CREATED_AT, IS_FAVORITED) VALUES (:user_id, :food_id, SYSDATE, 'Y')", [user_id, food_id], { autoCommit: true });
-        }
-        res.status(200).send({ message: '즐겨찾기 상태가 변경되었습니다.' });
-    } catch (err) {
-        console.error('즐겨찾기 상태 변경 오류:', err);
-        res.status(500).send({ message: '서버 오류' });
+  try {
+    const result = await db.execute('SELECT * FROM USEFAVORITES WHERE USER_ID = :user_id AND FOOD_ID = :food_id', [user_id, food_id]);
+    if (result.rows.length > 0) {
+      // 이미 북마크가 존재하면 삭제
+      await db.execute('DELETE FROM USEFAVORITES WHERE USER_ID = :user_id AND FOOD_ID = :food_id', [user_id, food_id], { autoCommit: true });
+    } else {
+      // 북마크가 존재하지 않으면 추가
+      await db.execute("INSERT INTO USEFAVORITES (USER_ID, FOOD_ID, CREATED_AT, IS_FAVORITED) VALUES (:user_id, :food_id, SYSDATE, 'Y')", [user_id, food_id], { autoCommit: true });
     }
+    res.status(200).send({ message: '즐겨찾기 상태가 변경되었습니다.' });
+  } catch (err) {
+    console.error('즐겨찾기 상태 변경 오류:', err);
+    res.status(500).send({ message: '서버 오류' });
+  }
 });
 
+// 즐겨찾기 목록 조회 (상세)
 router.get('/favorites/list', async (req, res) => {
-    const db = req.app.locals.db;
-    const { user_id } = req.query;
+  const db = req.app.locals.db;
+  const { user_id } = req.query;
 
-    try {
-        const result = await db.execute(`
-              SELECT f.FOOD_ID, f.FOOD_NAME, f.FOOD_IMG 
-              FROM USEFAVORITES fav 
-              JOIN FOODS f ON fav.FOOD_ID = f.FOOD_ID 
-              WHERE fav.USER_ID = :user_id 
-                AND fav.IS_FAVORITED = 'Y' 
-                AND f.IS_DELETE = 'N'
-              `, [user_id]
-                      );
-        
-        const favorites = await Promise.all(result.rows.map(async row => {
-            let imageBase64 = null;
-            if (row.FOOD_IMG) {
-                const blob = await row.FOOD_IMG.getData();
-                imageBase64 = blob.toString('base64');
-            } return {
-                FOOD_ID: row.FOOD_ID,
-                FOOD_NAME: row.FOOD_NAME,
-                FOOD_IMG: imageBase64
-            }
+  try {
+    const result = await db.execute(`
+      SELECT f.FOOD_ID, f.FOOD_NAME, f.FOOD_IMG 
+      FROM USEFAVORITES fav 
+      JOIN FOODS f ON fav.FOOD_ID = f.FOOD_ID 
+      WHERE fav.USER_ID = :user_id 
+        AND fav.IS_FAVORITED = 'Y' 
+        AND f.IS_DELETE = 'N'
+    `, [user_id]);
 
-        }));
+    const favorites = await Promise.all(result.rows.map(async row => {
+      let imageBase64 = null;
+      if (row.FOOD_IMG) {
+        const blob = await row.FOOD_IMG.getData();
+        imageBase64 = blob.toString('base64');
+      }
+      return {
+        FOOD_ID: row.FOOD_ID,
+        FOOD_NAME: row.FOOD_NAME,
+        FOOD_IMG: imageBase64
+      };
+    }));
 
-        res.status(200).json(favorites);
-    } catch (err) {
-        console.error('즐겨찾기 목록 조회 오류:', err);
-        res.status(500).send({ message: '서버 오류' });
-    }
+    res.status(200).json(favorites);
+  } catch (err) {
+    console.error('즐겨찾기 목록 조회 오류:', err);
+    res.status(500).send({ message: '서버 오류' });
+  }
 });
 
 // 레시피 상세 조회
@@ -246,22 +247,25 @@ router.get('/recipes/detail', async (req, res) => {
   const food_id = req.query.food_id;
 
   try {
-    const result = await db.execute(
-      `SELECT INGRE_NAME, AMOUNT, INGRED_UNIT, INGRED_PRICE
+    const result = await db.execute(`
+      SELECT INGRE_NAME, AMOUNT, INGRED_UNIT, INGRED_PRICE
       FROM INGREDIENTS
-      WHERE FOOD_ID = :food_id`, [food_id]);
-    
+      WHERE FOOD_ID = :food_id
+    `, [food_id]);
+
     const ingredients = result.rows.map(row => ({
       name: row.INGRE_NAME,
       amount: row.AMOUNT,
       unit: row.INGRED_UNIT,
       price: row.INGRED_PRICE
     }));
-    const stepsResult = await db.execute(
-      `SELECT STEPORDER, DESCRIPTION, STEP_IMG
+
+    const stepsResult = await db.execute(`
+      SELECT STEPORDER, DESCRIPTION, STEP_IMG
       FROM FOOD_STEPS
       WHERE FOOD_ID = :food_id
-      ORDER BY STEPORDER`, [food_id]);
+      ORDER BY STEPORDER
+    `, [food_id]);
 
     const steps = await Promise.all(stepsResult.rows.map(async row => { 
       let stepImageBase64 = null;
@@ -276,24 +280,25 @@ router.get('/recipes/detail', async (req, res) => {
       };
     }));
 
-    const recipeResult = await db.execute(
-      `SELECT FOOD_NAME, FOOD_IMG, COOK_TIME, IS_DELETE, FOOD_PRICE, NOTIFICATION
+    const recipeResult = await db.execute(`
+      SELECT FOOD_NAME, FOOD_IMG, COOK_TIME, IS_DELETE, FOOD_PRICE, NOTIFICATION
       FROM FOODS
-      WHERE FOOD_ID = :food_id`, [food_id]);
+      WHERE FOOD_ID = :food_id
+    `, [food_id]);
 
     const recipe = await recipeResult.rows.map(async row => {
       let imageBase64 = null;
       if (row.FOOD_IMG) {
-      const blob = await row.FOOD_IMG.getData();
-      imageBase64 = blob.toString('base64');
+        const blob = await row.FOOD_IMG.getData();
+        imageBase64 = blob.toString('base64');
       }
       return {
-      name: row.FOOD_NAME,
-      image: imageBase64,
-      cookTime: row.COOK_TIME,
-      isDelete: row.IS_DELETE,
-      price: row.FOOD_PRICE,
-      notification: row.NOTIFICATION
+        name: row.FOOD_NAME,
+        image: imageBase64,
+        cookTime: row.COOK_TIME,
+        isDelete: row.IS_DELETE,
+        price: row.FOOD_PRICE,
+        notification: row.NOTIFICATION
       };
     })[0];
 
@@ -305,7 +310,7 @@ router.get('/recipes/detail', async (req, res) => {
   }
 });
 
-
+// 사용자 레시피 목록 조회
 router.get('/recipes/my', async (req, res) => {
   const db = req.app.locals.db;
 
@@ -317,7 +322,6 @@ router.get('/recipes/my', async (req, res) => {
       WHERE f.NICK_NAME = :nick_name AND f.IS_DELETE = 'N'
       GROUP BY f.FOOD_ID, f.FOOD_NAME, f.NOTIFICATION, f.NICK_NAME
       ORDER BY f.FOOD_ID DESC
-
     `, { nick_name: req.query.nick_name });
 
     const recipes = await Promise.all(result.rows.map(async row => {
@@ -344,7 +348,7 @@ router.get('/recipes/my', async (req, res) => {
   }
 });
 
-
+// 카테고리별 레시피 목록 조회
 router.get('/categorylist', async (req, res) => {
   const db = req.app.locals.db;
   const { category } = req.query;
@@ -380,7 +384,7 @@ router.get('/categorylist', async (req, res) => {
   }
 });
 
-
+// 검색어를 통한 레시피 목록 조회
 router.get('/searchlist', async (req, res) => {
   const db = req.app.locals.db;
   const { search } = req.query;
@@ -393,13 +397,13 @@ router.get('/searchlist', async (req, res) => {
     }
 
     const result = await db.execute(`
-    SELECT *
-    FROM FOODS
-    WHERE (FOOD_NAME = :search OR FOOD_ID IN (
-        SELECT FOOD_ID
-        FROM INGREDIENTS
-        WHERE INGRE_NAME = :search
-    )) AND IS_DELETE = 'N'
+      SELECT *
+      FROM FOODS
+      WHERE (FOOD_NAME = :search OR FOOD_ID IN (
+          SELECT FOOD_ID
+          FROM INGREDIENTS
+          WHERE INGRE_NAME = :search
+      )) AND IS_DELETE = 'N'
     `, { search });
 
     console.log('쿼리 결과:', result.rows);
@@ -427,6 +431,7 @@ router.get('/searchlist', async (req, res) => {
   }
 });
 
+// 영양 정보를 통한 레시피 목록 조회
 router.get('/searchnutrition', async (req, res) => {
   const db = req.app.locals.db;
   const { search } = req.query;
@@ -467,28 +472,27 @@ router.get('/searchnutrition', async (req, res) => {
   }
 });
 
+// 레시피 삭제 상태 업데이트
 router.post('/lecipe/del', async (req, res) => {
   const db = req.app.locals.db;
   const { foodId } = req.body;
 
   try {
-      // IS_DELETE 컬럼을 'Y'로 업데이트
-      const result = await db.execute(`
-          UPDATE FOODS
-          SET IS_DELETE = 'Y'
-          WHERE FOOD_ID = :foodId
-      `, { foodId });
+    const result = await db.execute(`
+      UPDATE FOODS
+      SET IS_DELETE = 'Y'
+      WHERE FOOD_ID = :foodId
+    `, { foodId });
 
-      if (result.rowsAffected === 0) {
-          res.status(404).send({ message: '음식을 찾을 수 없습니다.' });
-      } else {
-          res.status(200).send({ message: '음식이 삭제 상태로 업데이트되었습니다.' });
-      }
+    if (result.rowsAffected === 0) {
+      res.status(404).send({ message: '음식을 찾을 수 없습니다.' });
+    } else {
+      res.status(200).send({ message: '음식이 삭제 상태로 업데이트되었습니다.' });
+    }
   } catch (err) {
-      console.error('음식 삭제 상태 업데이트 오류:', err);
-      res.status(500).send({ message: '서버 오류' });
+    console.error('음식 삭제 상태 업데이트 오류:', err);
+    res.status(500).send({ message: '서버 오류' });
   }
 });
-
 
 module.exports = router;
