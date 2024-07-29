@@ -115,8 +115,12 @@ router.post('/write', async (req, res) => {
       steps = [] // 기본값으로 빈 배열을 설정
     } = req.body;
 
-    const thumbnailData = thumbnail.replace(/^data:image\/\w+;base64,/, '');
-    const thumbnailBuffer = Buffer.from(thumbnailData, 'base64');
+    // thumbnail이 유효한지 확인
+    let thumbnailBuffer = null;
+    if (thumbnail) {
+      const thumbnailData = thumbnail.replace(/^data:image\/\w+;base64,/, '');
+      thumbnailBuffer = Buffer.from(thumbnailData, 'base64');
+    }
 
     const insertRecipeSql = `
       INSERT INTO FOODS (user_id, food_name, food_img, cook_time, upload_date, is_delete, food_price, cusine_type, cooking_method, nick_name, notification)
@@ -152,8 +156,14 @@ router.post('/write', async (req, res) => {
     `;
     for (let i = 0; i < steps.length; i++) {
       const step = steps[i];
-      const stepImgData = step.image.replace(/^data:image\/\w+;base64,/, '');
-      const stepImageBuffer = Buffer.from(stepImgData, 'base64');
+
+      // step.image가 유효한지 확인
+      let stepImageBuffer = null;
+      if (step.image) {
+        const stepImgData = step.image.replace(/^data:image\/\w+;base64,/, '');
+        stepImageBuffer = Buffer.from(stepImgData, 'base64');
+      }
+
       await db.execute(insertStepSql, [foodId, i + 1, step.description, { val: stepImageBuffer, type: oracledb.BLOB }], { autoCommit: true });
     }
 
@@ -163,6 +173,7 @@ router.post('/write', async (req, res) => {
     res.status(500).send({ message: '서버 오류' });
   }
 });
+
 
 // 즐겨찾기 목록 조회
 router.get('/favorites', async (req, res) => {
