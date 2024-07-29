@@ -65,5 +65,5 @@ const Category = () => {
     </div>
   );
 }
-//sasas
+
 export default Category;
