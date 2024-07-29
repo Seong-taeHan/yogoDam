@@ -415,4 +415,45 @@ router.get('/searchlist', async (req, res) => {
   }
 });
 
+router.get('/searchnutrition', async (req, res) => {
+  const db = req.app.locals.db;
+  const { search } = req.query;
+  console.log(req.query);
+
+  console.log('검색어:', search);
+
+  try {
+    if (!db) {
+      throw new Error('데이터베이스에 연결할 수 없습니다.');
+    }
+
+    const query = `
+      SELECT NUTRI_ID, PROTEIN, CARBOHYDRATE, FAT, 
+             (PROTEIN * 4 + CARBOHYDRATE * 4 + FAT * 9) AS TOTALCAL, 
+             INGRED_N_PRICE
+      FROM NUTRITION
+      WHERE NUTRI_ID = :search
+    `;
+
+    const result = await db.execute(query, { search });
+
+    console.log('쿼리 결과:', result.rows);
+
+    const recipes = result.rows.map(row => ({
+      NUTRI_ID: row.NUTRI_ID,
+      PROTEIN: row.PROTEIN,
+      CARBOHYDRATE: row.CARBOHYDRATE,
+      FAT: row.FAT,
+      TOTALCAL: row.TOTALCAL,
+      INGRED_N_PRICE: row.INGRED_N_PRICE
+    }));
+
+    res.status(200).json(recipes);
+  } catch (err) {
+    console.error('nutrition 오류:', err);
+    res.status(500).send({ message: '서버 오류', error: err.message });
+  }
+});
+
+
 module.exports = router;

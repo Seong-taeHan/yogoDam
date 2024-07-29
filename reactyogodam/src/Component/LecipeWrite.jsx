@@ -1,9 +1,9 @@
 import axios from '../axios';
 import React, { useState, useRef } from 'react';
-import '../css/LecipeWrite.css'
+import '../css/LecipeWrite.css';
 
 const LecipeWrite = () => {
-  const [ingredients, setIngredients] = useState([{ name: '', amount: '', unit: '' }]);
+  const [ingredients, setIngredients] = useState([{ name: '', amount: '', unit: '', price: '' }]);
   const [steps, setSteps] = useState([{ description: '', image: null, imagePreview: null }]);
   const [thumbnail, setThumbnail] = useState(null);
   const [thumbnailPreview, setThumbnailPreview] = useState(null);
@@ -14,25 +14,57 @@ const LecipeWrite = () => {
   const user_id = localStorage.getItem('user_id');
 
   const handleAddIngredient = () => {
-    setIngredients([...ingredients, { name: '', amount: '', unit: '' }]);
+    setIngredients([...ingredients, { name: '', amount: '', unit: '', price: '' }]);
   };
 
   const handleRemoveIngredient = (index) => {
     setIngredients(ingredients.filter((_, i) => i !== index));
   };
 
-  const handleIngredientChange = (index, e) => {
+  const handleIngredientChange = async (index, e) => {
+    const { name, value } = e.target;
     const newIngredients = ingredients.map((ingredient, i) => {
       if (i === index) {
-        if (e.target.name === 'amount') {   //정규식 활용하여 숫자만 입력되도록
-          const numericValue = e.target.value.replace(/[^0-9]/g, ''); // 숫자가 아닌 문자는 제거
-          return { ...ingredient, [e.target.name]: numericValue };
+        if (name === 'amount') {
+          const numericValue = value.replace(/[^0-9]/g, '');
+          return { ...ingredient, [name]: numericValue };
         }
-        return { ...ingredient, [e.target.name]: e.target.value };
+        return { ...ingredient, [name]: value };
       }
       return ingredient;
     });
+
     setIngredients(newIngredients);
+
+    if (name === 'name') {
+      try {
+        const response = await axios.get('/list/searchnutrition', {
+          params: { search: value }
+        });
+
+        if (response.data.length > 0) {
+          const { INGRED_N_PRICE } = response.data[0];
+          setIngredients(prevIngredients => {
+            const updatedIngredients = [...prevIngredients];
+            updatedIngredients[index].price = INGRED_N_PRICE;
+            return updatedIngredients;
+          });
+        } else {
+          setIngredients(prevIngredients => {
+            const updatedIngredients = [...prevIngredients];
+            updatedIngredients[index].price = '알 수 없음';
+            return updatedIngredients;
+          });
+        }
+      } catch (error) {
+        console.error('영양 정보 검색 오류:', error);
+        setIngredients(prevIngredients => {
+          const updatedIngredients = [...prevIngredients];
+          updatedIngredients[index].price = '알 수 없음';
+          return updatedIngredients;
+        });
+      }
+    }
   };
 
   const handleAddStep = () => {
@@ -59,7 +91,7 @@ const LecipeWrite = () => {
     reader.onloadend = () => {
       const newSteps = steps.map((step, i) => {
         if (i === index) {
-          return { ...step, image: reader.result, imagePreview: URL.createObjectURL(file) }; // Base64 인코딩된 이미지 저장
+          return { ...step, image: reader.result, imagePreview: URL.createObjectURL(file) };
         }
         return step;
       });
@@ -72,7 +104,7 @@ const LecipeWrite = () => {
     const file = e.target.files[0];
     const reader = new FileReader();
     reader.onloadend = () => {
-      setThumbnail(reader.result); // Base64 인코딩된 이미지 저장
+      setThumbnail(reader.result);
       setThumbnailPreview(URL.createObjectURL(file));
     };
     reader.readAsDataURL(file);
@@ -92,7 +124,9 @@ const LecipeWrite = () => {
       ingredients,
       steps
     };
-
+  
+    console.log('Form Data:', formData); // Log formData to verify its contents
+  
     try {
       const response = await axios.post('/list/write', formData, {
         headers: {
@@ -102,7 +136,21 @@ const LecipeWrite = () => {
       console.log('Form submitted:', response.data);
       window.location.href = '/';
     } catch (error) {
-      console.error('Form submission failed:', error);
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.error('Form submission failed:', error.response.data);
+        console.error('Status:', error.response.status);
+        console.error('Headers:', error.response.headers);
+      } else if (error.request) {
+        // The request was made but no response was received
+        console.error('Form submission failed: No response received');
+        console.error('Request:', error.request);
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.error('Form submission failed:', error.message);
+      }
+      console.error('Config:', error.config);
     }
   };
 
@@ -125,12 +173,13 @@ const LecipeWrite = () => {
               <img className='write-thumbnail' src='/img/recipeDetailImg/firstImg.png' alt='초기 상태'></img>
             </div>
           )}
-          <input 
-            className='thumbnail-input' 
-            type='file' 
-            accept='image/*' 
+          <input
+            className='thumbnail-input'
+            type='file'
+            accept='image/*'
             onChange={handleThumbnailChange}
             ref={fileInputRef}
+            style={{ display: 'none' }}
           />
         </div>
         <p>레시피 제목</p>
@@ -165,30 +214,31 @@ const LecipeWrite = () => {
         {ingredients.map((ingredient, index) => (
           <div key={index}>
             <div className='write-ingredient-row'>
-            <input
-              type="text"
-              name="name"
-              placeholder="재료"
-              value={ingredient.name}
-              onChange={(e) => handleIngredientChange(index, e)}
-              required
-            />
-            <input
-              type="text"
-              name="amount"
-              placeholder="양"
-              value={ingredient.amount}
-              onChange={(e) => handleIngredientChange(index, e)}
-              required
-            />
-            <input
-              type="text"
-              name="unit"
-              placeholder="단위"
-              value={ingredient.unit}
-              onChange={(e) => handleIngredientChange(index, e)}
-              required
-            />
+              <input
+                type="text"
+                name="name"
+                placeholder="재료"
+                value={ingredient.name}
+                onChange={(e) => handleIngredientChange(index, e)}
+                required
+              />
+              <input
+                type="text"
+                name="amount"
+                placeholder="양"
+                value={ingredient.amount}
+                onChange={(e) => handleIngredientChange(index, e)}
+                required
+              />
+              <input
+                type="text"
+                name="unit"
+                placeholder="단위"
+                value={ingredient.unit}
+                onChange={(e) => handleIngredientChange(index, e)}
+                required
+              />
+              <p>{ingredient.price ? `가격: ${ingredient.price}` : '가격 정보 없음'}</p>
             </div>
             <button type="button" onClick={() => handleRemoveIngredient(index)}>- 재료 삭제</button>
           </div>
@@ -210,6 +260,7 @@ const LecipeWrite = () => {
                 type='file'
                 accept='image/*'
                 onChange={(e) => handleImageChange(index, e)}
+                style={{ display: 'none' }}
               />
             </div>
             <input
