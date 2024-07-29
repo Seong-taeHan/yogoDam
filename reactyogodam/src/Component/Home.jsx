@@ -39,11 +39,13 @@ const Home = () => {
                     id: item.FOOD_ID,
                     name: item.FOOD_NAME,
                     img: item.FOOD_IMG ? `data:image/jpg;base64,${item.FOOD_IMG}` : null,
-                    price: 0, // item.FOOD_PRICE,
+                    price: item.FOOD_PRICE,
                     nickName: item.NICK_NAME,
                     content: item.NOTIFICATION,
                     popularity: item.POPULARITY
                 }));
+
+                console.log(lecipes); // 데이터를 콘솔에 출력하여 확인
 
                 setCardInfoList(prevCardInfoList => {
                     const newList = [...prevCardInfoList];
@@ -124,88 +126,55 @@ const Home = () => {
             </div>
             <div className="products-container">
                 {cardInfoList.map((product, index) => {
+                    const productCard = (
+                        <div className="product-card" onClick={() => handleProductClick(product.id)} key={product.id}>
+                            <div className="product-rank">{index + 1}</div>
+                            <img className="product-img" src={product.img} alt={product.name} />
+                            <div className="product-info">
+                                <div className="product-header">
+                                    <h2>{product.name}</h2>
+                                    <img 
+                                        className='bookmark_icon' 
+                                        src={bookmarks[product.id] ? "../img/icon/bookmarked.svg" : "../img/icon/bookmark.svg"} 
+                                        alt="bookmark" 
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            toggleBookmark(product.id);
+                                        }}
+                                    />
+                                </div>
+                                <div>{product.content}</div>
+                                <div className="product-body">
+                                    <div className="product-details">
+                                        <div className="product-user">
+                                            <img className="user_icon" src="../img/icon/User.svg" alt="user" />
+                                            <p>{product.nickName}</p>
+                                        </div>
+                                        <div className="product-stats">
+                                            <div className="product-rating">
+                                                <img className='star_icon' src="../img/icon/star.svg" alt="star" />
+                                                <p>{product.popularity}</p>
+                                            </div>
+                                            <div className="product-views">
+                                                <img className='search_icon' src="../img/icon/search.svg" alt="search" />
+                                                <p>2964</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p className="product-price">{product.price} 원</p>
+                                </div>
+                            </div>
+                        </div>
+                    );
+
                     if (index === cardInfoList.length - 1) {
                         return (
-                            <div ref={lastCardElementRef} className="product-card" onClick={() => handleProductClick(product.id)} key={product.id}>
-                                <div className="product-rank">{index + 1}</div>
-                                <img className="product-img" src={product.img} alt={product.name} />
-                                <div className="product-info">
-                                    <div className="product-header">
-                                        <h2>{product.name}</h2>
-                                        <img 
-                                            className='bookmark_icon' 
-                                            src={bookmarks[product.id] ? "../img/icon/bookmarked.svg" : "../img/icon/bookmark.svg"} 
-                                            alt="bookmark" 
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                toggleBookmark(product.id);
-                                            }}
-                                        />
-                                    </div>
-                                    <div>{product.content}</div>
-                                    <div className="product-body">
-                                        <div className="product-details">
-                                            <div className="product-user">
-                                                <img className="user_icon" src="../img/icon/User.svg" alt="user" />
-                                                <p>{product.nickName}</p>
-                                            </div>
-                                            <div className="product-stats">
-                                                <div className="product-rating">
-                                                    <img className='star_icon' src="../img/icon/star.svg" alt="star" />
-                                                    <p>{product.popularity}</p>
-                                                </div>
-                                                <div className="product-views">
-                                                    <img className='search_icon' src="../img/icon/search.svg" alt="search" />
-                                                    <p>2964</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <p className="product-price">{product.price.toLocaleString()} 원</p>
-                                    </div>
-                                </div>
+                            <div ref={lastCardElementRef} key={product.id}>
+                                {productCard}
                             </div>
-                        )
+                        );
                     } else {
-                        return (
-                            <div className="product-card" onClick={() => handleProductClick(product.id)} key={product.id}>
-                                <div className="product-rank">{index + 1}</div>
-                                <img className="product-img" src={product.img} alt={product.name} />
-                                <div className="product-info">
-                                    <div className="product-header">
-                                        <h2>{product.name}</h2>
-                                        <img 
-                                            className='bookmark_icon' 
-                                            src={bookmarks[product.id] ? "../img/icon/bookmarked.svg" : "../img/icon/bookmark.svg"} 
-                                            alt="bookmark" 
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                toggleBookmark(product.id);
-                                            }}
-                                        />
-                                    </div>
-                                    <div>{product.content}</div>
-                                    <div className="product-body">
-                                        <div className="product-details">
-                                            <div className="product-user">
-                                                <img className="user_icon" src="../img/icon/User.svg" alt="user" />
-                                                <p>{product.nickName}</p>
-                                            </div>
-                                            <div className="product-stats">
-                                                <div className="product-rating">
-                                                    <img className='star_icon' src="../img/icon/star.svg" alt="star" />
-                                                    <p>{product.popularity}</p>
-                                                </div>
-                                                <div className="product-views">
-                                                    <img className='search_icon' src="../img/icon/search.svg" alt="search" />
-                                                    <p>2964</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <p className="product-price">{product.price.toLocaleString()} 원</p>
-                                    </div>
-                                </div>
-                            </div>
-                        )
+                        return productCard;
                     }
                 })}
             </div>

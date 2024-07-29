@@ -13,11 +13,11 @@ router.get('/lecipes', async (req, res) => {
   try {
       const result = await db.execute(`
           SELECT * FROM (
-              SELECT f.FOOD_ID, f.FOOD_NAME, f.NOTIFICATION, f.NICK_NAME, COUNT(u.FOOD_ID) AS POPULARITY, 
+              SELECT f.FOOD_ID, f.FOOD_NAME, f.NOTIFICATION, f.NICK_NAME, f.FOOD_PRICE, COUNT(u.FOOD_ID) AS POPULARITY, 
                      ROW_NUMBER() OVER (ORDER BY f.FOOD_ID DESC) AS rn
               FROM FOODS f
               LEFT JOIN USEFAVORITES u ON f.FOOD_ID = u.FOOD_ID AND u.IS_FAVORITED = 'Y'
-              GROUP BY f.FOOD_ID, f.FOOD_NAME, f.NOTIFICATION, f.NICK_NAME
+              GROUP BY f.FOOD_ID, f.FOOD_NAME, f.NOTIFICATION, f.NICK_NAME, f.FOOD_PRICE
           ) WHERE rn > :offset AND rn <= :offset + :itemsPerPage
       `, { offset, itemsPerPage });
 
@@ -34,6 +34,7 @@ router.get('/lecipes', async (req, res) => {
               NOTIFICATION: row.NOTIFICATION,
               NICK_NAME: row.NICK_NAME,
               FOOD_IMG: imageBase64,
+              FOOD_PRICE: row.FOOD_PRICE,
               POPULARITY: row.POPULARITY
           };
       }));
@@ -55,11 +56,11 @@ router.get('/lecipes/pop', async (req, res) => {
   try {
       const result = await db.execute(`
           SELECT * FROM (
-              SELECT f.FOOD_ID, f.FOOD_NAME, f.NOTIFICATION, f.NICK_NAME, COUNT(u.FOOD_ID) AS POPULARITY,
+              SELECT f.FOOD_ID, f.FOOD_NAME, f.NOTIFICATION, f.NICK_NAME, f.FOOD_PRICE, COUNT(u.FOOD_ID) AS POPULARITY,
                      ROW_NUMBER() OVER (ORDER BY COUNT(u.FOOD_ID) DESC) AS rn
               FROM FOODS f
               LEFT JOIN USEFAVORITES u ON f.FOOD_ID = u.FOOD_ID AND u.IS_FAVORITED = 'Y'
-              GROUP BY f.FOOD_ID, f.FOOD_NAME, f.NOTIFICATION, f.NICK_NAME
+              GROUP BY f.FOOD_ID, f.FOOD_NAME, f.NOTIFICATION, f.NICK_NAME, f.FOOD_PRICE
           ) WHERE rn > :offset AND rn <= :offset + :itemsPerPage
       `, { offset, itemsPerPage });
 
@@ -76,6 +77,7 @@ router.get('/lecipes/pop', async (req, res) => {
               NOTIFICATION: row.NOTIFICATION,
               NICK_NAME: row.NICK_NAME,
               FOOD_IMG: imageBase64,
+              FOOD_PRICE: row.FOOD_PRICE,
               POPULARITY: row.POPULARITY
           };
       }));
