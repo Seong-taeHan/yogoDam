@@ -175,6 +175,123 @@ router.post('/write', async (req, res) => {
 });
 
 
+// 레시피 수정
+router.post('/edit', async (req, res) => {
+  const db = req.app.locals.db;
+  try {
+    const {
+      food_id,
+      user_id,
+      nickName,
+      title,
+      notification,
+      cookTime,
+      category1,
+      category2,
+      thumbnail, // Base64 인코딩된 이미지
+      ingredients,
+      steps
+    } = req.body;
+
+    // food_id가 숫자인지 확인
+    if (isNaN(food_id)) {
+      throw new Error('Invalid food_id: must be a number');
+    }
+
+    // thumbnail이 유효한지 확인
+    let thumbnailBuffer = null;
+    if (thumbnail) {
+      const thumbnailData = thumbnail.replace(/^data:image\/\w+;base64,/, '');
+      thumbnailBuffer = Buffer.from(thumbnailData, 'base64');
+    }
+
+    // 레시피 업데이트
+    const updateRecipeQuery = `
+      UPDATE FOODS
+      SET
+        user_id = :user_id,
+        nick_Name = :nickName,
+        food_name = :title,
+        notification = :notification,
+        cook_time = :cookTime,
+        cusine_type = :category1,
+        cooking_method = :category2,
+        food_img = :thumbnail
+      WHERE food_id = :food_id
+    `;
+    const updateRecipeBindVars = {
+      user_id,
+      nickName,
+      title,
+      notification,
+      cookTime,
+      category1,
+      category2,
+      thumbnail: { val: thumbnailBuffer, type: oracledb.BLOB },
+      food_id: Number(food_id) // 숫자로 변환
+    };
+    await db.execute(updateRecipeQuery, updateRecipeBindVars, { autoCommit: true });
+
+    // 기존 재료 삭제
+    const deleteIngredientsQuery = `
+      DELETE FROM INGREDIENTS WHERE food_id = :food_id
+    `;
+    await db.execute(deleteIngredientsQuery, { food_id: Number(food_id) }, { autoCommit: true });
+
+    // 새로운 재료 삽입
+    const insertIngredientQuery = `
+      INSERT INTO INGREDIENTS (food_id, ingre_name, amount, ingred_unit, ingred_price)
+      VALUES (:food_id, :name, :amount, :unit, :price)
+    `;
+    for (const ingredient of ingredients) {
+      const amount = isNaN(Number(ingredient.amount)) ? 0 : Number(ingredient.amount);
+      const price = isNaN(Number(ingredient.price)) ? 0 : Number(ingredient.price);
+      const insertIngredientBindVars = {
+        food_id: Number(food_id), // 숫자로 변환
+        name: ingredient.name,
+        amount,
+        unit: ingredient.unit,
+        price
+      };
+      await db.execute(insertIngredientQuery, insertIngredientBindVars, { autoCommit: true });
+    }
+
+    // 기존 요리 순서 삭제
+    const deleteStepsQuery = `
+      DELETE FROM FOOD_STEPS WHERE food_id = :food_id
+    `;
+    await db.execute(deleteStepsQuery, { food_id: Number(food_id) }, { autoCommit: true });
+
+    // 새로운 요리 순서 삽입
+    const insertStepQuery = `
+      INSERT INTO FOOD_STEPS (step_id, food_id, stepOrder, description, step_img)
+      VALUES (SEQ_STEP_ID.NEXTVAL, :food_id, :stepOrder, :description, :image)
+    `;
+    for (let i = 0; i < steps.length; i++) {
+      const step = steps[i];
+      let stepImageBuffer = null;
+      if (step.image) {
+        const stepImgData = step.image.replace(/^data:image\/\w+;base64,/, '');
+        stepImageBuffer = Buffer.from(stepImgData, 'base64');
+      }
+      const insertStepBindVars = {
+        food_id: Number(food_id), // 숫자로 변환
+        stepOrder: i + 1,
+        description: step.description,
+        image: { val: stepImageBuffer, type: oracledb.BLOB }
+      };
+      await db.execute(insertStepQuery, insertStepBindVars, { autoCommit: true });
+    }
+
+    res.status(200).json({ message: '레시피가 성공적으로 수정되었습니다.' });
+  } catch (err) {
+    console.error('500err', err);
+    console.error('수정 오류');
+    res.status(500).json({ message: '레시피 수정 중 오류가 발생했습니다.', error: err.message });
+  }
+});
+
+
 // 즐겨찾기 목록 조회
 router.get('/favorites', async (req, res) => {
   const db = req.app.locals.db;

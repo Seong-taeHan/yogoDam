@@ -41,7 +41,7 @@ const LecipeDetail = () => {
     };
 
     const handleEdit = () => {
-        navigate('/lecipeWrite', { state: { recipeDetail } });
+        navigate('/lecipeWrite', { state: { recipeDetail, food_id } });
     };
 
     if (!recipeDetail) {
