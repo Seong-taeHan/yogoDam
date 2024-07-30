@@ -1,12 +1,16 @@
+from flask import Flask, jsonify, request
+from flask_cors import CORS
 import pandas as pd
 import re
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.neighbors import NearestNeighbors
 import random
-import matplotlib.pyplot as plt
+
+app = Flask(__name__)
+CORS(app)  # CORS 설정 추가
 
 # 파일 경로를 지정합니다.
-file_path = '/hack_m_test/re1800.csv'
+file_path = './re1800.csv'  # 실제 파일 경로로 변경
 
 # 파일을 데이터프레임으로 읽어옵니다.
 df = pd.read_csv(file_path, encoding='cp949')
@@ -16,8 +20,7 @@ def remove_units(ingredient):
     return re.sub(r'\d+[^\w\s]*\s*', '', ingredient).strip()
 
 # 모든 재료 열을 결합하여 하나의 문자열로 만들기
-ingredient_columns = df.columns[5:]  # Assuming the first 5 columns are metadata
-# print(f"Ingredient columns: {ingredient_columns}")
+ingredient_columns = df.columns[5:]  # 처음 5개의 열이 메타데이터라고 가정
 
 df['재료'] = df[ingredient_columns].apply(lambda row: ', '.join([remove_units(ing) for ing in row.dropna() if ing]), axis=1)
 
@@ -59,38 +62,33 @@ def recommend_recipes_with_keyword(recipe_index, keyword, nn_model=nn_model, df=
         combined_similarities = similarities[:len(combined_recipes)]
         return combined_recipes, combined_distances, combined_similarities
 
-# 음식 추천 실행
+# 음식 추천 함수
 def recommend_random_recipes(df):
     return df.sample(5)
 
-# 유사한 음식과 유사도 거리 출력
-def plot_similar_recipes(similar_recipes, distances, similarities):
-    plt.figure(figsize=(10, 6))
-    plt.barh(similar_recipes, distances, color='skyblue', label='Distance')
-    plt.barh(similar_recipes, similarities, color='lightgreen', label='Similarity', left=distances)
-    plt.xlabel('유사도 거리 / 유사도')
-    plt.title('유사한 음식 추천')
-    plt.legend()
-    plt.gca().invert_yaxis()
-    plt.show()
+@app.route('/recommend', methods=['GET'])
+def recommend():
+    random_recipes = recommend_random_recipes(df)
+    recipes = random_recipes[['이름', '재료']].to_dict(orient='records')
+    return jsonify(recipes)
 
-# 랜덤 추천 음식 5개
-random_recipes = recommend_random_recipes(df)
-print("추천 음식:")
-print(random_recipes[['이름']])
+@app.route('/similar', methods=['POST'])
+def similar():
+    data = request.json
+    selected_recipe_name = data.get('name')
+    keyword = data.get('keyword', '')
 
-# 랜덤으로 선택된 음식
-selected_recipe_index = random.choice(random_recipes.index)
-selected_recipe = df['이름'].iloc[selected_recipe_index]
+    selected_recipe_index = df[df['이름'] == selected_recipe_name].index[0]
+    similar_recipes, distances, similarities = recommend_recipes_with_keyword(selected_recipe_index, keyword)
 
-print(f"\n선택된 음식: {selected_recipe}")
-print(f"재료: {df['재료'].iloc[selected_recipe_index]}")
+    response = {
+        'selected_recipe': selected_recipe_name,
+        'similar_recipes': similar_recipes.tolist(),
+        'distances': distances.tolist(),
+        'similarities': similarities.tolist()
+    }
 
-# 유사한 음식 5개 추천
-keyword = ""  # 키워드를 사용하려면 여기에 입력하세요
-similar_recipes, distances, similarities = recommend_recipes_with_keyword(selected_recipe_index, keyword, min_similarity=0.5)
+    return jsonify(response)
 
-print("\n유사한 음식 추천:")
-for name, distance, similarity in zip(similar_recipes, distances, similarities):
-    print(f"음식 이름: {name}, 유사도 거리: {distance:.4f}, 유사도: {similarity:.4f}")
-
+if __name__ == '__main__':
+    app.run(port=5000)
