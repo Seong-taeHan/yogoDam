@@ -11,6 +11,9 @@ const LecipeDetail = () => {
     const { food_id } = useParams();
     const [recipeDetail, setRecipeDetail] = useState(null);
     const navigate = useNavigate();
+    const nickName = localStorage.getItem('nickName'); // 현재 로그인된 사용자의 아이디 가져오기
+
+    console.log(recipeDetail);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -19,6 +22,7 @@ const LecipeDetail = () => {
                     params: { food_id }
                 });
                 setRecipeDetail(response.data);
+                console.log(response.data);
             } catch (error) {
                 console.error("데이터를 가져오는 중 오류가 발생했습니다:", error);
             }
@@ -56,9 +60,15 @@ const LecipeDetail = () => {
                         <img src={`data:image/png;base64,${recipeDetail.recipe.image}`} alt={recipeDetail.recipe.name} />
                     }
                 </div>
-                <h1>{recipeDetail.recipe.name}</h1>
-                <button onClick={handleEdit}>edit</button>
-                <button onClick={handleDelete}>delete</button>
+                <div className='lecipe-detail-header'>
+                    <h1>{recipeDetail.recipe.name}</h1>
+                    {recipeDetail.recipe.nickName === nickName && (
+                        <div className='lecipe-detail-buttons'>
+                            <button onClick={handleEdit}>edit</button>
+                            <button onClick={handleDelete}>delete</button>
+                        </div>
+                    )}
+                </div>
                 <p>{recipeDetail.recipe.notification}</p>
                 <div className='lecipe-detail-tags'>
                     <span className='lecipe-detail-tag'>{recipeDetail.recipe.cookTime}</span>

@@ -409,7 +409,7 @@ router.get('/recipes/detail', async (req, res) => {
     }));
 
     const recipeResult = await db.execute(`
-      SELECT FOOD_NAME, FOOD_IMG, COOK_TIME, IS_DELETE, FOOD_PRICE, NOTIFICATION
+      SELECT FOOD_NAME, FOOD_IMG, COOK_TIME, IS_DELETE, FOOD_PRICE, NOTIFICATION, NICK_NAME
       FROM FOODS
       WHERE FOOD_ID = :food_id
     `, [food_id]);
@@ -426,7 +426,8 @@ router.get('/recipes/detail', async (req, res) => {
         cookTime: row.COOK_TIME,
         isDelete: row.IS_DELETE,
         price: row.FOOD_PRICE,
-        notification: row.NOTIFICATION
+        notification: row.NOTIFICATION,
+        nickName : row.NICK_NAME
       };
     })[0];
 

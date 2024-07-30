@@ -38,6 +38,17 @@
     margin-bottom: 10px;
 }
 
+.lecipe-detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.lecipe-detail-buttons {
+    display: flex;
+    gap: 10px;
+}
+
 .lecipe-detail-tags {
     margin-bottom: 20px;
 }
