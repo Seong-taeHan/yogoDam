@@ -96,8 +96,8 @@
     height: auto; /* 높이를 자동으로 조절 */
 }
 
-th {
-    text-align: center; /* 텍스트 수평 가운데 정렬 */
+.detail th:nth-child(3), .details td:nth-child(3) {
+    text-align: right;
 }
 
 /* Swiper 커스터마이징 */
@@ -149,4 +149,21 @@ th {
     text-align: right;
     color: #999;
     font-size: 1.5em;
+}
+
+.edit, .del {
+    display: inline-block;
+    padding: 5px 10px;
+    font-size: 14px;
+    color: #ff8c00; /* Set the text color to match the button */
+    background-color: white; /* Set the background color to white */
+    border: 2px solid #ff8c00; /* Set the border color and thickness */
+    border-radius: 15px; /* Round the corners of the button */
+    text-align: center;
+    cursor: pointer;
+}
+
+.edit:hover, .del:hover {
+    background-color: #ff8c00;
+    color: white;
 }

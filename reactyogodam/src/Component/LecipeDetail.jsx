@@ -64,8 +64,8 @@ const LecipeDetail = () => {
                     <h1>{recipeDetail.recipe.name}</h1>
                     {recipeDetail.recipe.userId === user_id && (
                         <div className='lecipe-detail-buttons'>
-                            <button onClick={handleEdit}>edit</button>
-                            <button onClick={handleDelete}>delete</button>
+                            <button className='edit' onClick={handleEdit}>edit</button>
+                            <button className='del' onClick={handleDelete}>delete</button>
                         </div>
                     )}
                 </div>
@@ -75,7 +75,7 @@ const LecipeDetail = () => {
                 </div>
                 <table className='lecipe-detail-ingredient-table'>
                     <tbody>
-                        <tr>
+                        <tr className='detail'>
                             <th>재료</th>
                             <th>계량</th>
                             <th>이번 달 평균가</th>
