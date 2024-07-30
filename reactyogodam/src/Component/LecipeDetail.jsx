@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom'; // useNavigate로 변경
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from '../axios';
 import 'swiper/css';
 import 'swiper/css/pagination';
@@ -10,26 +10,21 @@ import '../css/LecipeDetail.css';
 const LecipeDetail = () => {
     const { food_id } = useParams();
     const [recipeDetail, setRecipeDetail] = useState(null);
-    const navigate = useNavigate(); // useNavigate 초기화
+    const navigate = useNavigate();
 
     useEffect(() => {
-        // 백엔드에서 데이터 가져오기
         const fetchData = async () => {
             try {
-                console.log("Fetching data for food_id:", food_id);
                 const response = await axios.get('http://localhost:8000/list/recipes/detail', {
-                    params: {
-                        food_id
-                    }
+                    params: { food_id }
                 });
-                console.log("DB 데이터 응답 확인 : ", response.data);
                 setRecipeDetail(response.data);
             } catch (error) {
                 console.error("데이터를 가져오는 중 오류가 발생했습니다:", error);
             }
         };
 
-        if (food_id) { // food_id가 존재하는지 확인
+        if (food_id) {
             fetchData();
         }
     }, [food_id]);
@@ -38,16 +33,19 @@ const LecipeDetail = () => {
         try {
             await axios.post('http://localhost:8000/list/lecipe/del', { foodId: food_id });
             alert('레시피가 삭제되었습니다.');
-            navigate('/'); // 삭제 후 메인 페이지로 이동
+            navigate('/');
         } catch (error) {
             console.error('레시피 삭제 중 오류가 발생했습니다:', error);
             alert('레시피 삭제 중 오류가 발생했습니다.');
         }
     };
 
+    const handleEdit = () => {
+        navigate('/lecipeWrite', { state: { recipeDetail } });
+    };
+
     if (!recipeDetail) {
-        console.log("RecipeDetail is null, food_id:", food_id);
-        return <div>로딩 중...</div>; // 데이터가 아직 로드되지 않은 경우
+        return <div>로딩 중...</div>;
     }
 
     return (
@@ -59,8 +57,8 @@ const LecipeDetail = () => {
                     }
                 </div>
                 <h1>{recipeDetail.recipe.name}</h1>
-                <button>edit</button>
-                <button onClick={handleDelete}>delete</button> {/* 삭제 버튼에 클릭 이벤트 핸들러 추가 */}
+                <button onClick={handleEdit}>edit</button>
+                <button onClick={handleDelete}>delete</button>
                 <p>{recipeDetail.recipe.notification}</p>
                 <div className='lecipe-detail-tags'>
                     <span className='lecipe-detail-tag'>{recipeDetail.recipe.cookTime}</span>
