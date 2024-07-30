@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route, BrowserRouter, useLocation, useNavigate } from "react-router-dom";
+import { Routes, Route, BrowserRouter, useLocation, useNavigate, Navigate } from "react-router-dom";
 import './App.css';
 import SearchFunc from './Component/SearchFunc';
 import Home from './Component/Home';
@@ -9,7 +9,7 @@ import LecipeDetail from './Component/LecipeDetail';
 import LecipeWrite from './Component/LecipeWrite';
 import Login from './Component/Login';
 import JoinUser from './Component/JoinUser';
-import UserInfo from './Component/UserInfo'
+import UserInfo from './Component/UserInfo';
 import Category from './Component/Category';
 import Favorite from './Component/Favorite';
 import PlusIconButton from './Component/LecipeDetailButton';
@@ -22,7 +22,7 @@ import AiSelectPage from './Component/AiSelectPage';
 function App() {
   const location = useLocation();
   const token = localStorage.getItem('token');
-  const showSearchBar = !['/login', '/favorites', '/joinuser','/userinfo'].includes(location.pathname);
+  const showSearchBar = !['/login', '/favorites', '/joinuser', '/userinfo'].includes(location.pathname);
   const showPlusIconButton = token && !['/lecipeWrite'].includes(location.pathname);
 
   const PrivateRoute = ({ element: Element }) => {
@@ -47,20 +47,20 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/lecipeList" element={<LecipeList />} />
               <Route path="/lecipeDetail/:food_id" element={<LecipeDetail />} />
-              <Route path='/lecipeWrite' element={<LecipeWrite />} />
+              <Route path="/lecipeWrite" element={<LecipeWrite />} />
               <Route path="/login" element={<Login />} />
-              <Route path='/userinfo' element={<UserInfo />}></Route>
+              <Route path='/userinfo' element={<UserInfo />} />
               <Route path='/joinuser' element={<JoinUser />} />
               <Route path='/category' element={<Category />} />
               <Route path='/categoryList' element={<CategoryList />} />
               <Route path='/favorites' element={<Favorite />} />
               <Route path='/searchlist' element={<SearchList />} />
-              <Route path='/loginComplete' element={<LoginComplete />}/>
-              <Route path='/recomAi' element={<RecomAI />}/>
+              <Route path='/loginComplete' element={<LoginComplete />} />
+              <Route path='/recomAi' element={<RecomAI />} />
               <Route path='/aiselect' element={<AiSelectPage />} />
             </Routes>
           </div>
-          {showPlusIconButton && <PlusIconButton />} 
+          {showPlusIconButton && <PlusIconButton />}
           <Footer />
         </div>
       </div>
