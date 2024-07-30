@@ -66,24 +66,32 @@ const Home = () => {
     }, [page, activeTab]);
 
     useEffect(() => {
-        axios.get('http://localhost:8000/list/favorites', {
-            params: {
-                user_id: user_id // 실제 사용자 ID를 사용
-            }
-        })
-        .then(response => {
-            const favorites = response.data.reduce((acc, food_id) => {
-                acc[food_id] = true;
-                return acc;
-            }, {});
-            setBookmarks(favorites);
-        })
-        .catch(error => {
-            console.error('즐겨찾기 데이터 불러오기 오류:', error);
-        });
+        if (user_id) {
+            axios.get('http://localhost:8000/list/favorites', {
+                params: {
+                    user_id: user_id // 실제 사용자 ID를 사용
+                }
+            })
+            .then(response => {
+                const favorites = response.data.reduce((acc, food_id) => {
+                    acc[food_id] = true;
+                    return acc;
+                }, {});
+                setBookmarks(favorites);
+            })
+            .catch(error => {
+                console.error('즐겨찾기 데이터 불러오기 오류:', error);
+            });
+        }
     }, [user_id]);
 
-    const toggleBookmark = async (id) => {
+    const toggleBookmark = async (id, e) => {
+        e.stopPropagation();
+        if (!user_id) {
+            alert('로그인이 필요합니다.');
+            return;
+        }
+
         try {
             await axios.post('http://localhost:8000/list/favorites/toggle', {
                 user_id: user_id, // 실제 사용자 ID를 사용
@@ -103,6 +111,7 @@ const Home = () => {
     };
 
     const handleTabChange = (tab) => {
+        if (activeTab === tab) return; // 현재 활성화된 탭이 클릭된 경우 아무 작업도 하지 않음
         setActiveTab(tab);
         setPage(1);
         setCardInfoList([]);
@@ -116,11 +125,13 @@ const Home = () => {
             </div>
             <div className="tab-container">
                 <div className={`tab ${activeTab === 'popular' ? 'active' : ''}`}
-                    onClick={() => handleTabChange('popular')}>
+                    onClick={() => handleTabChange('popular')}
+                    style={{ pointerEvents: activeTab === 'popular' ? 'none' : 'auto' }}>
                     인기순
                 </div>
                 <div className={`tab ${activeTab === 'latest' ? 'active' : ''}`}
-                    onClick={() => handleTabChange('latest')}>
+                    onClick={() => handleTabChange('latest')}
+                    style={{ pointerEvents: activeTab === 'latest' ? 'none' : 'auto' }}>
                     최신순
                 </div>
             </div>
@@ -137,10 +148,7 @@ const Home = () => {
                                         className='bookmark_icon' 
                                         src={bookmarks[product.id] ? "../img/icon/bookmarked.svg" : "../img/icon/bookmark.svg"} 
                                         alt="bookmark" 
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            toggleBookmark(product.id);
-                                        }}
+                                        onClick={(e) => toggleBookmark(product.id, e)}
                                     />
                                 </div>
                                 <div>{product.content}</div>
