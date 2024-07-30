@@ -3,11 +3,14 @@ import '../css/airesult.css'
 
 const AiResult = () => {
 
+  // 파이썬에서 불러오는 레시피 제목 값을 이용해 lecipeList에 추가
   const recipeList = [
-    { name : 김치찌개 },
-    { name : 참치볶음 },
-    { name : 햄버거 }
+    { name : '김치찌개' },
+    { name : '참치볶음' },
+    { name : '햄버거' }
   ]
+
+  
 
   return (
     <div>
@@ -15,8 +18,12 @@ const AiResult = () => {
         <div className="airesult-TopBar">추천 AI</div>
         <div className="airesult-Content">
             <div className="airesult-Text">비슷한 재료로 만들 수 있는<br></br>요리를 추천해 드릴게요!</div>
-            <form>
-              <input ></input>
+            <form >
+              {recipeList.map((recipe, index) => (
+                <div key={index} className="airesult-item">
+                  <input type='button' value={recipe.name}></input>
+                </div>
+              ))}
             </form>
         </div>
         <div>

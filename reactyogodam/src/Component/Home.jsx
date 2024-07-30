@@ -5,7 +5,7 @@ import BannerSlide from './BannerSlide';
 import '../css/home.css';
 
 const Home = () => {
-    const images = ['/img/testImg/groundImg.png', '/img/testImg/totoro1.png', '/img/testImg/test1.png'];
+    const images = ['/img/bannerImg/banner1.png', '/img/bannerImg/banner2.png', '/img/bannerImg/banner3.png'];
     const intervalTime = 3000; // 3초
 
     const [cardInfoList, setCardInfoList] = useState([]);
