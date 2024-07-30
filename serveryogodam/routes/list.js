@@ -576,7 +576,7 @@ router.get('/searchnutrition', async (req, res) => {
     const query = `
       SELECT NUTRI_ID, PROTEIN, CARBOHYDRATE, FAT, 
              (PROTEIN * 4 + CARBOHYDRATE * 4 + FAT * 9) AS TOTALCAL, 
-             INGRED_N_PRICE
+             INGRED_N_PRICE, NUTRI_UNIT
       FROM NUTRITION
       WHERE NUTRI_ID = :search
     `;
@@ -591,8 +591,11 @@ router.get('/searchnutrition', async (req, res) => {
       CARBOHYDRATE: row.CARBOHYDRATE,
       FAT: row.FAT,
       TOTALCAL: row.TOTALCAL,
-      INGRED_N_PRICE: row.INGRED_N_PRICE
+      INGRED_N_PRICE: row.INGRED_N_PRICE,
+      INGRED_UNIT : row.NUTRI_UNIT
     }));
+
+    console.log(recipes);
 
     res.status(200).json(recipes);
   } catch (err) {

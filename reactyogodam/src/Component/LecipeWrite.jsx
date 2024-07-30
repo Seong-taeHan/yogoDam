@@ -46,7 +46,8 @@ const LecipeWrite = () => {
             if (i === index) {
                 if (name === 'amount') {
                     const numericValue = value.replace(/[^0-9]/g, '');
-                    return { ...ingredient, [name]: numericValue };
+                    const price = ingredient.unitPrice * numericValue;
+                    return { ...ingredient, amount: numericValue, price };
                 }
                 return { ...ingredient, [name]: value };
             }
@@ -62,15 +63,19 @@ const LecipeWrite = () => {
                 });
 
                 if (response.data.length > 0) {
-                    const { INGRED_N_PRICE } = response.data[0];
+                    const { INGRED_UNIT, INGRED_N_PRICE } = response.data[0];
                     setIngredients(prevIngredients => {
                         const updatedIngredients = [...prevIngredients];
-                        updatedIngredients[index].price = INGRED_N_PRICE;
+                        updatedIngredients[index].unit = INGRED_UNIT;
+                        updatedIngredients[index].unitPrice = INGRED_N_PRICE;
+                        updatedIngredients[index].price = INGRED_N_PRICE * (updatedIngredients[index].amount || 1);
                         return updatedIngredients;
                     });
                 } else {
                     setIngredients(prevIngredients => {
                         const updatedIngredients = [...prevIngredients];
+                        updatedIngredients[index].unit = '알 수 없음';
+                        updatedIngredients[index].unitPrice = 0;
                         updatedIngredients[index].price = '알 수 없음';
                         return updatedIngredients;
                     });
@@ -79,6 +84,8 @@ const LecipeWrite = () => {
                 console.error('영양 정보 검색 오류:', error);
                 setIngredients(prevIngredients => {
                     const updatedIngredients = [...prevIngredients];
+                    updatedIngredients[index].unit = '알 수 없음';
+                    updatedIngredients[index].unitPrice = 0;
                     updatedIngredients[index].price = '알 수 없음';
                     return updatedIngredients;
                 });
@@ -245,6 +252,7 @@ const LecipeWrite = () => {
                                 value={ingredient.unit}
                                 onChange={(e) => handleIngredientChange(index, e)}
                                 required
+                                disabled // 단위 필드는 수정하지 못하게 비활성화
                             />
                             <p>{ingredient.price ? `가격: ${ingredient.price}` : '가격 정보 없음'}</p>
                         </div>
