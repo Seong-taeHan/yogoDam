@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { useNavigate } from 'react-router-dom';  // useNavigate 추가
+import { useNavigate } from 'react-router-dom';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -12,7 +12,7 @@ import { Navigation, Pagination } from 'swiper/modules';
 const AiSelectPage = () => {
     const [slides, setSlides] = useState([]);
     const [loop, setLoop] = useState(false);
-    const navigate = useNavigate();  // useNavigate 훅 초기화
+    const navigate = useNavigate();
 
     useEffect(() => {
         axios.get('http://localhost:5000/recommend')
@@ -20,14 +20,14 @@ const AiSelectPage = () => {
                 const formattedSlides = response.data.map((item, index) => ({
                     img: '/img/aicategory/aifolder.png',
                     text: `${item.이름}`,
-                    data: item  // 데이터 추가
+                    data: item
                 }));
                 setSlides(formattedSlides);
-                setLoop(formattedSlides.length > 1); // 슬라이드가 1개 이상일 때만 loop를 활성화
+                setLoop(formattedSlides.length > 1);
 
-                // 랜덤으로 5개의 메뉴를 선택하여 콘솔 로그에 출력
                 const randomSlides = formattedSlides.sort(() => 0.5 - Math.random()).slice(0, 5);
                 console.log("랜덤으로 선택된 5개 메뉴:", randomSlides.map(slide => slide.text));
+                setSlides(randomSlides);
             })
             .catch(error => {
                 console.error("데이터를 가져오는 중 오류가 발생했습니다!", error);
@@ -35,7 +35,7 @@ const AiSelectPage = () => {
     }, []);
 
     const handleSlideClick = (slide) => {
-        navigate('/airesult', { state: { recipe: slide.data } });  // 클릭 시 데이터와 함께 페이지 이동
+        navigate('/airesult', { state: { recipe: slide.data } });
     };
 
     return (
@@ -51,7 +51,7 @@ const AiSelectPage = () => {
                         slidesPerView={1}
                         navigation
                         pagination={{ clickable: true }}
-                        loop={loop} // 조건부로 loop 활성화
+                        loop={loop}
                     >
                         {slides.map((slide, index) => (
                             <SwiperSlide key={index} onClick={() => handleSlideClick(slide)}>
