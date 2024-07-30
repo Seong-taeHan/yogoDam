@@ -72,12 +72,12 @@
 }
 
 .aiselect-slide-text {
-    margin-top: 10px;
-    font-size: 20px;
-    color: white;
+    position: absolute;
+    font-size: 50px;
+    color: #ff7f00;
     text-align: center;
-    z-index: 2;
-    position: relative;
+    font-weight: 900;
+    z-index: 3;
 }
 
 .aiselect-footer {
@@ -85,7 +85,6 @@
     display: flex;
     justify-content: center;
     width: 100%;
-    padding: 10px;
     background-color: white;
     z-index: 2; /* Foreground subtitle */
     position: relative;
@@ -99,9 +98,9 @@
 }
 
 .aiselect-Image {
-    width: 50%;
-    max-width: 400px;
-    height: auto;
+    width: 80%;
+    max-width: 500px;
+    height: 300px;
     z-index: 2; /* Foreground image */
     position: relative;
 }
