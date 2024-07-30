@@ -5,20 +5,23 @@ import '../css/LecipeWrite.css';
 
 const LecipeWrite = () => {
     const location = useLocation();
-    const isEdit = location.state && location.state.recipeDetail;
+    const { recipeDetail, food_id } = location.state || {};
+    const isEdit = Boolean(recipeDetail);
     const [ingredients, setIngredients] = useState([{ name: '', amount: '', unit: '', price: '' }]);
     const [steps, setSteps] = useState([{ description: '', image: null, imagePreview: null }]);
     const [thumbnail, setThumbnail] = useState(null);
     const [thumbnailPreview, setThumbnailPreview] = useState(null);
     const fileInputRef = useRef(null);
 
+    console.log(food_id);
+
     const token = localStorage.getItem('token');
     const nickName = localStorage.getItem('nickName');
     const user_id = localStorage.getItem('user_id');
 
     useEffect(() => {
-        if (isEdit) {
-            const { recipe, ingredients, steps } = location.state.recipeDetail;
+        if (isEdit && recipeDetail) {
+            const { recipe, ingredients, steps } = recipeDetail;
             setIngredients(ingredients);
             setSteps(steps.map(step => ({
                 ...step,
@@ -27,7 +30,7 @@ const LecipeWrite = () => {
             setThumbnail(recipe.image);
             setThumbnailPreview(recipe.image ? `data:image/png;base64,${recipe.image}` : null);
         }
-    }, [isEdit, location.state]);
+    }, [isEdit, recipeDetail]);
 
     const handleAddIngredient = () => {
         setIngredients([...ingredients, { name: '', amount: '', unit: '', price: '' }]);
@@ -129,14 +132,14 @@ const LecipeWrite = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const formData = {
-            food_id: location.state?.recipeDetail?.recipe?.food_id || '', // 수정 시 food_id 포함
+            food_id: food_id || '', // 수정 시 food_id 포함
             user_id,
             nickName,
-            title: e.target[0].value,
-            notification: e.target[1].value,
-            cookTime: e.target[2].value,
-            category1: e.target[3].value,
-            category2: e.target[4].value,
+            title: e.target[1].value,
+            notification: e.target[2].value,
+            cookTime: e.target[3].value,
+            category1: e.target[4].value,
+            category2: e.target[5].value,
             thumbnail,
             ingredients,
             steps
@@ -188,15 +191,15 @@ const LecipeWrite = () => {
                     />
                 </div>
                 <p>레시피 제목</p>
-                <input type='text' placeholder='요리 제목 입력' required defaultValue={location.state?.recipeDetail?.recipe?.name || ''}></input>
+                <input type='text' placeholder='요리 제목 입력' required defaultValue={recipeDetail?.recipe?.name || ''}></input>
                 <p>요리 소개</p>
-                <input type='text' placeholder='이 요리의 배경을 멋지게 소개해 주세요' required defaultValue={location.state?.recipeDetail?.recipe?.notification || ''}></input>
+                <input type='text' placeholder='이 요리의 배경을 멋지게 소개해 주세요' required defaultValue={recipeDetail?.recipe?.notification || ''}></input>
                 <p>요리 시간</p>
-                <input type="text" placeholder="요리 시간 입력" required defaultValue={location.state?.recipeDetail?.recipe?.cookTime || ''}></input>
+                <input type="text" placeholder="요리 시간 입력" required defaultValue={recipeDetail?.recipe?.cookTime || ''}></input>
 
                 <p>카테고리</p>
                 <div className='select-container'>
-                    <select name="category1" required defaultValue={location.state?.recipeDetail?.recipe?.category1 || ''}>
+                    <select name="category1" required defaultValue={recipeDetail?.recipe?.category1 || ''}>
                         <option value=""></option>
                         <option value="한식">한식</option>
                         <option value="일식">일식</option>
@@ -205,7 +208,7 @@ const LecipeWrite = () => {
                         <option value="기타">기타</option>
                     </select>
 
-                    <select name="category2" required defaultValue={location.state?.recipeDetail?.recipe?.category2 || ''}>
+                    <select name="category2" required defaultValue={recipeDetail?.recipe?.category2 || ''}>
                         <option value=""></option>
                         <option value="고기">고기</option>
                         <option value="생선">생선</option>
