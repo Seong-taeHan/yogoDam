@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, make_response
 from flask_cors import CORS
 import pandas as pd
 import re
@@ -65,8 +65,15 @@ def recommend():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-@app.route('/similar', methods=['POST'])
+@app.route('/similar', methods=['OPTIONS', 'POST'])
 def similar():
+    if request.method == 'OPTIONS':
+        response = make_response()
+        response.headers.add("Access-Control-Allow-Origin", "*")
+        response.headers.add("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+        response.headers.add("Access-Control-Allow-Headers", "Content-Type")
+        return response
+
     try:
         data = request.json
         app.logger.info(f"Received data: {data}")
@@ -84,9 +91,9 @@ def similar():
 
         response = {
             'selected_recipe': selected_recipe_name,
-            'similar_recipes': similar_recipes.tolist(),
-            'distances': distances.tolist(),
-            'similarities': similarities.tolist()
+            'similar_recipes': list(similar_recipes),
+            'distances': list(distances),
+            'similarities': list(similarities)
         }
 
         return jsonify(response)

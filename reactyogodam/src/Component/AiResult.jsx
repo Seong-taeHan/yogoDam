@@ -7,12 +7,14 @@ const AiResult = () => {
   const [similarRecipes, setSimilarRecipes] = useState([]);
   const [selectedRecipe, setSelectedRecipe] = useState(location.state?.recipe || null);
   const [keyword, setKeyword] = useState('');
+  const [selectRcp, setSelectRcp] = useState('');
 
   useEffect(() => {
     if (selectedRecipe) {
       handleRecipeClick(selectedRecipe['이름']);
+      setSelectRcp(selectedRecipe['이름']);
     }
-  }, [selectedRecipe]);
+  }, []);
 
   const handleRecipeClick = (recipeName) => {
     fetch('http://localhost:5000/similar', {
@@ -42,7 +44,7 @@ const AiResult = () => {
         </div>
         {selectedRecipe && (
           <div className="similar-recipes-container">
-            <h3>{selectedRecipe.이름}와(과) 유사한 레시피:</h3>
+            <h3>{selectRcp}와(과) 유사한 레시피:</h3>
             <ul>
               {similarRecipes.map((recipe, index) => (
                 <li key={index}>{recipe}</li>
