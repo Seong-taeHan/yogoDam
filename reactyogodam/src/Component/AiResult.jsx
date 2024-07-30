@@ -36,26 +36,21 @@ const AiResult = () => {
   };
 
   return (
-    <div>
-      <div className="airesult-container">
-        <div className="airesult-TopBar">추천 AI</div>
-        <div className="airesult-Content">
-          <div className="airesult-Text">비슷한 재료로 만들 수 있는<br />요리를 추천해 드릴게요!</div>
-        </div>
+    <div className="airesult-container">
+      <div className="airesult-TopBar">추천 AI</div>
+      <div className="airesult-Content">
+        <div className="airesult-Text">비슷한 재료로 만들 수 있는<br />요리를 추천해 드릴게요!</div>
         {selectedRecipe && (
           <div className="similar-recipes-container">
-            <h3>{selectRcp}와(과) 유사한 레시피:</h3>
-            <ul>
-              {similarRecipes.map((recipe, index) => (
-                <li key={index}>{recipe}</li>
-              ))}
-            </ul>
+            {similarRecipes.map((recipe, index) => (
+              <div key={index}><button className='airesult-button'>{recipe}</button></div>
+            ))}
           </div>
         )}
-        <div>
-          <div className='aiselect-sbtitle-align'>
-            <img src="/img/aicategory/aiconhalf.png" alt="AI 추천" className="aiselect-Image" />
-          </div>
+      </div>
+      <div className="airesult-footer">
+        <div className='airesult-sbtitle-align'>
+          <img src="/img/aicategory/aiconhalf.png" alt="AI 추천" className="airesult-Image" />
         </div>
       </div>
     </div>
