@@ -11,7 +11,7 @@ const LecipeDetail = () => {
     const { food_id } = useParams();
     const [recipeDetail, setRecipeDetail] = useState(null);
     const navigate = useNavigate();
-    const nickName = localStorage.getItem('nickName'); // 현재 로그인된 사용자의 아이디 가져오기
+    const user_id = localStorage.getItem('user_id'); // 현재 로그인된 사용자의 아이디 가져오기
 
     console.log(recipeDetail);
 
@@ -62,7 +62,7 @@ const LecipeDetail = () => {
                 </div>
                 <div className='lecipe-detail-header'>
                     <h1>{recipeDetail.recipe.name}</h1>
-                    {recipeDetail.recipe.nickName === nickName && (
+                    {recipeDetail.recipe.userId === user_id && (
                         <div className='lecipe-detail-buttons'>
                             <button onClick={handleEdit}>edit</button>
                             <button onClick={handleDelete}>delete</button>
