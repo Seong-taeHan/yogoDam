@@ -81,6 +81,10 @@
     border-bottom: 1px solid #f0f0f0;
 }
 
+.lecipe-detail-ingredient-table td:nth-child(3) {
+    text-align: right; /* 가격 부분을 오른쪽 정렬 */
+}
+
 .lecipe-detail-summary {
     display: flex;
     justify-content: space-between;

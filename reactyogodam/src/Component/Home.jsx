@@ -42,7 +42,8 @@ const Home = () => {
                     price: item.FOOD_PRICE,
                     nickName: item.NICK_NAME,
                     content: item.NOTIFICATION,
-                    popularity: item.POPULARITY
+                    popularity: item.POPULARITY,
+                    totalPrice: item.TOTAL_PRICE // 총 가격
                 }));
 
                 console.log(lecipes); // 데이터를 콘솔에 출력하여 확인
@@ -169,7 +170,7 @@ const Home = () => {
                                             </div>
                                         </div>
                                     </div>
-                                    <p className="product-price">{product.price} 원</p>
+                                    <p className="product-price">총 가격: {product.totalPrice} 원</p> {/* 총 가격 표시 */}
                                 </div>
                             </div>
                         </div>

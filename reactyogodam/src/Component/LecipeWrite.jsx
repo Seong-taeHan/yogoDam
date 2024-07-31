@@ -7,7 +7,7 @@ const LecipeWrite = () => {
     const location = useLocation();
     const { recipeDetail, food_id } = location.state || {};
     const isEdit = Boolean(recipeDetail);
-    const [ingredients, setIngredients] = useState([{ name: '', amount: '', unit: '', price: '' }]);
+    const [ingredients, setIngredients] = useState([{ name: '', amount: '', unit: '', price: '', calories: '' }]);
     const [steps, setSteps] = useState([{ description: '', image: null, imagePreview: null }]);
     const [thumbnail, setThumbnail] = useState(null);
     const [thumbnailPreview, setThumbnailPreview] = useState(null);
@@ -33,7 +33,7 @@ const LecipeWrite = () => {
     }, [isEdit, recipeDetail]);
 
     const handleAddIngredient = () => {
-        setIngredients([...ingredients, { name: '', amount: '', unit: '', price: '' }]);
+        setIngredients([...ingredients, { name: '', amount: '', unit: '', price: '', calories: '' }]);
     };
 
     const handleRemoveIngredient = (index) => {
@@ -47,28 +47,31 @@ const LecipeWrite = () => {
                 if (name === 'amount') {
                     const numericValue = value.replace(/[^0-9]/g, '');
                     const price = ingredient.unitPrice * numericValue;
-                    return { ...ingredient, amount: numericValue, price };
+                    const calories = ingredient.unitCalories * numericValue;
+                    return { ...ingredient, amount: numericValue, price, calories };
                 }
                 return { ...ingredient, [name]: value };
             }
             return ingredient;
         });
-
+    
         setIngredients(newIngredients);
-
+    
         if (name === 'name') {
             try {
                 const response = await axios.get('/list/searchnutrition', {
                     params: { search: value }
                 });
-
+    
                 if (response.data.length > 0) {
-                    const { INGRED_UNIT, INGRED_N_PRICE } = response.data[0];
+                    const { INGRED_UNIT, INGRED_N_PRICE, INGRED_KCAL } = response.data[0];
                     setIngredients(prevIngredients => {
                         const updatedIngredients = [...prevIngredients];
                         updatedIngredients[index].unit = INGRED_UNIT;
                         updatedIngredients[index].unitPrice = INGRED_N_PRICE;
+                        updatedIngredients[index].unitCalories = INGRED_KCAL; // 칼로리 데이터 저장
                         updatedIngredients[index].price = INGRED_N_PRICE * (updatedIngredients[index].amount || 1);
+                        updatedIngredients[index].calories = INGRED_KCAL * (updatedIngredients[index].amount || 1); // 칼로리 데이터 추가
                         return updatedIngredients;
                     });
                 } else {
@@ -76,7 +79,9 @@ const LecipeWrite = () => {
                         const updatedIngredients = [...prevIngredients];
                         updatedIngredients[index].unit = '알 수 없음';
                         updatedIngredients[index].unitPrice = 0;
+                        updatedIngredients[index].unitCalories = 0; // 칼로리 기본값 설정
                         updatedIngredients[index].price = '알 수 없음';
+                        updatedIngredients[index].calories = '알 수 없음'; // 칼로리 기본값 설정
                         return updatedIngredients;
                     });
                 }
@@ -86,7 +91,9 @@ const LecipeWrite = () => {
                     const updatedIngredients = [...prevIngredients];
                     updatedIngredients[index].unit = '알 수 없음';
                     updatedIngredients[index].unitPrice = 0;
+                    updatedIngredients[index].unitCalories = 0; // 칼로리 기본값 설정
                     updatedIngredients[index].price = '알 수 없음';
+                    updatedIngredients[index].calories = '알 수 없음'; // 칼로리 기본값 설정
                     return updatedIngredients;
                 });
             }
@@ -255,6 +262,7 @@ const LecipeWrite = () => {
                                 disabled // 단위 필드는 수정하지 못하게 비활성화
                             />
                             <p>{ingredient.price ? `가격: ${ingredient.price}` : '가격 정보 없음'}</p>
+                            <p>{ingredient.calories ? `Kcal: ${ingredient.calories}` : '칼로리 정보 없음'}</p>
                         </div>
                         <button type="button" onClick={() => handleRemoveIngredient(index)}>- 재료 삭제</button>
                     </div>

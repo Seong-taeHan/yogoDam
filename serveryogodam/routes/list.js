@@ -17,6 +17,7 @@ router.get('/lecipes', async (req, res) => {
     const result = await db.execute(`
       SELECT * FROM (
         SELECT f.FOOD_ID, f.FOOD_NAME, f.NOTIFICATION, f.NICK_NAME, f.FOOD_PRICE, COUNT(u.FOOD_ID) AS POPULARITY, 
+               (SELECT SUM(INGRED_PRICE) FROM INGREDIENTS WHERE FOOD_ID = f.FOOD_ID) AS TOTAL_PRICE,
                ROW_NUMBER() OVER (ORDER BY f.FOOD_ID DESC) AS rn
         FROM FOODS f
         LEFT JOIN USEFAVORITES u ON f.FOOD_ID = u.FOOD_ID AND u.IS_FAVORITED = 'Y'
@@ -39,7 +40,8 @@ router.get('/lecipes', async (req, res) => {
         NICK_NAME: row.NICK_NAME,
         FOOD_IMG: imageBase64,
         FOOD_PRICE: row.FOOD_PRICE,
-        POPULARITY: row.POPULARITY
+        POPULARITY: row.POPULARITY,
+        TOTAL_PRICE: row.TOTAL_PRICE // 총 가격
       };
     }));
 
@@ -62,6 +64,7 @@ router.get('/lecipes/pop', async (req, res) => {
     const result = await db.execute(`
       SELECT * FROM (
         SELECT f.FOOD_ID, f.FOOD_NAME, f.NOTIFICATION, f.NICK_NAME, f.FOOD_PRICE, COUNT(u.FOOD_ID) AS POPULARITY,
+               (SELECT SUM(INGRED_PRICE) FROM INGREDIENTS WHERE FOOD_ID = f.FOOD_ID) AS TOTAL_PRICE,
                ROW_NUMBER() OVER (ORDER BY COUNT(u.FOOD_ID) DESC) AS rn
         FROM FOODS f
         LEFT JOIN USEFAVORITES u ON f.FOOD_ID = u.FOOD_ID AND u.IS_FAVORITED = 'Y'
@@ -84,7 +87,8 @@ router.get('/lecipes/pop', async (req, res) => {
         NICK_NAME: row.NICK_NAME,
         FOOD_IMG: imageBase64,
         FOOD_PRICE: row.FOOD_PRICE,
-        POPULARITY: row.POPULARITY
+        POPULARITY: row.POPULARITY,
+        TOTAL_PRICE: row.TOTAL_PRICE // 총 가격
       };
     }));
 
@@ -143,11 +147,11 @@ router.post('/write', async (req, res) => {
     const foodId = result.outBinds.food_id[0];
 
     const insertIngredientSql = `
-      INSERT INTO INGREDIENTS (food_id, ingre_name, amount, ingred_unit)
-      VALUES (:foodId, :name, :amount, :unit)
+      INSERT INTO INGREDIENTS (food_id, ingre_name, amount, ingred_unit, INGRED_PRICE, INGRED_KCAL)
+      VALUES (:foodId, :name, :amount, :unit, :price, :calories)
     `;
     for (const ingredient of ingredients) {
-      await db.execute(insertIngredientSql, [foodId, ingredient.name, ingredient.amount, ingredient.unit], { autoCommit: true });
+      await db.execute(insertIngredientSql, [foodId, ingredient.name, ingredient.amount, ingredient.unit, ingredient.price, ingredient.calories], { autoCommit: true });
     }
 
     const insertStepSql = `
@@ -240,18 +244,20 @@ router.post('/edit', async (req, res) => {
 
     // 새로운 재료 삽입
     const insertIngredientQuery = `
-      INSERT INTO INGREDIENTS (food_id, ingre_name, amount, ingred_unit, ingred_price)
-      VALUES (:food_id, :name, :amount, :unit, :price)
+      INSERT INTO INGREDIENTS (food_id, ingre_name, amount, ingred_unit, ingred_price, ingred_kcal)
+      VALUES (:food_id, :name, :amount, :unit, :price, :calories)
     `;
     for (const ingredient of ingredients) {
       const amount = isNaN(Number(ingredient.amount)) ? 0 : Number(ingredient.amount);
       const price = isNaN(Number(ingredient.price)) ? 0 : Number(ingredient.price);
+      const calories = isNaN(Number(ingredient.calories)) ? 0 : Number(ingredient.calories);
       const insertIngredientBindVars = {
         food_id: Number(food_id), // 숫자로 변환
         name: ingredient.name,
         amount,
         unit: ingredient.unit,
-        price
+        price,
+        calories
       };
       await db.execute(insertIngredientQuery, insertIngredientBindVars, { autoCommit: true });
     }
@@ -375,18 +381,23 @@ router.get('/recipes/detail', async (req, res) => {
   const food_id = req.query.food_id;
 
   try {
-    const result = await db.execute(`
-      SELECT INGRE_NAME, AMOUNT, INGRED_UNIT, INGRED_PRICE
+    const ingredientResult = await db.execute(`
+      SELECT INGRE_NAME, AMOUNT, INGRED_UNIT, INGRED_PRICE, INGRED_KCAL
       FROM INGREDIENTS
       WHERE FOOD_ID = :food_id
     `, [food_id]);
 
-    const ingredients = result.rows.map(row => ({
+    const ingredients = ingredientResult.rows.map(row => ({
       name: row.INGRE_NAME,
       amount: row.AMOUNT,
       unit: row.INGRED_UNIT,
-      price: row.INGRED_PRICE
+      price: row.INGRED_PRICE,
+      calories: row.INGRED_KCAL
     }));
+
+    // Calculate total price and total calories
+    const totalPrice = ingredients.reduce((total, ingredient) => total + (ingredient.price), 0);
+    const totalCalories = ingredients.reduce((total, ingredient) => total + (ingredient.calories), 0);
 
     const stepsResult = await db.execute(`
       SELECT STEPORDER, DESCRIPTION, STEP_IMG
@@ -414,22 +425,23 @@ router.get('/recipes/detail', async (req, res) => {
       WHERE FOOD_ID = :food_id
     `, [food_id]);
 
-    const recipe = await recipeResult.rows.map(async row => {
-      let imageBase64 = null;
-      if (row.FOOD_IMG) {
-        const blob = await row.FOOD_IMG.getData();
-        imageBase64 = blob.toString('base64');
-      }
-      return {
-        name: row.FOOD_NAME,
-        image: imageBase64,
-        cookTime: row.COOK_TIME,
-        isDelete: row.IS_DELETE,
-        price: row.FOOD_PRICE,
-        notification: row.NOTIFICATION,
-        userId : row.USER_ID
-      };
-    })[0];
+    const recipeRow = recipeResult.rows[0];
+    let imageBase64 = null;
+    if (recipeRow.FOOD_IMG) {
+      const blob = await recipeRow.FOOD_IMG.getData();
+      imageBase64 = blob.toString('base64');
+    }
+    const recipe = {
+      name: recipeRow.FOOD_NAME,
+      image: imageBase64,
+      cookTime: recipeRow.COOK_TIME,
+      isDelete: recipeRow.IS_DELETE,
+      price: recipeRow.FOOD_PRICE,
+      notification: recipeRow.NOTIFICATION,
+      userId: recipeRow.USER_ID,
+      totalPrice, // Add total price
+      totalCalories // Add total calories
+    };
 
     res.status(200).json({ ingredients, steps, recipe });
 
@@ -438,6 +450,7 @@ router.get('/recipes/detail', async (req, res) => {
     res.status(500).send({ message: '서버 오류' });
   }
 });
+
 
 // 사용자 레시피 목록 조회
 router.get('/recipes/my', async (req, res) => {
@@ -574,9 +587,7 @@ router.get('/searchnutrition', async (req, res) => {
     }
 
     const query = `
-      SELECT NUTRI_ID, PROTEIN, CARBOHYDRATE, FAT, 
-             (PROTEIN * 4 + CARBOHYDRATE * 4 + FAT * 9) AS TOTALCAL, 
-             INGRED_N_PRICE, NUTRI_UNIT
+      SELECT NUTRI_ID, PROTEIN, CARBOHYDRATE, FAT, TOTALCAL, INGRED_N_PRICE, NUTRI_UNIT
       FROM NUTRITION
       WHERE NUTRI_ID = :search
     `;
@@ -590,7 +601,7 @@ router.get('/searchnutrition', async (req, res) => {
       PROTEIN: row.PROTEIN,
       CARBOHYDRATE: row.CARBOHYDRATE,
       FAT: row.FAT,
-      TOTALCAL: row.TOTALCAL,
+      INGRED_KCAL: row.TOTALCAL,
       INGRED_N_PRICE: row.INGRED_N_PRICE,
       INGRED_UNIT : row.NUTRI_UNIT
     }));
@@ -614,7 +625,7 @@ router.post('/lecipe/del', async (req, res) => {
       UPDATE FOODS
       SET IS_DELETE = 'Y'
       WHERE FOOD_ID = :foodId
-    `, { foodId });
+    `, { foodId }, { autoCommit: true });
 
     if (result.rowsAffected === 0) {
       res.status(404).send({ message: '음식을 찾을 수 없습니다.' });
