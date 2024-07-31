@@ -14,6 +14,14 @@ const AiSelectPage = () => {
     const [loop, setLoop] = useState(false);
     const navigate = useNavigate();
 
+    const randomLecipe = [
+        {name : '김치찌개'},
+        {name : '어묵김말이'},
+        {name : '돈가스'},
+        {name : '떡볶이'},
+        {name : '제육볶음'}
+    ]
+
     useEffect(() => {
         axios.get('http://localhost:5000/recommend')
             .then(response => {
@@ -52,11 +60,20 @@ const AiSelectPage = () => {
                     pagination={{ clickable: true }}
                     loop={loop}
                 >
-                    {slides.map((slide, index) => (
+                    {/* {slides.map((slide, index) => (
                         <SwiperSlide key={index} onClick={() => handleSlideClick(slide)}>
                             <div className="aiselect-slide-content">
                                 <img src={slide.img} alt={slide.text} className="aiselect-slide-image" />
                                 <div className="aiselect-slide-text">{slide.text}</div>
+                            </div>
+                        </SwiperSlide>
+                    ))} */}
+                    {/* 이 아래는 테스트 데이터 입니다 */}
+                    {randomLecipe.map((recipe, index) => (
+                        <SwiperSlide key={index} onClick={() => handleSlideClick(recipe)}>
+                            <div className="aiselect-slide-content">
+                                <img src="/img/aicategory/aifolder.png" alt={recipe.name} className="aiselect-slide-image" />
+                                <div className="aiselect-slide-text">{recipe.name}</div>
                             </div>
                         </SwiperSlide>
                     ))}
