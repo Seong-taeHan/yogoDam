@@ -9,9 +9,9 @@ import random
 app = Flask(__name__)
 CORS(app)
 
-file_path = './re1800.csv'
+file_path = './re1800.xlsx'
 
-df = pd.read_csv(file_path, encoding='cp949')
+df = pd.read_excel(file_path)
 
 def remove_units(ingredient):
     return re.sub(r'\d+[^\\w\\s]*\\s*', '', ingredient).strip()
