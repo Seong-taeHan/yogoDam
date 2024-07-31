@@ -46,38 +46,17 @@
     font-weight: bold;
     z-index: 2; /* Foreground text */
     position: relative;
+    max-height: 30%;
 }
 
-.airesult-swiper {
-    width: 100%;
-    z-index: 2; /* Foreground content */
-    position: relative;
-}
-
-.airesult-slide-content {
+.similar-recipes-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    z-index: 2; /* Foreground content */
-    position: relative;
-}
-
-.airesult-slide-image {
+    
     width: 100%;
-    max-width: 400px;
-    height: auto;
-    z-index: 2; /* Foreground image */
-    position: relative;
-}
-
-.airesult-slide-text {
-    margin-top: 10px;
-    font-size: 20px;
-    color: white;
-    text-align: center;
-    z-index: 2;
-    position: relative;
+    margin-top: 20px;
+    overflow-y: auto;
 }
 
 .airesult-button {
@@ -93,21 +72,21 @@
     display: inline-block;
     text-decoration: none;
     transition: all 0.3s ease;
-    align-items: center;
-  }
+    margin: 5px 0;
+}
   
-  .airesult-button:hover {
+.airesult-button:hover {
     background: linear-gradient(to right, #ffcc73, #ffec00);
     color: #d86c00;
     border-color: #d86c00;
-  }
+}
   
-  .airesult-button:active {
+.airesult-button:active {
     background: linear-gradient(to right, #ffbe4c, #ffec00);
     color: #d86c00;
     border-color: #d86c00;
     transform: translateY(2px);
-  }
+}
 
 .airesult-footer {
     display: flex;

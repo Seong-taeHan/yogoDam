@@ -135,6 +135,7 @@
     width: 100%;
     height: 300px;
     text-align: left;
+    overflow: hidden; /* Ensures content does not overflow */
 }
 
 .lecipe-detail-description {
@@ -143,6 +144,9 @@
     font-size: 40px;
     display: flex;
     align-items: center;
+    overflow: hidden; /* Hides overflowed content */
+    text-overflow: ellipsis; /* Adds ellipsis at the end of the text */
+    white-space: pre-wrap; /* Allows text to wrap to the next line */
 }
 
 .lecipe-detail-step-counter {

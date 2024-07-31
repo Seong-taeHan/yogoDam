@@ -105,7 +105,7 @@ const UserInfo = () => {
                   <p className="recipe-title">{recipe.FOOD_NAME}</p>
                   <p className="recipe-NOTIFICATION">{recipe.NOTIFICATION}</p>
                   <p className="recipe-details"><img src="../img/icon/User.svg" alt="사용자 이미지" />{recipe.NICK_NAME}</p>
-                  <p className="recipe-like"><img src="좋아요 이미지" alt="좋아요 이미지"/>{recipe.POPULARITY}</p>
+                  <p className="recipe-like"><img src="../img/icon/star.svg" alt="좋아요 이미지"/>{recipe.POPULARITY}</p>
                 </div>
               </div>
             </SwiperSlide>
