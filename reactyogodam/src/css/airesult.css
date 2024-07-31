@@ -27,7 +27,7 @@
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    height: 50%;
+    height: 55%;
     background-image: url('../../public/img/aicategory/aibackground.png');
     background-size: cover;
     background-position: center;
@@ -46,7 +46,6 @@
     font-weight: bold;
     z-index: 2; /* Foreground text */
     position: relative;
-    max-height: 30%;
 }
 
 .similar-recipes-container {
@@ -55,8 +54,9 @@
     align-items: center;
     
     width: 100%;
-    margin-top: 20px;
-    overflow-y: auto;
+    /* height: auto; */
+    /* margin-top: 10px; */
+    /* overflow-y: auto; */
 }
 
 .airesult-button {

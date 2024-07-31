@@ -25,7 +25,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center; /* 변경된 부분 */
     width: 100%;
     height: 60%;
     background-image: url('../../public/img/aicategory/aibackground.png');
@@ -40,6 +40,7 @@
 
 .aiselect-Text {
     margin-top: 5%;
+    margin-bottom: 5%;
     font-size: 40px;
     text-align: center;
     color: white;
@@ -59,7 +60,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    z-index: 2; /* Foreground content */
+    z-index: 3; /* Foreground content */
     position: relative;
 }
 
