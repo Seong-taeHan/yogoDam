@@ -107,8 +107,8 @@ const LecipeDetail = () => {
                                 {step.image && <img className='lecipe-detail-swiper-slide' src={`data:image/png;base64,${step.image}`} alt={`Step ${step.order}`} />}
                                 <div className="lecipe-detail-instruction-text">
                                     <p className="lecipe-detail-description">{step.order}. {step.description}</p>
-                                    <p className="lecipe-detail-step-counter">{step.order}/{recipeDetail.steps.length}</p>
                                 </div>
+                                <p className="lecipe-detail-step-counter">{step.order}/{recipeDetail.steps.length}</p>
                             </div>
                         </SwiperSlide>
                     ))}
