@@ -71,7 +71,7 @@ const LecipeWrite = () => {
                         updatedIngredients[index].unitPrice = INGRED_N_PRICE;
                         updatedIngredients[index].unitCalories = INGRED_KCAL; // 칼로리 데이터 저장
                         updatedIngredients[index].price = INGRED_N_PRICE * (updatedIngredients[index].amount || 1);
-                        updatedIngredients[index].calories = INGRED_KCAL * (updatedIngredients[index].amount || 1); // 칼로리 데이터 추가
+                        updatedIngredients[index].calories = parseInt(INGRED_KCAL * (updatedIngredients[index].amount || 1)); // 칼로리 데이터 추가
                         return updatedIngredients;
                     });
                 } else {
@@ -262,7 +262,7 @@ const LecipeWrite = () => {
                                 disabled // 단위 필드는 수정하지 못하게 비활성화
                             />
                             <p>{ingredient.price ? `가격: ${ingredient.price}` : '가격 정보 없음'}</p>
-                            <p>{ingredient.calories ? `Kcal: ${ingredient.calories}` : '칼로리 정보 없음'}</p>
+                            <p>{ingredient.calories ? `Kcal: ${parseInt(ingredient.calories)}` : '칼로리 정보 없음'}</p>
                         </div>
                         <button type="button" onClick={() => handleRemoveIngredient(index)}>- 재료 삭제</button>
                     </div>

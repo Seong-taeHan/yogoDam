@@ -60,20 +60,11 @@ const AiSelectPage = () => {
                     pagination={{ clickable: true }}
                     loop={loop}
                 >
-                    {/* {slides.map((slide, index) => (
+                    {slides.map((slide, index) => (
                         <SwiperSlide key={index} onClick={() => handleSlideClick(slide)}>
                             <div className="aiselect-slide-content">
                                 <img src={slide.img} alt={slide.text} className="aiselect-slide-image" />
                                 <div className="aiselect-slide-text">{slide.text}</div>
-                            </div>
-                        </SwiperSlide>
-                    ))} */}
-                    {/* 이 아래는 테스트 데이터 입니다 */}
-                    {randomLecipe.map((recipe, index) => (
-                        <SwiperSlide key={index} onClick={() => handleSlideClick(recipe)}>
-                            <div className="aiselect-slide-content">
-                                <img src="/img/aicategory/aifolder.png" alt={recipe.name} className="aiselect-slide-image" />
-                                <div className="aiselect-slide-text">{recipe.name}</div>
                             </div>
                         </SwiperSlide>
                     ))}

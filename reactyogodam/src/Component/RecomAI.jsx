@@ -9,7 +9,7 @@ const RecomAI = () => {
     <div className="recomai-container">
         <div className="ai-TopBar">추천 AI</div>
         <div className="ai-Content">
-            <div className="ai-Text">무엇을 요리할지<br></br>고민이 된다면!</div>
+            <div className="ai-Text"></div>
             <img src="/img/aicategory/aiconhalf.png" alt="AI 추천" className="ai-Image" />
         </div>
         <div>

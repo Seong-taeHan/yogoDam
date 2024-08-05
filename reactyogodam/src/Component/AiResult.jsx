@@ -53,27 +53,14 @@ const AiResult = () => {
     <div className="airesult-container">
       <div className="airesult-TopBar">추천 AI</div>
       <div className="airesult-Content">
-        <div className="airesult-Text">비슷한 재료로 만들 수 있는<br />요리를 추천해 드릴게요!</div>
-        {/* {selectedRecipe && (
+        <div className="airesult-Text">유사한 음식<br />추천해 드릴게요!</div>
+        {selectedRecipe && (
           <div className="similar-recipes-container">
             {similarRecipes.map((recipe, index) => (
               <div key={index}><button className='airesult-button'>{recipe}</button></div>
             ))}
           </div>
-        )} */}
-        {/* 이 아래는 테스트 데이터 입니다 */}
-        <div className="similar-recipes-container">
-          {testLecipes.map((recipe, index) => (
-            <div key={index}>
-              <button 
-                className='airesult-button' 
-                onClick={() => handleLecipeClick(recipe.food_id)}
-              >
-                {recipe.name}
-              </button>
-            </div>
-          ))}
-        </div>
+        )}
       </div>
       <div className="airesult-footer">
         <div className='airesult-sbtitle-align'>

@@ -84,14 +84,14 @@ const LecipeDetail = () => {
                             <tr key={index}>
                                 <td>{ingredient.name}</td>
                                 <td>{ingredient.amount} {ingredient.unit}</td>
-                                <td>{ingredient.price}</td>
+                                <td>{parseInt(ingredient.price)}</td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
                 <div className='lecipe-detail-summary'>
-                    <span>총 칼로리 : {recipeDetail.recipe.totalCalories} kcal</span> {/* 총 칼로리 출력 */}
-                    <span>합계 {recipeDetail.recipe.totalPrice} 원</span> {/* 총 가격 출력 */}
+                    <span>총 칼로리 : {parseInt(recipeDetail.recipe.totalCalories)} kcal</span> {/* 총 칼로리 출력 */}
+                    <span>합계 {parseInt(recipeDetail.recipe.totalPrice)} 원</span> {/* 총 가격 출력 */}
                 </div>
                 <h2>요리순서</h2>
                 <hr></hr>
